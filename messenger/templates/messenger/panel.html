@@ -10,7 +10,7 @@
             {% endfor %}
         </div>
         <div class="column">
-            {% if messages %}
+            {% if user %}
                 <form action="{% url 'panel' user.pk %}" method="POST">
                     {% csrf_token %}
                     {% for field in form %}
