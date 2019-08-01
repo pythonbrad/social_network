@@ -1,0 +1,66 @@
+{% extends 'messenger/base.html' %}
+{% block contains %}
+    <div class="columns">
+        <div class="column">
+            <h1 class="label">Users</h1>
+            {% for user in users %}
+                <p><a class="button {% if user in new_message_senders %}is-warning{% endif %}" href="{% url 'panel' user.pk %}">{{ user }}</a></p>
+            {% empty %}
+                <p>Nothing for the moment</p>
+            {% endfor %}
+        </div>
+        <div class="column">
+            {% if messages %}
+                <form action="{% url 'panel' user.pk %}" method="POST">
+                    {% csrf_token %}
+                    {% for field in form %}
+                        <div class="field">
+                            <label class="label" for="{{ field.id_for_label }}">{{ field.label }}: </label>
+                            <div class="help is-danger">{{ field.errors }}</div>
+                            <div class="control">
+                                {{ field }}
+                            </div>
+                            <div class="help">{{ field.help_text }}</div>
+                        </div>
+                    {% endfor %}
+                    <div class="field">
+                        <div class="control">
+                            <input type="submit" class="button is-link">
+                        </div>
+                    </div>
+                </form>
+            {% endif %}
+            <h1 class="label">Message (avec {{ user }})</h1>
+            {% for message in messages %}
+                <br/>
+                <div class="card">
+                    <header class="card-header">
+                        {{ message.own }}:
+                    </header>
+                    <div class="card-content">
+                        {{ message.contains }}
+                    </div>
+                    <footer class="card-footer">
+                        <p>
+                            {% if message.own == request.user %}
+                                send:
+                            {% else %}
+                                received:
+                            {% endif %} {{ message.date_created }}
+                        </p>
+                    </footer>
+                    <footer class="card-footer">
+                        {% if message.received %}
+                            <p>seen: {{ message.date_received }}</p>
+                        {% else %}
+                            <p>Not seen</p>
+                        {% endif %}
+                    </footer>
+                </div>
+            {% empty %}
+                <p>Nothing for the moment, selected a other user</p>
+            {% endfor %}
+            <br/>
+        </div>
+    </div>
+{% endblock %}

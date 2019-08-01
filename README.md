@@ -1,2 +1,2 @@
 # social_network
-A little social network
+Pour le fun

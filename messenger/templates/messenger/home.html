@@ -1,0 +1,55 @@
+{% extends 'messenger/base.html' %}
+{% block contains %}
+    <br/><br/>
+    <h1 class="label" align="center">Deja membre, ou pas encore membre, faite votre choix</h1>
+    <div class="columns" align="center">
+        <div class="column">
+            <a class="button is-primary" href="{% url 'login' %}">Deja membre</a>
+        </div>
+        <div class="column">
+            <a class="button is-primary" href="{% url 'signin' %}">Pas encore membre</a>
+        </div>
+    </div>
+    <h1 class="label" align="center">Nous repondons a quelque de vos questions</h1>
+    <div class="card">
+        <div class="card-content">
+            <header class="card-header">
+                <p class="title">What is it ?</p>
+            </header>
+            <div class="card-content">
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </div>
+        </div>
+        <div class="card-content">
+            <header class="card-header">
+                <p class="title">Why it ?</p>
+            </header>
+            <div class="card-content">
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </div>
+        </div>
+        <div class="card-content">
+            <header class="card-header">
+                <p class="title">About us ?</p>
+            </header>
+            <div class="card-content">
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </div>
+        </div>
+    </div>
+{% endblock %}

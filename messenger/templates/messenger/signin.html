@@ -1,0 +1,7 @@
+{% extends 'messenger/base2.html' %}
+{% block form_url %}
+    {% url 'signin' %}
+{% endblock %}
+{% block footer %}
+    <a href="{% url 'login' %}">I have a account</a>
+{% endblock %}
