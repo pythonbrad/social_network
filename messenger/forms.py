@@ -1,6 +1,5 @@
 from django import forms
-from django.contrib.auth.models import User
-from .models import Message
+from .models import Message, User
 from django.db.models import Q
 
 
@@ -19,11 +18,15 @@ class SigninForm(forms.ModelForm):
             'placeholder':
             'Enter your email'
         })
+        self.fields['date_of_birth'].widget = forms.DateInput(attrs={'type': 'date'})
+        self.fields['date_of_birth'].widget.attrs.update({
+            'class':
+            'input',
+        })
+        self.fields['password'].widget = forms.PasswordInput()
         self.fields['password'].widget.attrs.update({
             'class':
             'input',
-            'placeholder':
-            'Enter your password'
         })
 
     class Meta:
@@ -31,6 +34,7 @@ class SigninForm(forms.ModelForm):
         fields = [
             'username',
             'email',
+            'date_of_birth',
             'password',
         ]
 
@@ -44,11 +48,10 @@ class LoginForm(forms.Form):
             'placeholder':
             'Type your Username or Email'
         })
+        self.fields['password'].widget = forms.PasswordInput()
         self.fields['password'].widget.attrs.update({
             'class':
             'input',
-            'type':
-            'password',
             'placeholder':
             'Type your Password'
         })

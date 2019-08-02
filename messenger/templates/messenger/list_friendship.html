@@ -1,0 +1,37 @@
+{% extends 'messenger/panel.html' %}
+{% block column_contains %}
+    <a class="button is-primary" href="{% url 'list_users' %}">Find friends</a>
+    <h1 class="title">Frienship en attente</h1>
+    {% for friendship in friendships %}
+        <div class="card">
+            {% if friendship.sender != request.user %}
+                <header class="card-header">
+                    Demande d'amitier de {{ friendship.sender }}
+                </header>
+            {% else %}
+                <header class="card-header">
+                    Demande d'amitier avec {{ friendship.receiver }} en attente
+                </header>
+            {% endif %}
+            <div class="card-content">
+                {{ friendship.message }}
+            </div>
+            <footer class="card-footer">
+                <a class="button is-danger" href="{% url 'delete_friendship' friendship.pk %}">
+                    {% if friendship.sender != request.user %}
+                        Refuser
+                    {% else %}
+                        Annuler
+                    {% endif %}
+                </a>
+                {% if friendship.sender != request.user %}
+                    <a class="button is-success" href="{% url 'accept_friendship' friendship.pk %}">
+                        Accepter
+                    </a>
+                {% endif %}
+            </footer>
+        </div>
+    {% empty %}
+        <p>Nothing for the moment</p>
+    {% endfor %}
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'messenger/panel.html' %}
+{% block column_contains %}
+    <h1 class="title">List friends</h1>
+    {% for friend in friends %}
+        <div class="card">
+            <header class="card-header">
+                Username: {{ friend.username }}
+            </header>
+            <div class="card-content">
+                <p>Adhesion: {{ friend.date_joined }}</p>
+                <p>Email: {{ friend.email }}</p>
+                <p>Date of birth: {{ friend.date_of_birth }}</p>
+                <p>First name: {{ friend.first_name }}</p>
+                <p>Last name: {{ friend.last_name }}</p>
+            </div>
+            <footer class="card-footer">
+                <a class="button is-danger" href="{% url 'delete_friend' friend.pk %}">
+                    Delete friend
+                </a>
+            </footer>
+        </div>
+    {% empty %}
+        No friends for the moment
+    {% endfor %}
+{% endblock %}
