@@ -67,6 +67,7 @@ def panel_view(request):
 
 def get_list_friendship_view(request):
     if request.user.is_authenticated:
+        # Pour data frienship, use it
         friendships = Friendship.objects.filter(Q(sender=request.user)
                                                 | Q(receiver=request.user),
                                                 is_valided=False)
@@ -82,12 +83,12 @@ def get_list_friendship_view(request):
 
 def create_friendship_view(request, pk):
     if request.user.is_authenticated:
-        receiver = get_object_or_404(User, pk=pk)
-        friendship = Friendship.objects.filter(
-            Q(receiver=request.user, sender=receiver)
-            | Q(sender=request.user, receiver=receiver))
-        if not friendship:
-            Friendship.objects.create(sender=request.user, receiver=receiver)
+        future_friend = get_object_or_404(User, pk=pk)
+        friends = request.user.friends.all()
+        waiting_friends = request.user.waiting_friends.all()
+        if future_friend not in friends and future_friend not in waiting_friends:
+            Friendship.objects.create(sender=request.user,
+                                      receiver=future_friend)
         return redirect('list_users')
     else:
         return redirect('login')
@@ -120,13 +121,15 @@ def accept_friendship_view(request, pk):
 def get_list_users_view(request):
     if request.user.is_authenticated:
         users = User.objects.all().exclude(pk=request.user.pk)
-        friends = Friendship.get_list_all_friends(request.user)
+        friends = request.user.friends.all()
+        waiting_friends = request.user.waiting_friends.all()
         print(users, friends)
         return render(
             request, 'messenger/list_users.html', {
                 'title': 'List users',
                 'users': users,
                 'friends': friends,
+                'waiting_friends': waiting_friends,
                 'datetime': timezone.now(),
             })
     else:
@@ -135,7 +138,7 @@ def get_list_users_view(request):
 
 def get_list_friends_view(request):
     if request.user.is_authenticated:
-        friends = Friendship.get_list_friends(request.user)
+        friends = request.user.friends.all()
         return render(
             request, 'messenger/list_friends.html', {
                 'title': 'List friends',
@@ -174,7 +177,7 @@ def delete_notification_view(request, pk):
 def user_wall_view(request, pk):
     if request.user.is_authenticated:
         user = get_object_or_404(User, pk=pk)
-        friends = Friendship.get_list_friends(request.user)
+        friends = request.user.friends.all()
         return render(
             request, 'messenger/user_wall.html', {
                 'title': 'User wall',
@@ -192,10 +195,11 @@ def send_message_view(request, pk):
         if request.POST:
             form = MessageForm(request.POST)
             if form.is_valid():
-                Message.objects.create(sender=request.user,
+                if user != request.user:
+                    Message.objects.create(sender=request.user,
                                        receiver=user,
                                        contains=form.cleaned_data['contains'])
-                return redirect(reverse('get_messages', args=(pk,)))
+                return redirect(reverse('get_messages', args=(pk, )))
         else:
             form = MessageForm()
         return render(
@@ -209,30 +213,47 @@ def send_message_view(request, pk):
         return redirect('login')
 
 
-def messages_view(request, pk=None):
+def get_messages_view(request, pk):
     if request.user.is_authenticated:
-        if pk:
-            user = get_object_or_404(User, pk=pk)
-            messages = Message.objects.filter(
-                Q(sender=request.user, receiver=user)
-                | Q(receiver=request.user, sender=user))
-            return render(
-                request, 'messenger/messages.html', {
-                    'title': 'Messages',
-                    'messages': messages,
-                    'datetime': timezone.now(),
-                    'friends': None,
-                    'user': user,
+        user = get_object_or_404(User, pk=pk)
+        messages = Message.objects.filter(
+            Q(sender=request.user, receiver=user)
+            | Q(receiver=request.user, sender=user))
+        return render(
+            request, 'messenger/get_messages.html', {
+                'title': 'Messages',
+                'messages': messages,
+                'datetime': timezone.now(),
+                'user': user,
+            })
+
+
+def messages_view(request):
+    if request.user.is_authenticated:
+        messages = request.user.messages.all()
+        datas = []
+        user_added = []
+        for message in messages:
+            if message.sender != request.user and message.sender not in user_added:
+                user_added.append(message.sender)
+                datas.append({
+                    'user': message.sender,
+                    'message': message.contains
                 })
-        else:
-            friends = Friendship.get_list_friends(request.user)
-            return render(
-                request, 'messenger/messages.html', {
-                    'title': 'Messages',
-                    'messages': [],
-                    'datetime': timezone.now(),
-                    'friends': friends,
+            elif message.receiver != request.user and message.receiver not in user_added:
+                user_added.append(message.receiver)
+                datas.append({
+                    'user': message.receiver,
+                    'message': message.contains
                 })
+            else:
+                pass
+        return render(
+            request, 'messenger/messages.html', {
+                'title': 'Messages',
+                'datetime': timezone.now(),
+                'datas': datas,
+            })
     else:
         return redirect('login')
 

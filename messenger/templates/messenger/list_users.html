@@ -4,19 +4,21 @@
     {% for user in users %}
         <div class="card">
             <header class="card-header">
-                <a href="{% url 'user_wall' user.pk %}" class="title">{{ user.username }}</a>
+                <a href="{% url 'user_wall' user.pk %}">{{ user.username }}</a>
             </header>
             <div class="card-content">
                 <p>Adhesion: {{ user.date_joined }}</p>
                 <p>Date of birth: {{ user.date_of_birth }}</p>
             </div>
             <footer class="card-footer">
-                {% if user not in friends %}
-                    <a class="button is-success" href="{% url 'create_friendship' user.pk %}">
+                {% if user in friends %}
+                    Already friend
+                {% elif user in waiting_friends %}
+                    Friendship in waiting
+                {% else %}
+                    <a class="button is-success is-small" href="{% url 'create_friendship' user.pk %}">
                         Send friendship
                     </a>
-                {% else %}
-                    Already friend or friendship in waiting
                 {% endif %}
             </footer>
         </div>

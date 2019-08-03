@@ -1,26 +1,36 @@
 {% extends 'messenger/base.html' %}
 {% block contains %}
-    <div class='columns'>
-        <div class="column is-one-quarter">
-            <div class="message is-link">
+    <div class='columns is-mobile'>
+        <div class="column is-one-fifth">
+            <div class="message is-link is-small">
                 <header class="message-header">
                     Menu
                 </header>
-                <div class="message-body">
-                    <a>Actualite</a>
-                </div>
-                <div class="message-body">
-                    <a href="{% url 'messages' %}">Messages</a>
-                </div>
-                <div class="message-body">
-                    <a href="{% url 'list_friends' %}">Friends</a>
-                </div>
-                <div class="message-body">
-                    <a href="{% url 'list_friendships' %}">Friendship</a>
-                </div>
-                <div class="message-body">
-                    <a>Settings</a>
-                </div>
+                <a>
+                    <div class="message-body">
+                        Actualite
+                    </div>
+                </a>
+                <a href="{% url 'messages' %}">
+                    <div class="message-body">
+                        Messages
+                    </div>
+                </a>
+                <a href="{% url 'list_friends' %}">
+                    <div class="message-body">
+                        Friends
+                    </div>
+                </a>
+                <a href="{% url 'list_friendships' %}">
+                    <div class="message-body">
+                        Friendship
+                    </div>
+                </a>
+                <a>
+                    <div class="message-body">
+                        Settings
+                    </div>
+                </a>
             </div>
         </div>
         <div class="column is-half">
@@ -28,8 +38,8 @@
                 <center>Select a menu</center>
             {% endblock %}
         </div>
-        <div class="column is-one-quarter">
-            <div class="message is-link">
+        <div class="column is-one-fifth">
+            <div class="message is-link is-small">
                 <header class="message-header">
                     Notification ({{ request.user.notifications.all|length }})
                 </header>

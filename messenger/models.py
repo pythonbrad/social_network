@@ -4,17 +4,20 @@ from django.contrib.auth.models import AbstractUser
 from django.db.models import Q
 from django.db.models.signals import post_save
 from django.db.models.signals import post_delete
-from .signals import post_create_friendship
+from .signals import post_save_friendship
 from .signals import post_delete_friendship
-from .signals import post_create_message
+from .signals import post_save_message
 from .signals import post_delete_message
 
 
 # Create your models here.
 class User(AbstractUser):
     date_of_birth = models.DateField()
-    notifications = models.ManyToManyField('Notification',
-                                           related_name='user_notification')
+    notifications = models.ManyToManyField('Notification')
+    # Don't use through, because it use only the first ForeignKey
+    friends = models.ManyToManyField('User', related_name='friends_list')
+    waiting_friends = models.ManyToManyField('User', related_name='waiting_friends_list')
+    messages = models.ManyToManyField('Message')
     is_group = models.BooleanField(default=False)
     REQUIRED_FIELDS = ['date_of_birth']
 
@@ -39,34 +42,6 @@ class Friendship(models.Model):
 
     def __str__(self):
         return "%s and %s" % (self.sender, self.receiver)
-
-    def get_list_friends(user):
-        friendships = Friendship.objects.filter(Q(receiver=user)
-                                                | Q(sender=user),
-                                                is_valided=True)
-        friends_list = []
-        for friendship in friendships:
-            if friendship.sender != user:
-                friends_list.append(friendship.sender)
-            elif friendship.receiver != user:
-                friends_list.append(friendship.receiver)
-            else:
-                pass
-        return friends_list
-
-    def get_list_all_friends(user):
-        friendships = Friendship.objects.filter(
-            Q(receiver=user)
-            | Q(sender=user))
-        friends_list = []
-        for friendship in friendships:
-            if friendship.sender != user:
-                friends_list.append(friendship.sender)
-            elif friendship.receiver != user:
-                friends_list.append(friendship.receiver)
-            else:
-                pass
-        return friends_list
 
 
 class Message(models.Model):
@@ -103,7 +78,7 @@ class Notification(models.Model):
         ordering = ['-date_created']
 
 
-post_save.connect(post_create_friendship, sender=Friendship)
+post_save.connect(post_save_friendship, sender=Friendship)
 post_delete.connect(post_delete_friendship, sender=Friendship)
-post_save.connect(post_create_message, sender=Message)
+post_save.connect(post_save_message, sender=Message)
 post_delete.connect(post_delete_message, sender=Message)

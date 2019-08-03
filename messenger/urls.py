@@ -37,6 +37,6 @@ urlpatterns = [
          views.messages_view,
          name='messages'),
     path('messages/<int:pk>',
-         views.messages_view,
+         views.get_messages_view,
          name='get_messages'),
 ]
