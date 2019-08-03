@@ -4,6 +4,7 @@
     <h1 class="title">Frienship en attente</h1>
     {% for friendship in friendships %}
         <div class="card">
+            <p>Depuis {{ friendship.date_created|timesince:datetime }}</p>
             {% if friendship.sender != request.user %}
                 <header class="card-header">
                     Demande d'amitier de {{ friendship.sender }}

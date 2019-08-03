@@ -1,0 +1,21 @@
+{% extends 'messenger/panel.html' %}
+{% block column_contains %}
+    <div class="card">
+        <header class="card-header title">
+            {{ user.username }}
+        </header>
+        <div class="card-content">
+            <p>Adhesion: {{ user.date_joined }}</p>
+            <p>Date of birth: {{ user.date_of_birth }}</p>
+            {% if user in friends %}
+                <p>Last login: Il y'a {{ user.last_login|timesince:datetime }}</p>
+                <p>Email: {{ user.email|default:"No entry" }}</p>
+                <p>First name: {{ user.first_name|default:"No entry" }}</p>
+                <p>Last name: {{ user.last_name|default:"No entry" }}</p>
+            {% endif %}
+        </div>
+        <footer class="card-footer">
+            <a href="{% url 'send_message' user.pk %}" class="button is-link">Send message</a>
+        </footer>
+    </div>
+{% endblock %}

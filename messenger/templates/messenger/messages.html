@@ -1,0 +1,34 @@
+{% extends 'messenger/panel.html' %}
+{% block column_contains %}
+    {% if messages %}
+        <a href="{% url 'send_message' user.pk %}" class="button">New message</a>
+        <h1 class="title">Discussion with {{ user }}</h1>
+        {% for message in messages %}
+            <div class="message">
+                <div class="message-header">
+                    <p>{{ message.sender }}</p>
+                    <p>(il y'a {{ message.date_created|timesince:datetime }})</p>
+                </div>
+                <div class="message-body">
+                    <p>{{ message.contains }}</p>
+                </div>
+            </div>
+        {% empty %}
+            <p>No messages for the moment</p>
+        {% endfor %}
+    {% else %}
+        <h1 class="title">Select a user</h1>
+        {% for friend in friends %}
+            <div class="card">
+                <header class="card-header">
+                    <p class="title">{{ friend.username }}</p>
+                </header>
+                <div class="card-content">
+                    <a href="{% url 'get_messages' friend.pk %}" class="button is-link">Open</a>
+                </div>
+            </div>
+        {% empty %}
+            No friends for the moment
+        {% endfor %}
+    {% endif %}
+{% endblock %}

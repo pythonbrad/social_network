@@ -10,7 +10,7 @@
                     <a>Actualite</a>
                 </div>
                 <div class="message-body">
-                    <a>Messages</a>
+                    <a href="{% url 'messages' %}">Messages</a>
                 </div>
                 <div class="message-body">
                     <a href="{% url 'list_friends' %}">Friends</a>
@@ -25,19 +25,19 @@
         </div>
         <div class="column is-half">
             {% block column_contains %}
-                <center>empty</center>
+                <center>Select a menu</center>
             {% endblock %}
         </div>
         <div class="column is-one-quarter">
             <div class="message is-link">
                 <header class="message-header">
-                    Notification
+                    Notification ({{ request.user.notifications.all|length }})
                 </header>
-                {% for notification in notifications %}
+                {% for notification in request.user.notifications.all %}
                     <div class="message-body">
-                        {{ notification.message }}
-                        <a class="is-small">{{ notification.date_created }}</a>
-                        <a class="delete"></a>
+                        <p>{{ notification.message }}</p>
+                        <p>Il y'a {{ notification.date_created|timesince:datetime }}</p>
+                        <a class="delete" href="{% url 'delete_notification' notification.pk %}"></a>
                     </div>
                 {% empty %}
                     <div class="message-body">

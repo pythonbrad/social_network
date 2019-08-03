@@ -4,18 +4,14 @@
     {% for friend in friends %}
         <div class="card">
             <header class="card-header">
-                Username: {{ friend.username }}
+                <a href="{% url 'user_wall' friend.pk %}" class="title">{{ friend.username }}</a>
             </header>
             <div class="card-content">
-                <p>Adhesion: {{ friend.date_joined }}</p>
-                <p>Email: {{ friend.email }}</p>
-                <p>Date of birth: {{ friend.date_of_birth }}</p>
-                <p>First name: {{ friend.first_name }}</p>
-                <p>Last name: {{ friend.last_name }}</p>
+                <p>photo</p>
             </div>
             <footer class="card-footer">
                 <a class="button is-danger" href="{% url 'delete_friend' friend.pk %}">
-                    Delete friend
+                    Delete friendship
                 </a>
             </footer>
         </div>

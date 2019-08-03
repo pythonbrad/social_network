@@ -81,9 +81,10 @@ class LoginForm(forms.Form):
 class MessageForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['contains'].widget = forms.Textarea()
         self.fields['contains'].widget.attrs.update({
             'class':
-            'input',
+            'textarea',
             'placeholder':
             'Enter your message'
         })
