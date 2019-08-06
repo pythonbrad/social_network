@@ -61,6 +61,7 @@ class LoginForm(forms.Form):
 
     def clean(self):
         username_or_email = self.cleaned_data['username_or_email']
+        username_or_email.lower
         password = self.cleaned_data['password']
         user = User.objects.filter(
             Q(username=username_or_email) | Q(email=username_or_email)

@@ -2,7 +2,7 @@
 {% block contains %}
     <div class='columns is-mobile'>
         <div class="column is-one-fifth">
-            <div class="message is-link is-small">
+            <div class="message is-info is-small">
                 <header class="message-header">
                     Menu
                 </header>
@@ -39,15 +39,15 @@
             {% endblock %}
         </div>
         <div class="column is-one-fifth">
-            <div class="message is-link is-small">
+            <div class="message is-info is-small">
                 <header class="message-header">
                     Notification ({{ request.user.notifications.all|length }})
                 </header>
-                {% for notification in request.user.notifications.all %}
+                {% for notification in request.user.notifications.all|slice:":5" %}
                     <div class="message-body">
-                        <p>{{ notification.message }}</p>
-                        <p>Il y'a {{ notification.date_created|timesince:datetime }}</p>
-                        <a class="delete" href="{% url 'delete_notification' notification.pk %}"></a>
+                        <a href="{{ notification.url }}">{{ notification.message }}</a>
+                        <p>Il y'a {{ notification.date_created|timesince:datetime }}
+                        <a class="delete" href="{% url 'delete_notification' notification.pk %}" title='delete'></a></p>
                     </div>
                 {% empty %}
                     <div class="message-body">

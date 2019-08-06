@@ -1,0 +1,24 @@
+    <br/>
+    <nav class="pagination" role="navigation" aria-label="pagination">
+        <ul class="pagination-list">
+            {% if data_to_pagin.has_other_pages %}
+                {% if data_to_pagin.has_previous %}
+                    <li><a class="pagination-previous" href="?page={{ data_to_pagin.previous_page_number }}">&laquo;</a></li>
+                {% else %}
+                    <li><a class="pagination-previous" disabled>&laquo;</a></li>
+                {% endif %}
+                {% for i in data_to_pagin.paginator.page_range %}
+                    {% if data_to_pagin.number == i %}
+                        <li><a class="pagination-link is-current">{{ i }}</a></li>
+                    {% else %}
+                        <li><a class="pagination-link" href="?page={{ i }}">{{ i }}</a></li>
+                    {% endif %}
+                {% endfor %}
+                {% if data_to_pagin.has_next %}
+                    <li><a class="pagination-next" href="?page={{ data_to_pagin.next_page_number }}">&raquo;</a></li>
+                {% else %}
+                    <li><a class="pagination-next" disabled>&raquo;</a></li>
+                {% endif %}
+            {% endif %}
+        </ul>
+    </nav>

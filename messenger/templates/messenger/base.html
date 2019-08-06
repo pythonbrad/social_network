@@ -10,7 +10,7 @@
         <nav class="navbar is-link">
             <div class="navbar-brand">
                 <a href="{% url 'home' %}">
-                    <img width="75" height="75" class="navbar-item" src="{% static 'img/koala.jpg' %}">
+                    <a class="navbar-item">SiteWeb</a>
                 </a>
                 {% if request.user.is_authenticated %}
                     <a class="navbar-item">{{ request.user }}</a>

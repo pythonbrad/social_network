@@ -1,24 +1,23 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import AbstractUser
-from django.db.models import Q
 from django.db.models.signals import post_save
-from django.db.models.signals import post_delete
+from django.db.models.signals import pre_delete
 from .signals import post_save_friendship
-from .signals import post_delete_friendship
+from .signals import pre_delete_friendship
 from .signals import post_save_message
-from .signals import post_delete_message
+from .signals import pre_delete_message
 
 
 # Create your models here.
 class User(AbstractUser):
     date_of_birth = models.DateField()
     notifications = models.ManyToManyField('Notification')
-    # Don't use through, because it use only the first ForeignKey
     friends = models.ManyToManyField('User', related_name='friends_list')
-    waiting_friends = models.ManyToManyField('User', related_name='waiting_friends_list')
+    waiting_friends = models.ManyToManyField(
+        'User', related_name='waiting_friends_list')
     messages = models.ManyToManyField('Message')
-    is_group = models.BooleanField(default=False)
+    date_created = models.DateField(default=timezone.now)
     REQUIRED_FIELDS = ['date_of_birth']
 
     class Meta:
@@ -66,10 +65,12 @@ class Message(models.Model):
 class Notification(models.Model):
     receiver = models.ForeignKey(User,
                                  related_name='notification_receiver',
-                                 on_delete=models.CASCADE)
+                                 on_delete=models.CASCADE,
+                                 db_constraint=False)
     message = models.CharField(max_length=50)
     date_created = models.DateTimeField(default=timezone.now)
     obj_pk = models.IntegerField()
+    url = models.URLField(blank=True)
 
     def __str__(self):
         return self.message
@@ -79,6 +80,6 @@ class Notification(models.Model):
 
 
 post_save.connect(post_save_friendship, sender=Friendship)
-post_delete.connect(post_delete_friendship, sender=Friendship)
+pre_delete.connect(pre_delete_friendship, sender=Friendship)
 post_save.connect(post_save_message, sender=Message)
-post_delete.connect(post_delete_message, sender=Message)
+pre_delete.connect(pre_delete_message, sender=Message)

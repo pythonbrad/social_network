@@ -1,6 +1,6 @@
 {% extends 'messenger/panel.html' %}
 {% block column_contains %}
-    <h1 class="title">Select a discussion</h1>
+    <h1 class="title">Select a discussion ({{ datas.paginator.count }})</h1>
     {% for data in datas %}
         <div class="card">
             <header class="card-header">
@@ -8,10 +8,13 @@
             </header>
             <div class="card-content">
                 <p class="label">last message: {{ data.message|truncatechars:30 }}</p>
-                <a href="{% url 'get_messages' data.user.pk %}" class="button is-link is-small">Open</a>
+                <a href="{% url 'get_messages' data.user.pk %}" class="button is-info is-small">Open</a>
             </div>
         </div>
     {% empty %}
         Nothing for the moment
     {% endfor %}
+    {% with datas as data_to_pagin %}
+        {% include 'messenger/pagin.html' %}
+    {% endwith %}
 {% endblock %}

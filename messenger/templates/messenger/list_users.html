@@ -1,11 +1,13 @@
 {% extends 'messenger/panel.html' %}
 {% block column_contains %}
-    <h1 class="title">List users</h1>
+    <h1 class="title">List users ({{ users.paginator.count }})</h1>
     {% for user in users %}
         <div class="card">
-            <header class="card-header">
-                <a href="{% url 'user_wall' user.pk %}">{{ user.username }}</a>
-            </header>
+            <a href="{% url 'user_details' user.pk %}" title="Click to see his details">
+                <header class="card-header">
+                    {{ user.username }}
+                </header>
+            </a>
             <div class="card-content">
                 <p>Adhesion: {{ user.date_joined }}</p>
                 <p>Date of birth: {{ user.date_of_birth }}</p>
@@ -14,6 +16,7 @@
                 {% if user in friends %}
                     Already friend
                 {% elif user in waiting_friends %}
+                    <a class="button is-small is-loading is-success"></a>
                     Friendship in waiting
                 {% else %}
                     <a class="button is-success is-small" href="{% url 'create_friendship' user.pk %}">
@@ -25,4 +28,7 @@
     {% empty %}
         No others users for the moment
     {% endfor %}
+    {% with users as data_to_pagin %}
+        {% include 'messenger/pagin.html' %}
+    {% endwith %}
 {% endblock %}

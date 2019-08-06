@@ -1,9 +1,13 @@
 {% extends 'messenger/panel.html' %}
 {% block column_contains %}
+    <h1 class="title">
+        Discussion with {{ user.username }} ({{ messages.paginator.count }})
+    </h1>
+    <a href="{% url 'user_details' user.pk %}" class="button is-link is-small">See the details</a>
     <a href="{% url 'send_message' user.pk %}" class="button is-primary is-small">Send message</a>
-    <h1 class="title">Discussion with {{ user }}</h1>
+    <br/>.
     {% for message in messages %}
-        <div class="message is-small">
+        <div class="message is-small {% if message.sender == request.user %}is-link{% else %}is-primary{% endif %}">
             <div class="message-header">
                 <p>{{ message.sender }}</p>
                 <p>(il y'a {{ message.date_created|timesince:datetime }})</p>
@@ -15,4 +19,7 @@
     {% empty %}
         <p>Nothing for the moment</p>
     {% endfor %}
+    {% with messages as data_to_pagin %}
+        {% include 'messenger/pagin.html' %}
+    {% endwith %}
 {% endblock %}

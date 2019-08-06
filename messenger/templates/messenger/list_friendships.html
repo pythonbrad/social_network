@@ -1,18 +1,22 @@
 {% extends 'messenger/panel.html' %}
 {% block column_contains %}
     <a class="button is-primary is-small" href="{% url 'list_users' %}">Find friends</a>
-    <h1 class="title">Frienship en attente</h1>
+    <h1 class="title">Frienship en attente ({{ friendships.paginator.count }})</h1>
     {% for friendship in friendships %}
         <div class="card">
             <p>Depuis {{ friendship.date_created|timesince:datetime }}</p>
             {% if friendship.sender != request.user %}
-                <header class="card-header">
-                    Demande d'amitier de {{ friendship.sender }}
-                </header>
+                <a href="{% url 'user_details' friendship.sender.pk %}" title="Click to see the details">
+                    <header class="card-header">
+                        Demande d'amitier de {{ friendship.sender }}
+                    </header>
+                </a>
             {% else %}
-                <header class="card-header">
-                    Demande d'amitier avec {{ friendship.receiver }} en attente
-                </header>
+                <a href="{% url 'user_details' friendship.receiver.pk %}" title="Click to see the details">
+                    <header class="card-header">
+                        Demande d'amitier avec {{ friendship.receiver }} en attente
+                    </header>
+                </a>
             {% endif %}
             <div class="card-content">
                 {{ friendship.message }}
@@ -35,4 +39,7 @@
     {% empty %}
         <p>Nothing for the moment</p>
     {% endfor %}
+    {% with friendships as data_to_pagin %}
+        {% include 'messenger/pagin.html' %}
+    {% endwith %}
 {% endblock %}
