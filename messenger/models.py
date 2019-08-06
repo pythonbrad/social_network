@@ -11,17 +11,41 @@ from .signals import pre_delete_message
 
 # Create your models here.
 class User(AbstractUser):
+    username = models.CharField(unique=True, max_length=50)
     date_of_birth = models.DateField()
+    email = models.EmailField(unique=True)
     notifications = models.ManyToManyField('Notification')
     friends = models.ManyToManyField('User', related_name='friends_list')
     waiting_friends = models.ManyToManyField(
         'User', related_name='waiting_friends_list')
     messages = models.ManyToManyField('Message')
+    """
+    No replace friendship, the contact save all the users
+     with who a user has communicated same if this user is not his friend
+    """
+    contacts = models.ManyToManyField('Contact', related_name='contacts_list')
     date_created = models.DateField(default=timezone.now)
-    REQUIRED_FIELDS = ['date_of_birth']
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = ['date_of_birth', 'email']
 
     class Meta:
         ordering = ['-date_of_birth']
+
+
+class Contact(models.Model):
+    own = models.ForeignKey(User,
+                            on_delete=models.CASCADE,
+                            related_name='contact_own')
+    user = models.ForeignKey(User,
+                             on_delete=models.CASCADE,
+                             related_name='contact_user')
+    date_last_message = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        ordering = ['-date_last_message']
+
+    def __str__(self):
+        return self.user.username
 
 
 class Friendship(models.Model):
@@ -50,7 +74,7 @@ class Message(models.Model):
     receiver = models.ForeignKey(User,
                                  related_name='message_receiver',
                                  on_delete=models.CASCADE)
-    contains = models.CharField(max_length=512)
+    contains = models.TextField(max_length=512)
     seen = models.BooleanField(default=False)
     date_received = models.DateTimeField(default=timezone.now)
     date_created = models.DateTimeField(default=timezone.now)

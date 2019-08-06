@@ -1,4 +1,5 @@
 from django.shortcuts import reverse
+from django.utils import timezone
 
 
 def post_save_friendship(sender, instance, created, **kwargs):
@@ -26,7 +27,7 @@ def post_save_friendship(sender, instance, created, **kwargs):
                 message='%s has accepted your friendship' %
                 (instance.receiver),
                 obj_pk=instance.pk,
-                url=reverse('user_details', args=(instance.receiver.pk,)),
+                url=reverse('user_details', args=(instance.receiver.pk, )),
             )
 
         else:
@@ -71,11 +72,20 @@ def post_save_message(sender, instance, created, **kwargs):
         instance.sender.messages.add(instance)
         instance.receiver.messages.add(instance)
 
+        if not instance.sender.contacts.filter(own=instance.sender, user=instance.receiver):
+            instance.sender.contacts.create(own=instance.sender, user=instance.receiver)
+            instance.receiver.contacts.create(own=instance.receiver, user=instance.sender)
+        else:
+            _ = instance.sender.contacts.filter(own=instance.sender, user=instance.receiver)
+            _.date_last_message = timezone.now()
+            _ = instance.receiver.contacts.filter(own=instance.receiver, user=instance.sender)
+            _.date_last_message = timezone.now()
+
         instance.receiver.notifications.create(
             receiver=instance.receiver,
             message='Message from %s' % instance.sender,
             obj_pk=instance.pk,
-            url=reverse('get_messages', args=(instance.sender.pk,)),
+            url=reverse('get_messages', args=(instance.sender.pk, )),
         )
     else:
         pass

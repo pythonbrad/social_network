@@ -1,6 +1,7 @@
 from django import forms
 from .models import Message, User
 from django.db.models import Q
+import string
 
 
 class SigninForm(forms.ModelForm):
@@ -18,15 +19,14 @@ class SigninForm(forms.ModelForm):
             'placeholder':
             'Enter your email'
         })
-        self.fields['date_of_birth'].widget = forms.DateInput(attrs={'type': 'date'})
+        self.fields['date_of_birth'].widget = forms.DateInput(
+            attrs={'type': 'date'})
         self.fields['date_of_birth'].widget.attrs.update({
-            'class':
-            'input',
+            'class': 'input',
         })
         self.fields['password'].widget = forms.PasswordInput()
         self.fields['password'].widget.attrs.update({
-            'class':
-            'input',
+            'class': 'input',
         })
 
     class Meta:
@@ -37,6 +37,43 @@ class SigninForm(forms.ModelForm):
             'date_of_birth',
             'password',
         ]
+
+    def clean_username(self):
+        username = self.cleaned_data['username']
+        min_length = 4
+        max_length = 30
+        if len(username) < min_length:
+            self.add_error(
+                'username',
+                'username is too short, min %s characters' % min_length)
+        elif len(username) > max_length:
+            self.add_error(
+                'username',
+                'username is too long, max %s characters' % max_length)
+        elif " " in username:
+            self.add_error(
+                'username',
+                'username should not contains the space')
+        else:
+            pass
+        for i in string.punctuation:
+            if i in username:
+                self.add_error(
+                    'username',
+                    'username should not contains a special character')
+                break
+        return username
+
+    def clean_password(self):
+        password = self.cleaned_data['password']
+        min_length = 4
+        if len(password) < min_length:
+            self.add_error(
+                'password',
+                'password is too short, min %s characters' % min_length)
+        else:
+            pass
+        return password
 
 
 class LoginForm(forms.Form):
@@ -64,8 +101,7 @@ class LoginForm(forms.Form):
         username_or_email.lower
         password = self.cleaned_data['password']
         user = User.objects.filter(
-            Q(username=username_or_email) | Q(email=username_or_email)
-        )
+            Q(username=username_or_email) | Q(email=username_or_email))
         if user:
             user = user.filter(password=password)
             if user:

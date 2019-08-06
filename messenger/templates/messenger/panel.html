@@ -47,7 +47,7 @@
                     <div class="message-body">
                         <a href="{{ notification.url }}">{{ notification.message }}</a>
                         <p>Il y'a {{ notification.date_created|timesince:datetime }}
-                        <a class="delete" href="{% url 'delete_notification' notification.pk %}" title='delete'></a></p>
+                        <a class="delete" href="{% url 'delete_notification' notification.pk %}?next={{ request.path }}" title='delete'></a></p>
                     </div>
                 {% empty %}
                     <div class="message-body">

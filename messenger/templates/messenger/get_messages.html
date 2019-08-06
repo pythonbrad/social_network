@@ -3,7 +3,7 @@
     <h1 class="title">
         Discussion with {{ user.username }} ({{ messages.paginator.count }})
     </h1>
-    <a href="{% url 'user_details' user.pk %}" class="button is-link is-small">See the details</a>
+    <a href="{% url 'user_details' user.pk %}" class="button is-link is-small">See his details</a>
     <a href="{% url 'send_message' user.pk %}" class="button is-primary is-small">Send message</a>
     <br/>.
     {% for message in messages %}

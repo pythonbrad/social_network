@@ -6,13 +6,13 @@
         <div class="card">
             <p>Depuis {{ friendship.date_created|timesince:datetime }}</p>
             {% if friendship.sender != request.user %}
-                <a href="{% url 'user_details' friendship.sender.pk %}" title="Click to see the details">
+                <a href="{% url 'user_details' friendship.sender.pk %}" title="Click to see his details">
                     <header class="card-header">
                         Demande d'amitier de {{ friendship.sender }}
                     </header>
                 </a>
             {% else %}
-                <a href="{% url 'user_details' friendship.receiver.pk %}" title="Click to see the details">
+                <a href="{% url 'user_details' friendship.receiver.pk %}" title="Click to see his details">
                     <header class="card-header">
                         Demande d'amitier avec {{ friendship.receiver }} en attente
                     </header>

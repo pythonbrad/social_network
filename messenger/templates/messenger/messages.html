@@ -1,20 +1,20 @@
 {% extends 'messenger/panel.html' %}
 {% block column_contains %}
-    <h1 class="title">Select a discussion ({{ datas.paginator.count }})</h1>
-    {% for data in datas %}
+    <h1 class="title">Select a discussion ({{ users.paginator.count }})</h1>
+    {% for last_message in last_messages %}
         <div class="card">
             <header class="card-header">
-                {{ data.user.username }}
+                {{ last_message.user.username }}
             </header>
             <div class="card-content">
-                <p class="label">last message: {{ data.message|truncatechars:30 }}</p>
-                <a href="{% url 'get_messages' data.user.pk %}" class="button is-info is-small">Open</a>
+                <p class="label">Last message: {{ last_message.message.contains|truncatechars:30 }}</p>
+                <a href="{% url 'get_messages' last_message.user.pk %}" class="button is-info is-small">Open</a>
             </div>
         </div>
     {% empty %}
         Nothing for the moment
     {% endfor %}
-    {% with datas as data_to_pagin %}
+    {% with users as data_to_pagin %}
         {% include 'messenger/pagin.html' %}
     {% endwith %}
 {% endblock %}

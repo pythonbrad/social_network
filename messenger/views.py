@@ -188,12 +188,13 @@ def delete_friend_view(request, pk):
 
 def delete_notification_view(request, pk):
     if request.user.is_authenticated:
+        redirect_to = request.GET.get('next', 'panel')
         # receiver=request.user for more security
         notification = get_object_or_404(Notification,
                                          receiver=request.user,
                                          pk=pk)
         notification.delete()
-        return redirect('panel')
+        return redirect(redirect_to)
     else:
         return redirect('login')
 
@@ -261,70 +262,37 @@ def get_messages_view(request, pk):
                 'datetime': timezone.now(),
                 'user': user,
             })
+    else:
+        return redirect('login')
 
 
 def messages_view(request):
     if request.user.is_authenticated:
-        messages = request.user.messages.all()
-        datas = []
-        user_added = []
-        for message in messages:
-            if message.sender != request.user and message.sender not in user_added:
-                user_added.append(message.sender)
-                datas.append({
-                    'user': message.sender,
-                    'message': message.contains
-                })
-            elif message.receiver != request.user and message.receiver not in user_added:
-                user_added.append(message.receiver)
-                datas.append({
-                    'user': message.receiver,
-                    'message': message.contains
-                })
-            else:
-                pass
+        users = [contact.user for contact in request.user.contacts.all()]
         page = request.GET.get('page', 1)
-        paginator = Paginator(datas, 10)
+        paginator = Paginator(users, 10)
         try:
-            datas = paginator.page(page)
+            users = paginator.page(page)
         except PageNotAnInteger:
-            datas = paginator.page(1)
+            users = paginator.page(1)
         except EmptyPage:
-            datas = paginator.page(paginator.num_pages)
-        return render(request, 'messenger/messages.html', {
-            'title': 'Messages',
-            'datetime': timezone.now(),
-            'datas': datas,
-        })
+            users = paginator.page(paginator.num_pages)
+        last_messages = []
+        for user in users:
+            last_messages.append({
+                'user':
+                user,
+                'message':
+                Message.objects.filter(
+                    Q(sender=user, receiver=request.user)
+                    | Q(sender=request.user, receiver=user))[0]
+            })
+        return render(
+            request, 'messenger/messages.html', {
+                'title': 'Messages',
+                'datetime': timezone.now(),
+                'users': users,
+                'last_messages': last_messages,
+            })
     else:
         return redirect('login')
-
-'''
-try:
-    u1 = User.objects.create(username='fo',
-                             date_of_birth='2001-05-05',
-                             password='qwerty123')
-    u1.is_superuser = True
-    u1.is_staff = True
-    u1.save()
-    for i in range(100, 150):
-        u = User.objects.create(date_of_birth='2001-05-05',
-                                username='sdfsdf%s' % i)
-        f = Friendship.objects.create(sender=u, receiver=u1)
-        if i % 2:
-            f.is_valided = True
-            f.save()
-    u.delete()
-    for i in range(2):
-        u2 = User.objects.create(date_of_birth='2001-05-05',
-                                 username='sdfsdf%s' % i)
-        print(u2)
-        f = Friendship.objects.create(sender=u2, receiver=u1)
-        if i % 2:
-            f.is_valided = True
-            f.save()
-        for i in range(50):
-            Message.objects.create(sender=u2, receiver=u1, contains="hello")
-except Exception as err:
-    print(err)
-'''
