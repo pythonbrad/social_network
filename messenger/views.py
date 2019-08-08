@@ -255,6 +255,11 @@ def get_messages_view(request, pk):
             messages = paginator.page(1)
         except EmptyPage:
             messages = paginator.page(paginator.num_pages)
+        for message in messages:
+            if not message.received and message.receiver == request.user:
+                message.received = True
+                message.date_received = timezone.now()
+                message.save()
         return render(
             request, 'messenger/get_messages.html', {
                 'title': 'Messages',
@@ -262,6 +267,17 @@ def get_messages_view(request, pk):
                 'datetime': timezone.now(),
                 'user': user,
             })
+    else:
+        return redirect('login')
+
+
+def delete_message_view(request, pk):
+    if request.user.is_authenticated:
+        redirect_to = request.GET.get('next', 'messages')
+        # receiver=request.user for more security
+        message = get_object_or_404(Message, sender=request.user, pk=pk)
+        message.delete()
+        return redirect(redirect_to)
     else:
         return redirect('login')
 
@@ -293,6 +309,31 @@ def messages_view(request):
                 'datetime': timezone.now(),
                 'users': users,
                 'last_messages': last_messages,
+            })
+    else:
+        return redirect('login')
+
+
+def list_notifications_view(request):
+    if request.user.is_authenticated:
+        notifications = request.user.notifications.all()
+        page = request.GET.get('page', 1)
+        paginator = Paginator(notifications, 10)
+        try:
+            notifications = paginator.page(page)
+        except PageNotAnInteger:
+            notifications = paginator.page(1)
+        except EmptyPage:
+            notifications = paginator.page(paginator.num_pages)
+        for notification in notifications:
+            if not notification.received:
+                notification.received = True
+                notification.save()
+        return render(
+            request, 'messenger/notifications.html', {
+                'title': 'Notifications',
+                'datetime': timezone.now(),
+                'notifications': notifications,
             })
     else:
         return redirect('login')

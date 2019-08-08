@@ -1,6 +1,6 @@
 {% extends 'messenger/panel.html' %}
 {% block column_contains %}
-    <h1 class="title">
+    <h1 class="subtitle">
         Discussion with {{ user.username }} ({{ messages.paginator.count }})
     </h1>
     <a href="{% url 'user_details' user.pk %}" class="button is-link is-small">See his details</a>
@@ -10,10 +10,22 @@
         <div class="message is-small {% if message.sender == request.user %}is-link{% else %}is-primary{% endif %}">
             <div class="message-header">
                 <p>{{ message.sender }}</p>
-                <p>(il y'a {{ message.date_created|timesince:datetime }})</p>
+                {% if message.sender == request.user %}
+                    <a class="delete is-small" href="{% url 'delete_message' message.pk %}?next={{ request.path }}"></a>
+                {% endif %}
             </div>
             <div class="message-body">
-                {{ message.contains }}
+                <p>{{ message.contains }}</p>
+                <p><i>Send by {{ message.sender }}: Il y'a {{ message.date_created|timesince:datetime }}</i></p>
+                <p>
+                    <i>
+                        {% if message.received %}
+                            Received by {{ message.receiver }}: Il y'a {{ message.date_received|timesince:datetime }}
+                        {% else %}
+                            Not received by {{ message.receiver }}
+                        {% endif %}
+                    </i>
+                </p>
             </div>
         </div>
     {% empty %}

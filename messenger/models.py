@@ -61,7 +61,7 @@ class Friendship(models.Model):
     date_created = models.DateTimeField(default=timezone.now)
 
     class Meta:
-        ordering = ['-date_created']
+        ordering = ['is_valided', '-date_created']
 
     def __str__(self):
         return "%s and %s" % (self.sender, self.receiver)
@@ -75,12 +75,12 @@ class Message(models.Model):
                                  related_name='message_receiver',
                                  on_delete=models.CASCADE)
     contains = models.TextField(max_length=512)
-    seen = models.BooleanField(default=False)
-    date_received = models.DateTimeField(default=timezone.now)
+    received = models.BooleanField(default=False)
+    date_received = models.DateTimeField(blank=True)
     date_created = models.DateTimeField(default=timezone.now)
 
     class Meta:
-        ordering = ['-date_created']
+        ordering = ['received', '-date_created']
 
     def __str__(self):
         return self.contains
@@ -92,6 +92,7 @@ class Notification(models.Model):
                                  on_delete=models.CASCADE,
                                  db_constraint=False)
     message = models.CharField(max_length=50)
+    received = models.BooleanField(default=False)
     date_created = models.DateTimeField(default=timezone.now)
     obj_pk = models.IntegerField()
     url = models.URLField(blank=True)
@@ -100,7 +101,7 @@ class Notification(models.Model):
         return self.message
 
     class Meta:
-        ordering = ['-date_created']
+        ordering = ['received', '-date_created']
 
 
 post_save.connect(post_save_friendship, sender=Friendship)

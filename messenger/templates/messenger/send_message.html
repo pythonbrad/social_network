@@ -1,6 +1,6 @@
 {% extends 'messenger/panel.html' %}
 {% block column_contains %}
-    <h1 class="title">Message to {{ user.username }}</h1>
+    <h1 class="subtitle">Message to {{ user.username }}</h1>
     <form action="{% url 'send_message' user.pk %}" method="POST">
         {% csrf_token %}
         {% for field in form %}

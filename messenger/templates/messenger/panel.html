@@ -1,60 +1,39 @@
 {% extends 'messenger/base.html' %}
 {% block contains %}
+    <div class="tabs is-centered is-fullwidth is-small">
+        <ul>
+            <li><a>Actualite</a></li>
+            <li><a href="{% url 'messages' %}">
+                Messages
+                {% with request.user.messages.first as rumf %}
+                    {% if rumf.received is False and rumf.receiver == request.user %}
+                        &nbsp;<font color="red">(New)</font>
+                    {% endif %}
+                {% endwith %}
+            </a></li>
+            <li><a href="{% url 'list_friends' %}">Friends</a></li>
+            <li><a href="{% url 'list_friendships' %}">
+                Friendships
+                {% if request.user.waiting_friends.count %}
+                    &nbsp;<font color="red">(New)</font>
+                {% endif %}
+            </a></li>
+            <li><a href="{% url 'list_notifications' %}">
+                Notifications
+                {% if request.user.notifications.first.received is False %}
+                    &nbsp;<font color="red">(New)</font>
+                {% endif %}
+            <li><a>Settings</a></li>
+        </ul>
+    </div>
     <div class='columns is-mobile'>
-        <div class="column is-one-fifth">
-            <div class="message is-info is-small">
-                <header class="message-header">
-                    Menu
-                </header>
-                <a>
-                    <div class="message-body">
-                        Actualite
-                    </div>
-                </a>
-                <a href="{% url 'messages' %}">
-                    <div class="message-body">
-                        Messages
-                    </div>
-                </a>
-                <a href="{% url 'list_friends' %}">
-                    <div class="message-body">
-                        Friends
-                    </div>
-                </a>
-                <a href="{% url 'list_friendships' %}">
-                    <div class="message-body">
-                        Friendship
-                    </div>
-                </a>
-                <a>
-                    <div class="message-body">
-                        Settings
-                    </div>
-                </a>
-            </div>
-        </div>
-        <div class="column is-half">
+        <div class="column is-one-fifth"></div>
+        <div class="column">
             {% block column_contains %}
                 <center>Select a menu</center>
             {% endblock %}
         </div>
         <div class="column is-one-fifth">
-            <div class="message is-info is-small">
-                <header class="message-header">
-                    Notification ({{ request.user.notifications.all|length }})
-                </header>
-                {% for notification in request.user.notifications.all|slice:":5" %}
-                    <div class="message-body">
-                        <a href="{{ notification.url }}">{{ notification.message }}</a>
-                        <p>Il y'a {{ notification.date_created|timesince:datetime }}
-                        <a class="delete" href="{% url 'delete_notification' notification.pk %}?next={{ request.path }}" title='delete'></a></p>
-                    </div>
-                {% empty %}
-                    <div class="message-body">
-                        No notifications
-                    </div>
-                {% endfor %}
-            </div>
         </div>
     </div>
 {% endblock %}

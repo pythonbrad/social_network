@@ -1,6 +1,6 @@
 {% extends 'messenger/panel.html' %}
 {% block column_contains %}
-    <h1 class="title">List friends ({{ friends.paginator.count }})</h1>
+    <h1 class="subtitle">List friends ({{ friends.paginator.count }})</h1>
     {% for friend in friends %}
         <div class="card">
             <header class="card-header">
@@ -8,8 +8,11 @@
             </header>
             <div class="card-content">
                 <p>photo</p>
-                <a href="{% url 'send_message' friend.pk %}" class="button is-link is-small">Send message</a>&nbsp;&nbsp;<a href="{% url 'user_details' friend.pk %}" class="button is-link is-small" title="Click to see his details">See his details</a>
             </div>
+            <footer class="card-footer">
+                <a href="{% url 'send_message' friend.pk %}" class="button is-link is-small card-footer-item">Send message</a>
+                <a href="{% url 'user_details' friend.pk %}" class="button is-link is-small card-footer-item" title="Click to see his details">See his details</a>
+            </footer>
         </div>
     {% empty %}
         No friends for the moment

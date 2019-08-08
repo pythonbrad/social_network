@@ -8,7 +8,7 @@
             <p>Adhesion: {{ user.date_joined }}</p>
             <p>Date of birth: {{ user.date_of_birth }}</p>
             {% if user in friends %}
-                <p>Friends: {{ user.friends.all|length }}</p>
+                <p>Friends: {{ user.friends.count }}</p>
                 <p>Active: {{ user.is_active }}</p>
                 <p>Date joined: {{ user.date_created }}</p>
                 <p>Last login: Il y'a {{ user.last_login|timesince:datetime }}</p>
@@ -18,13 +18,13 @@
             {% endif %}
         </div>
         <footer class="card-footer">
-            <a href="{% url 'send_message' user.pk %}" class="button is-link is-small">Send message</a>
+            <a href="{% url 'send_message' user.pk %}" class="button is-link is-small card-footer-item">Send message</a>
             {% if user in friends %}
-                <a class="button is-danger is-small" href="{% url 'delete_friend' user.pk %}">Delete friendship</a>
+                <a class="button is-danger is-small card-footer-item" href="{% url 'delete_friend' user.pk %}">Delete friendship</a>
             {% elif user in waiting_friends %}
-                <a class="button is-danger is-small" disabled>Friendship in waiting</a>
+                <a class="button is-danger is-small card-footer-item" disabled>Friendship in waiting</a>
             {% else %}
-                <a class="button is-success is-small" href="{% url 'create_friendship' user.pk %}">
+                <a class="button is-success is-small card-footer-item" href="{% url 'create_friendship' user.pk %}">
                     Send friendship
                 </a>
             {% endif %}

@@ -1,0 +1,24 @@
+{% extends 'messenger/panel.html' %}
+{% block column_contains %}
+    <div class="message is-small">
+        <div class="message-header">
+            <span>Notification ({{ notifications.paginator.count }})</span>
+        </div>
+        {% for notification in notifications %}
+            <div class="message-body">
+                <a href="{{ notification.url }}">
+                    {{ notification }}
+                </a>&nbsp;
+                <a class="delete is-small" title="delete" href="{% url 'delete_notification' notification.pk %}?next={{ request.path }}"></a>
+                <p>{{ notification.date_created }}</p>
+            </div>
+        {% empty %}
+            <div class="message-body">
+                Nothing for the moment
+            </div>
+        {% endfor %}
+        {% with notifications as data_to_pagin %}
+            {% include 'messenger/pagin.html' %}
+        {% endwith %}
+    </div>
+{% endblock %}

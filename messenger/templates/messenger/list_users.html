@@ -1,6 +1,6 @@
 {% extends 'messenger/panel.html' %}
 {% block column_contains %}
-    <h1 class="title">List users ({{ users.paginator.count }})</h1>
+    <h1 class="subtitle">List users ({{ users.paginator.count }})</h1>
     {% for user in users %}
         <div class="card">
             <a href="{% url 'user_details' user.pk %}" title="Click to see his details">
@@ -16,10 +16,9 @@
                 {% if user in friends %}
                     Already friend
                 {% elif user in waiting_friends %}
-                    <a class="button is-small is-loading is-success"></a>
-                    Friendship in waiting
+                    <a class="button is-danger is-small card-footer-item" disabled>Friendship in waiting</a>
                 {% else %}
-                    <a class="button is-success is-small" href="{% url 'create_friendship' user.pk %}">
+                    <a class="button is-success is-small card-footer-item" href="{% url 'create_friendship' user.pk %}">
                         Send friendship
                     </a>
                 {% endif %}

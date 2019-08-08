@@ -50,12 +50,14 @@ def pre_delete_friendship(sender, instance, **kwargs):
             receiver=instance.sender,
             message='your friendship with %s has been canceled' %
             (instance.receiver),
+            url=reverse('user_details', args=(instance.receiver.pk,)),
             obj_pk=instance.pk,
         )
         instance.receiver.notifications.create(
             receiver=instance.receiver,
             message='your friendship with %s has been canceled' %
             (instance.sender),
+            url=reverse('user_details', args=(instance.sender.pk,)),
             obj_pk=instance.pk,
         )
     else:
@@ -63,6 +65,7 @@ def pre_delete_friendship(sender, instance, **kwargs):
             receiver=instance.sender,
             message='your friendship with %s has been refused' %
             (instance.receiver),
+            url=reverse('user_details', args=(instance.receiver.pk,)),
             obj_pk=instance.pk,
         )
 
@@ -72,13 +75,18 @@ def post_save_message(sender, instance, created, **kwargs):
         instance.sender.messages.add(instance)
         instance.receiver.messages.add(instance)
 
-        if not instance.sender.contacts.filter(own=instance.sender, user=instance.receiver):
-            instance.sender.contacts.create(own=instance.sender, user=instance.receiver)
-            instance.receiver.contacts.create(own=instance.receiver, user=instance.sender)
+        if not instance.sender.contacts.filter(own=instance.sender,
+                                               user=instance.receiver):
+            instance.sender.contacts.create(own=instance.sender,
+                                            user=instance.receiver)
+            instance.receiver.contacts.create(own=instance.receiver,
+                                              user=instance.sender)
         else:
-            _ = instance.sender.contacts.filter(own=instance.sender, user=instance.receiver)
+            _ = instance.sender.contacts.filter(own=instance.sender,
+                                                user=instance.receiver)
             _.date_last_message = timezone.now()
-            _ = instance.receiver.contacts.filter(own=instance.receiver, user=instance.sender)
+            _ = instance.receiver.contacts.filter(own=instance.receiver,
+                                                  user=instance.sender)
             _.date_last_message = timezone.now()
 
         instance.receiver.notifications.create(

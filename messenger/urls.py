@@ -27,6 +27,9 @@ urlpatterns = [
     path('notifications/delete/<int:pk>',
          views.delete_notification_view,
          name='delete_notification'),
+    path('notifications',
+         views.list_notifications_view,
+         name='list_notifications'),
     path('users/<int:pk>',
          views.user_details_view,
          name='user_details'),
@@ -39,4 +42,7 @@ urlpatterns = [
     path('messages/<int:pk>',
          views.get_messages_view,
          name='get_messages'),
+    path('messages/delete/<int:pk>',
+         views.delete_message_view,
+         name='delete_message'),
 ]

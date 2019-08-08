@@ -1,15 +1,18 @@
 {% extends 'messenger/panel.html' %}
 {% block column_contains %}
-    <h1 class="title">Select a discussion ({{ users.paginator.count }})</h1>
+    <h1 class="subtitle">Select a discussion ({{ users.paginator.count }})</h1>
     {% for last_message in last_messages %}
         <div class="card">
             <header class="card-header">
-                {{ last_message.user.username }}
+                {{ last_message.user.username }}{% if not last_message.message.received and request.user == last_message.message.receiver %}&nbsp;<a class="button is-small is-primary">Has New</a>{% endif %}</a>
             </header>
             <div class="card-content">
-                <p class="label">Last message: {{ last_message.message.contains|truncatechars:30 }}</p>
-                <a href="{% url 'get_messages' last_message.user.pk %}" class="button is-info is-small">Open</a>
+                <p class="label">Last message:</p><p>{{ last_message.message.contains|truncatechars:30 }}</p>
+                <i>Il y'a {{ last_message.message.date_created|timesince:datetime }}</i>
             </div>
+            <footer class="card-footer">
+                <a href="{% url 'get_messages' last_message.user.pk %}" class="button is-small card-footer-item is-info">Open</a>
+            </footer>
         </div>
     {% empty %}
         Nothing for the moment
