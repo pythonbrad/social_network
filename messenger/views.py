@@ -18,7 +18,7 @@ def home_view(request):
 def signin_view(request):
     if not request.user.is_authenticated:
         if request.POST:
-            form = SigninForm(request.POST)
+            form = SigninForm(request.POST, request.FILES)
             if form.is_valid():
                 form.save()
                 return redirect('login')
@@ -223,10 +223,11 @@ def send_message_view(request, pk):
             form = MessageForm(request.POST)
             if form.is_valid():
                 if user != request.user:
+                    message = form.cleaned_data['contains']
                     Message.objects.create(
                         sender=request.user,
                         receiver=user,
-                        contains=form.cleaned_data['contains'])
+                        contains=message)
                 return redirect(reverse('get_messages', args=(pk, )))
         else:
             form = MessageForm()
@@ -295,13 +296,14 @@ def messages_view(request):
             users = paginator.page(paginator.num_pages)
         last_messages = []
         for user in users:
+            message = Message.objects.filter(
+                    Q(sender=user, receiver=request.user)
+                    | Q(sender=request.user, receiver=user))
             last_messages.append({
                 'user':
                 user,
                 'message':
-                Message.objects.filter(
-                    Q(sender=user, receiver=request.user)
-                    | Q(sender=request.user, receiver=user))[0]
+                message[0] if message else [],
             })
         return render(
             request, 'messenger/messages.html', {

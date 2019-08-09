@@ -31,12 +31,7 @@ class SigninForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = [
-            'username',
-            'email',
-            'date_of_birth',
-            'password',
-        ]
+        fields = ['username', 'email', 'date_of_birth', 'password', 'photo']
 
     def clean_username(self):
         username = self.cleaned_data['username']
@@ -51,9 +46,8 @@ class SigninForm(forms.ModelForm):
                 'username',
                 'username is too long, max %s characters' % max_length)
         elif " " in username:
-            self.add_error(
-                'username',
-                'username should not contains the space')
+            self.add_error('username',
+                           'username should not contains the space')
         else:
             pass
         for i in string.punctuation:
@@ -74,6 +68,20 @@ class SigninForm(forms.ModelForm):
         else:
             pass
         return password
+
+    def clean_photo(self):
+        photo = self.cleaned_data['photo']
+        if not type(photo) is str:
+            if photo.size > 1024*1024:
+                self.add_error(
+                    'photo',
+                    'The photo should be lower to 1024Ko, this photo has %s Ko' %
+                    photo.size)
+            else:
+                pass
+        else:
+            pass
+        return photo
 
 
 class LoginForm(forms.Form):

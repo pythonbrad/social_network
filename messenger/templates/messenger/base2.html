@@ -8,7 +8,7 @@
                 <header class="card-header title">{{ title }}</header>
                 <div class="card-content" style="">
                     {% block form %}
-                        <form action="{% block form_url %}{% endblock %}" method="POST">
+                        <form action="{% block form_url %}{% endblock %}" method="POST" enctype="multipart/form-data">
                             {% csrf_token %}
                             {% for field in form %}
                                 <div class="field">

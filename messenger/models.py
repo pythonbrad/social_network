@@ -7,6 +7,7 @@ from .signals import post_save_friendship
 from .signals import pre_delete_friendship
 from .signals import post_save_message
 from .signals import pre_delete_message
+from django.conf import settings
 
 
 # Create your models here.
@@ -14,6 +15,10 @@ class User(AbstractUser):
     username = models.CharField(unique=True, max_length=50)
     date_of_birth = models.DateField()
     email = models.EmailField(unique=True)
+    photo = models.ImageField(upload_to='profil_photo',
+                              blank=True,
+                              default=settings.MEDIA_ROOT +
+                              '/profil_photo/no-image.png',)
     notifications = models.ManyToManyField('Notification')
     friends = models.ManyToManyField('User', related_name='friends_list')
     waiting_friends = models.ManyToManyField(
@@ -74,9 +79,9 @@ class Message(models.Model):
     receiver = models.ForeignKey(User,
                                  related_name='message_receiver',
                                  on_delete=models.CASCADE)
-    contains = models.TextField(max_length=512)
+    contains = models.TextField(max_length=2048)
     received = models.BooleanField(default=False)
-    date_received = models.DateTimeField(blank=True)
+    date_received = models.DateTimeField(default=timezone.now)
     date_created = models.DateTimeField(default=timezone.now)
 
     class Meta:

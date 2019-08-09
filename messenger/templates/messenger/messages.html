@@ -4,11 +4,30 @@
     {% for last_message in last_messages %}
         <div class="card">
             <header class="card-header">
-                {{ last_message.user.username }}{% if not last_message.message.received and request.user == last_message.message.receiver %}&nbsp;<a class="button is-small is-primary">Has New</a>{% endif %}</a>
+                {{ last_message.user.username }}
+                {% if last_message.message %}
+                    {% if not last_message.message.received and request.user == last_message.message.receiver %}
+                        &nbsp;
+                        <a class="button is-small is-primary">
+                            Has New
+                        </a>
+                    {% endif %}
+                {% endif %}
             </header>
             <div class="card-content">
-                <p class="label">Last message:</p><p>{{ last_message.message.contains|truncatechars:30 }}</p>
-                <i>Il y'a {{ last_message.message.date_created|timesince:datetime }}</i>
+                <div class="card-image" align="center">
+                    {% if user.photo %}
+                        <img src="{{ user.photo.url }}" width="100" height="100">
+                    {% else %}
+                        no image
+                    {% endif %}
+                </div>
+                {% if last_message.message %}
+                    <p class="label">Last message:</p><p>{{ last_message.message.contains|truncatechars:30 }}</p>
+                    <i>Il y'a {{ last_message.message.date_created|timesince:datetime }}</i>
+                {% else %}
+                    No messages
+                {% endif %}
             </div>
             <footer class="card-footer">
                 <a href="{% url 'get_messages' last_message.user.pk %}" class="button is-small card-footer-item is-info">Open</a>
