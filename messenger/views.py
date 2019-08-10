@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404, reverse
-from .forms import SigninForm, LoginForm, MessageForm
+from .forms import SigninForm, LoginForm, MessageForm, ArticleForm
 from django.contrib import auth
 from django.utils import timezone
-from .models import Message, Friendship, User, Notification
+from .models import Message, Friendship, User, Notification, Article
 from django.db.models import Q
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
@@ -60,7 +60,6 @@ def panel_view(request):
     if request.user.is_authenticated:
         return render(request, 'messenger/panel.html', {
             'title': 'Panel',
-            'datetime': timezone.now(),
         })
     else:
         return redirect('login')
@@ -146,7 +145,6 @@ def list_users_view(request):
                 'users': users,
                 'friends': friends,
                 'waiting_friends': waiting_friends,
-                'datetime': timezone.now(),
             })
     else:
         return redirect('login')
@@ -167,7 +165,6 @@ def list_friends_view(request):
             request, 'messenger/list_friends.html', {
                 'title': 'List friends',
                 'friends': friends,
-                'datetime': timezone.now(),
             })
     else:
         return redirect('login')
@@ -220,14 +217,12 @@ def send_message_view(request, pk):
     if request.user.is_authenticated:
         user = get_object_or_404(User, pk=pk)
         if request.POST:
-            form = MessageForm(request.POST)
+            form = MessageForm(request.POST, request.FILES)
             if form.is_valid():
                 if user != request.user:
-                    message = form.cleaned_data['contains']
-                    Message.objects.create(
-                        sender=request.user,
-                        receiver=user,
-                        contains=message)
+                    form.instance.sender = request.user
+                    form.instance.receiver = user
+                    form.save()
                 return redirect(reverse('get_messages', args=(pk, )))
         else:
             form = MessageForm()
@@ -235,7 +230,6 @@ def send_message_view(request, pk):
             request, 'messenger/send_message.html', {
                 'title': 'Send message',
                 'user': user,
-                'datetime': timezone.now(),
                 'form': form,
             })
     else:
@@ -337,5 +331,63 @@ def list_notifications_view(request):
                 'datetime': timezone.now(),
                 'notifications': notifications,
             })
+    else:
+        return redirect('login')
+
+
+def create_article_view(request):
+    if request.user.is_authenticated:
+        if request.POST:
+            form = ArticleForm(request.POST, request.FILES)
+            if form.is_valid():
+                form.instance.author = request.user
+                form.save()
+                return redirect('articles')
+        else:
+            form = ArticleForm()
+        return render(
+            request, 'messenger/create_article.html', {
+                'title': 'Create article',
+                'form': form,
+            })
+    else:
+        return redirect('login')
+
+
+def articles_view(request):
+    if request.user.is_authenticated:
+        articles = Article.objects.all()
+        _ = []
+        friends = request.user.friends.all()
+        for article in articles:
+            if article.author in friends or article.author == request.user:
+                _.append(article)
+            else:
+                pass
+        articles = _
+        page = request.GET.get('page', 1)
+        paginator = Paginator(articles, 10)
+        try:
+            articles = paginator.page(page)
+        except PageNotAnInteger:
+            articles = paginator.page(1)
+        except EmptyPage:
+            articles = paginator.page(paginator.num_pages)
+        return render(
+            request, 'messenger/articles.html', {
+                'title': 'Articles',
+                'datetime': timezone.now(),
+                'articles': articles,
+            })
+    else:
+        return redirect('login')
+
+
+def delete_article_view(request, pk):
+    if request.user.is_authenticated:
+        redirect_to = request.GET.get('next', 'articles')
+        article = get_object_or_404(Article, author=request.user, pk=pk)
+        article.delete()
+        return redirect(redirect_to)
     else:
         return redirect('login')

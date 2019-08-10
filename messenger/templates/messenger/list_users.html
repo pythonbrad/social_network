@@ -8,14 +8,14 @@
                     {{ user.username }}
                 </header>
             </a>
-            <div class="card-image" align="center">
-                {% if user.photo %}
-                    <img src="{{ user.photo.url }}" width="100" height="100">
-                {% else %}
-                    no image
-                {% endif %}
-            </div>
             <div class="card-content">
+                <div class="card-image" align="center">
+                    {% if user.photo %}
+                        <img src="{{ user.photo.url }}">
+                    {% else %}
+                        no image
+                    {% endif %}
+                </div>
                 <p>Adhesion: {{ user.date_joined }}</p>
                 <p>Date of birth: {{ user.date_of_birth }}</p>
             </div>

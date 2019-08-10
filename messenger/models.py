@@ -7,18 +7,23 @@ from .signals import post_save_friendship
 from .signals import pre_delete_friendship
 from .signals import post_save_message
 from .signals import pre_delete_message
+from .signals import post_save_article
 from django.conf import settings
+
+
+def user_directory_path(instance, filename):
+    # file will be uploaded to MEDIA_ROOT/user_<pk>/<filename>'
+    return 'user_{0}/{1}'.format(instance.get_user().pk, filename)
 
 
 # Create your models here.
 class User(AbstractUser):
-    username = models.CharField(unique=True, max_length=50)
+    username = models.CharField(unique=True, max_length=50, primary_key=True)
     date_of_birth = models.DateField()
     email = models.EmailField(unique=True)
-    photo = models.ImageField(upload_to='profil_photo',
+    photo = models.ImageField(upload_to=user_directory_path,
                               blank=True,
-                              default=settings.MEDIA_ROOT +
-                              '/profil_photo/no-image.png',)
+                              default=settings.MEDIA_ROOT + '/no-image.png')
     notifications = models.ManyToManyField('Notification')
     friends = models.ManyToManyField('User', related_name='friends_list')
     waiting_friends = models.ManyToManyField(
@@ -35,6 +40,9 @@ class User(AbstractUser):
 
     class Meta:
         ordering = ['-date_of_birth']
+
+    def get_user(self):
+        return self
 
 
 class Contact(models.Model):
@@ -79,7 +87,8 @@ class Message(models.Model):
     receiver = models.ForeignKey(User,
                                  related_name='message_receiver',
                                  on_delete=models.CASCADE)
-    contains = models.TextField(max_length=2048)
+    contains = models.TextField(max_length=5000)
+    photo = models.ImageField(upload_to=user_directory_path, blank=True)
     received = models.BooleanField(default=False)
     date_received = models.DateTimeField(default=timezone.now)
     date_created = models.DateTimeField(default=timezone.now)
@@ -90,13 +99,16 @@ class Message(models.Model):
     def __str__(self):
         return self.contains
 
+    def get_user(self):
+        return self.sender
+
 
 class Notification(models.Model):
     receiver = models.ForeignKey(User,
                                  related_name='notification_receiver',
                                  on_delete=models.CASCADE,
                                  db_constraint=False)
-    message = models.CharField(max_length=50)
+    message = models.CharField(max_length=100)
     received = models.BooleanField(default=False)
     date_created = models.DateTimeField(default=timezone.now)
     obj_pk = models.IntegerField()
@@ -109,7 +121,24 @@ class Notification(models.Model):
         ordering = ['received', '-date_created']
 
 
+class Article(models.Model):
+    author = models.ForeignKey(User, related_name='article_author', on_delete=models.CASCADE)
+    contains = models.TextField(max_length=5000)
+    photo = models.ImageField(upload_to=user_directory_path, blank=True)
+    date_created = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return self.contains
+
+    class Meta:
+        ordering = ['-date_created']
+
+    def get_user(self):
+        return self.author
+
+
 post_save.connect(post_save_friendship, sender=Friendship)
 pre_delete.connect(pre_delete_friendship, sender=Friendship)
 post_save.connect(post_save_message, sender=Message)
 pre_delete.connect(pre_delete_message, sender=Message)
+post_save.connect(post_save_article, sender=Article)

@@ -15,6 +15,9 @@
                 {% endif %}
             </div>
             <div class="message-body">
+                {% if message.photo %}
+                    <img src="{{ message.photo.url }}">
+                {% endif %}
                 <p>{{ message.contains }}</p>
                 <p><i>Send by {{ message.sender }}: Il y'a {{ message.date_created|timesince:datetime }}</i></p>
                 <p>

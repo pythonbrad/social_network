@@ -10,7 +10,7 @@
                     {{ notification }}
                 </a>&nbsp;
                 <a class="delete is-small" title="delete" href="{% url 'delete_notification' notification.pk %}?next={{ request.path }}"></a>
-                <p>{{ notification.date_created }}</p>
+                <p>Il y'a {{ notification.date_created|timesince:datetime }}</p>
             </div>
         {% empty %}
             <div class="message-body">

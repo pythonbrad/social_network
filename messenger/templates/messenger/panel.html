@@ -2,7 +2,7 @@
 {% block contains %}
     <div class="tabs is-centered is-fullwidth is-small">
         <ul>
-            <li><a>Actualite</a></li>
+            <li><a href="{% url 'articles' %}">Actualite</a></li>
             <li><a href="{% url 'messages' %}">
                 Messages
                 {% with request.user.messages.first as rumf %}

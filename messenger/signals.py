@@ -46,13 +46,6 @@ def pre_delete_friendship(sender, instance, **kwargs):
     instance.receiver.friends.remove(instance.sender)
 
     if instance.is_valided:
-        instance.sender.notifications.create(
-            receiver=instance.sender,
-            message='your friendship with %s has been canceled' %
-            (instance.receiver),
-            url=reverse('user_details', args=(instance.receiver.pk,)),
-            obj_pk=instance.pk,
-        )
         instance.receiver.notifications.create(
             receiver=instance.receiver,
             message='your friendship with %s has been canceled' %
@@ -61,13 +54,14 @@ def pre_delete_friendship(sender, instance, **kwargs):
             obj_pk=instance.pk,
         )
     else:
-        instance.sender.notifications.create(
-            receiver=instance.sender,
-            message='your friendship with %s has been refused' %
-            (instance.receiver),
-            url=reverse('user_details', args=(instance.receiver.pk,)),
-            obj_pk=instance.pk,
-        )
+        pass
+    instance.sender.notifications.create(
+        receiver=instance.sender,
+        message='your friendship with %s has been canceled' %
+        (instance.receiver),
+        url=reverse('user_details', args=(instance.receiver.pk,)),
+        obj_pk=instance.pk,
+    )
 
 
 def post_save_message(sender, instance, created, **kwargs):
@@ -103,3 +97,16 @@ def pre_delete_message(sender, instance, **kwargs):
     notifications = instance.receiver.notifications.filter(obj_pk=instance.pk)
     for notification in notifications:
         notification.delete()
+
+
+def post_save_article(sender, instance, created, **kwargs):
+    if created:
+        for friend in instance.author.friends.all():
+            friend.notifications.create(
+                receiver=friend,
+                message='%s has publish a new article' % instance.author,
+                obj_pk=instance.pk,
+                url=reverse('articles'),
+            )
+    else:
+        pass

@@ -1,6 +1,7 @@
 from django import forms
-from .models import Message, User
+from .models import Message, User, Article
 from django.db.models import Q
+from django.utils import timezone
 import string
 
 
@@ -56,7 +57,7 @@ class SigninForm(forms.ModelForm):
                     'username',
                     'username should not contains a special character')
                 break
-        return username
+        return username.lower()
 
     def clean_password(self):
         password = self.cleaned_data['password']
@@ -72,16 +73,23 @@ class SigninForm(forms.ModelForm):
     def clean_photo(self):
         photo = self.cleaned_data['photo']
         if not type(photo) is str:
-            if photo.size > 1024*1024:
+            max_size = 1024 * 1024  # 1MB
+            if photo.size > max_size:
                 self.add_error(
-                    'photo',
-                    'The photo should be lower to 1024Ko, this photo has %s Ko' %
-                    photo.size)
+                    'photo', 'The photo should be lower to 1MB->1024KB,'
+                    ' this photo has %sMB-->%sKo' %
+                    (photo.size / 1000 / 1000, photo.size / 1000))
             else:
                 pass
         else:
             pass
         return photo
+
+    def clean_date_of_birth(self):
+        date_of_birth = self.cleaned_data['date_of_birth']
+        if date_of_birth.year >= timezone.now().year:
+            self.add_error('date_of_birth', 'You are too young.')
+        return date_of_birth
 
 
 class LoginForm(forms.Form):
@@ -105,8 +113,7 @@ class LoginForm(forms.Form):
     password = forms.CharField()
 
     def clean(self):
-        username_or_email = self.cleaned_data['username_or_email']
-        username_or_email.lower
+        username_or_email = self.cleaned_data['username_or_email'].lower()
         password = self.cleaned_data['password']
         user = User.objects.filter(
             Q(username=username_or_email) | Q(email=username_or_email))
@@ -136,4 +143,50 @@ class MessageForm(forms.ModelForm):
 
     class Meta:
         model = Message
-        fields = ['contains']
+        fields = ['contains', 'photo']
+
+    def clean_photo(self):
+        photo = self.cleaned_data['photo']
+        if photo:
+            max_size = 1024 * 1024  # 1MB
+            if photo.size > max_size:
+                self.add_error(
+                    'photo', 'The photo should be lower to 1MB->1024KB,'
+                    ' this photo has %sMB-->%sKo' %
+                    (photo.size / 1000 / 1000, photo.size / 1000))
+            else:
+                pass
+        else:
+            pass
+        return photo
+
+
+class ArticleForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['contains'].widget = forms.Textarea()
+        self.fields['contains'].widget.attrs.update({
+            'class':
+            'textarea',
+            'placeholder':
+            'Enter your message'
+        })
+
+    class Meta:
+        model = Article
+        fields = ['contains', 'photo']
+
+    def clean_photo(self):
+        photo = self.cleaned_data['photo']
+        if photo:
+            max_size = 1024 * 1024  # 1MB
+            if photo.size > max_size:
+                self.add_error(
+                    'photo', 'The photo should be lower to 1MB->1024KB,'
+                    ' this photo has %sMB-->%sKo' %
+                    (photo.size / 1000 / 1000, photo.size / 1000))
+            else:
+                pass
+        else:
+            pass
+        return photo

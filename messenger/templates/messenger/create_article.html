@@ -1,7 +1,7 @@
 {% extends 'messenger/panel.html' %}
 {% block column_contains %}
-    <h1 class="subtitle">Message to {{ user.username }}</h1>
-    <form action="{% url 'send_message' user.pk %}" method="POST" enctype="multipart/form-data">
+    <h1 class="subtitle">New Article</h1>
+    <form action="{% url 'create_article' %}" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         {% for field in form %}
             <div class="field">
