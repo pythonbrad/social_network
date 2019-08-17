@@ -110,3 +110,29 @@ def post_save_article(sender, instance, created, **kwargs):
             )
     else:
         pass
+
+
+def post_save_comment(sender, instance, created, **kwargs):
+    if created:
+        instance.article.comments.add(instance)
+        for liker in instance.article.likers.all():
+            if instance.author != liker != instance.article.author:
+                liker.notifications.create(
+                    receiver=liker,
+                    message='%s has comments an article' % instance.author,
+                    obj_pk=instance.pk,
+                    url=reverse('get_comments', args=(instance.article.pk,)),
+                )
+            else:
+                pass
+        if instance.author != instance.article.author:
+            instance.article.author.notifications.create(
+                receiver=instance.article.author,
+                message='%s has comments your article' % instance.author,
+                obj_pk=instance.pk,
+                url=reverse('get_comments', args=(instance.article.pk,)),
+            )
+        else:
+            pass
+    else:
+        pass

@@ -1,20 +1,34 @@
 {% extends 'messenger/panel.html' %}
 {% block column_contains %}
     <p><a href="{% url 'create_article' %}" class="button is-link">Create a new article</a></p>
+    <h1 class="subtitle">
+        Articles: {{ articles.paginator.count }}
+    </h1>
     {% for article in articles %}
         <div class="message is-small">
             <div class="message-header">
-                <p>{{ article.author }}</p>
+                <a href="{% url 'user_details' article.author.pk %}">{{ article.author }}</a>
                 {% if article.author == request.user %}
-                    <a class="delete is-small" href="{% url 'delete_article' article.pk %}?next={{ request.path }}"></a>
+                    <a class="delete is-small" href="{% url 'delete_article' article.pk %}?next={{ request.path }}?page={{ articles.number }}"></a>
                 {% endif %}
             </div>
             <div class="message-body">
                 {% if article.photo %}
                     <img src="{{ article.photo.url }}">
                 {% endif %}
-                <p>{{ article.contains }}</p>
+                <p>{{ article.contains|truncatechars:100 }}</p>
                 <p><i>Send Il y'a {{ article.date_created|timesince:datetime }}</i></p>
+                <a href="{% url 'liked_article' article.pk %}?next={{ request.path }}?page={{ articles.number }}" class="button is-small is-primary">
+                    {% if request.user in article.likers.all %}
+                        Unliked
+                    {% else %}
+                        Liked
+                    {% endif %}
+                    ({{ article.likers.count }})
+                </a>
+                <a href="{% url 'create_comment' article.pk %}?next={{ request.path }}?page={{ articles.number }}" class="button is-small is-link">Comment ({{ article.comments.count }})</a>
+                <a href="{% url 'get_comments' article.pk %}" class="button is-small is-link">See more</a>
+                <a href="{% url 'share_article' article.pk %}?next={{ request.path }}?page={{ articles.number }}" class="button is-small is-warning">Share with my friends</a>
             </div>
         </div>
     {% empty %}

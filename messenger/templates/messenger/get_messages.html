@@ -11,7 +11,7 @@
             <div class="message-header">
                 <p>{{ message.sender }}</p>
                 {% if message.sender == request.user %}
-                    <a class="delete is-small" href="{% url 'delete_message' message.pk %}?next={{ request.path }}"></a>
+                    <a class="delete is-small" href="{% url 'delete_message' message.pk %}?next={{ request.path }}?page={{ messages.number }}"></a>
                 {% endif %}
             </div>
             <div class="message-body">

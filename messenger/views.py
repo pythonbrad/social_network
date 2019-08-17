@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404, reverse
-from .forms import SigninForm, LoginForm, MessageForm, ArticleForm
+from .forms import SigninForm, LoginForm, MessageForm, ArticleForm, CommentForm
 from django.contrib import auth
 from django.utils import timezone
-from .models import Message, Friendship, User, Notification, Article
+from .models import Message, Friendship, User, Notification, Article, Comment
 from django.db.models import Q
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
@@ -91,12 +91,19 @@ def list_friendship_view(request):
 
 def create_friendship_view(request, pk):
     if request.user.is_authenticated:
-        future_friend = get_object_or_404(User, pk=pk)
-        friends = request.user.friends.all()
-        waiting_friends = request.user.waiting_friends.all()
-        if future_friend not in friends and future_friend not in waiting_friends:
-            Friendship.objects.create(sender=request.user,
-                                      receiver=future_friend)
+        if request.user.pk != pk:
+            future_friend = get_object_or_404(User, pk=pk)
+            friends = request.user.friends.all()
+            waiting_friends = request.user.waiting_friends.all()
+            if future_friend in friends:
+                pass
+            elif future_friend in waiting_friends:
+                pass
+            else:
+                Friendship.objects.create(sender=request.user,
+                                          receiver=future_friend)
+        else:
+            pass
         return redirect('list_users')
     else:
         return redirect('login')
@@ -161,11 +168,10 @@ def list_friends_view(request):
             friends = paginator.page(1)
         except EmptyPage:
             friends = paginator.page(paginator.num_pages)
-        return render(
-            request, 'messenger/list_friends.html', {
-                'title': 'List friends',
-                'friends': friends,
-            })
+        return render(request, 'messenger/list_friends.html', {
+            'title': 'List friends',
+            'friends': friends,
+        })
     else:
         return redirect('login')
 
@@ -215,53 +221,57 @@ def user_details_view(request, pk):
 
 def send_message_view(request, pk):
     if request.user.is_authenticated:
-        user = get_object_or_404(User, pk=pk)
-        if request.POST:
-            form = MessageForm(request.POST, request.FILES)
-            if form.is_valid():
-                if user != request.user:
+        if request.user.pk != pk:
+            user = get_object_or_404(User, pk=pk)
+            if request.POST:
+                form = MessageForm(request.POST, request.FILES)
+                if form.is_valid():
                     form.instance.sender = request.user
                     form.instance.receiver = user
                     form.save()
-                return redirect(reverse('get_messages', args=(pk, )))
-        else:
-            form = MessageForm()
-        return render(
-            request, 'messenger/send_message.html', {
+                    return redirect(reverse('get_messages', args=(pk, )))
+            else:
+                form = MessageForm()
+            return render(request, 'messenger/send_message.html', {
                 'title': 'Send message',
                 'user': user,
                 'form': form,
             })
+        else:
+            return redirect('panel')
     else:
         return redirect('login')
 
 
 def get_messages_view(request, pk):
     if request.user.is_authenticated:
-        user = get_object_or_404(User, pk=pk)
-        messages = Message.objects.filter(
-            Q(sender=request.user, receiver=user)
-            | Q(receiver=request.user, sender=user))
-        page = request.GET.get('page', 1)
-        paginator = Paginator(messages, 10)
-        try:
-            messages = paginator.page(page)
-        except PageNotAnInteger:
-            messages = paginator.page(1)
-        except EmptyPage:
-            messages = paginator.page(paginator.num_pages)
-        for message in messages:
-            if not message.received and message.receiver == request.user:
-                message.received = True
-                message.date_received = timezone.now()
-                message.save()
-        return render(
-            request, 'messenger/get_messages.html', {
-                'title': 'Messages',
-                'messages': messages,
-                'datetime': timezone.now(),
-                'user': user,
-            })
+        if request.user.pk != pk:
+            user = get_object_or_404(User, pk=pk)
+            messages = request.user.messages.filter(
+                Q(receiver=user)
+                | Q(sender=user))
+            page = request.GET.get('page', 1)
+            paginator = Paginator(messages, 10)
+            try:
+                messages = paginator.page(page)
+            except PageNotAnInteger:
+                messages = paginator.page(1)
+            except EmptyPage:
+                messages = paginator.page(paginator.num_pages)
+            for message in messages:
+                if not message.received and message.receiver == request.user:
+                    message.received = True
+                    message.date_received = timezone.now()
+                    message.save()
+            return render(
+                request, 'messenger/get_messages.html', {
+                    'title': 'Messages',
+                    'messages': messages,
+                    'datetime': timezone.now(),
+                    'user': user,
+                })
+        else:
+            return redirect('panel')
     else:
         return redirect('login')
 
@@ -290,14 +300,12 @@ def messages_view(request):
             users = paginator.page(paginator.num_pages)
         last_messages = []
         for user in users:
-            message = Message.objects.filter(
-                    Q(sender=user, receiver=request.user)
-                    | Q(sender=request.user, receiver=user))
+            message = request.user.messages.filter(
+                Q(sender=user)
+                | Q(receiver=user))
             last_messages.append({
-                'user':
-                user,
-                'message':
-                message[0] if message else [],
+                'user': user,
+                'message': message[0] if message else [],
             })
         return render(
             request, 'messenger/messages.html', {
@@ -345,11 +353,10 @@ def create_article_view(request):
                 return redirect('articles')
         else:
             form = ArticleForm()
-        return render(
-            request, 'messenger/create_article.html', {
-                'title': 'Create article',
-                'form': form,
-            })
+        return render(request, 'messenger/create_article.html', {
+            'title': 'Create article',
+            'form': form,
+        })
     else:
         return redirect('login')
 
@@ -385,9 +392,97 @@ def articles_view(request):
 
 def delete_article_view(request, pk):
     if request.user.is_authenticated:
-        redirect_to = request.GET.get('next', 'articles')
+        redirect_to = request.GET.get('next', 'panel')
+        # author=request.user for more security
         article = get_object_or_404(Article, author=request.user, pk=pk)
         article.delete()
+        return redirect(redirect_to)
+    else:
+        return redirect('login')
+
+
+def liked_article_view(request, pk):
+    if request.user.is_authenticated:
+        redirect_to = request.GET.get('next', 'articles')
+        article = get_object_or_404(Article, pk=pk)
+        if request.user in article.likers.all():
+            article.likers.remove(request.user)
+        else:
+            article.likers.add(request.user)
+        return redirect(redirect_to)
+    else:
+        return redirect('login')
+
+
+def create_comment_view(request, pk):
+    if request.user.is_authenticated:
+        redirect_to = request.GET.get('next', 'panel')
+        article = get_object_or_404(Article, pk=pk)
+        if request.POST:
+            form = CommentForm(request.POST, request.FILES)
+            if form.is_valid():
+                form.instance.article = article
+                form.instance.author = request.user
+                form.save()
+                return redirect(redirect_to)
+        else:
+            form = CommentForm()
+        return render(
+            request, 'messenger/create_comment.html', {
+                'title': 'Create comment',
+                'form': form,
+                'article': article,
+                'redirect_to': redirect_to,
+            })
+    else:
+        return redirect('login')
+
+
+def get_comments_view(request, pk):
+    if request.user.is_authenticated:
+        article = get_object_or_404(Article, pk=pk)
+        page = request.GET.get('page', 1)
+        comments = article.comments.all()
+        paginator = Paginator(comments, 10)
+        try:
+            comments = paginator.page(page)
+        except PageNotAnInteger:
+            comments = paginator.page(1)
+        except EmptyPage:
+            comments = paginator.page(paginator.num_pages)
+        return render(
+            request, 'messenger/get_comments.html', {
+                'title': 'Comments',
+                'comments': comments,
+                'article': article,
+                'datetime': timezone.now(),
+            })
+    else:
+        return redirect('login')
+
+
+def delete_comment_view(request, pk):
+    if request.user.is_authenticated:
+        redirect_to = request.GET.get('next', 'panel')
+        # author=request.user for more security
+        comment = get_object_or_404(Comment, author=request.user, pk=pk)
+        comment.delete()
+        return redirect(redirect_to)
+    else:
+        return redirect('login')
+
+
+def share_article_view(request, pk):
+    if request.user.is_authenticated:
+        redirect_to = request.GET.get('next', 'panel')
+        article = get_object_or_404(Article, pk=pk)
+        for friend in request.user.friends.all():
+            friend.notifications.create(
+                receiver=friend,
+                message="%s said: Can you see this article of %s?" %
+                (request.user.username, article.author.username),
+                url=reverse('get_comments', args=(pk, )),
+                obj_pk=pk)
         return redirect(redirect_to)
     else:
         return redirect('login')

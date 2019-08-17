@@ -8,6 +8,7 @@ from .signals import pre_delete_friendship
 from .signals import post_save_message
 from .signals import pre_delete_message
 from .signals import post_save_article
+from .signals import post_save_comment
 from django.conf import settings
 
 
@@ -122,13 +123,36 @@ class Notification(models.Model):
 
 
 class Article(models.Model):
-    author = models.ForeignKey(User, related_name='article_author', on_delete=models.CASCADE)
+    author = models.ForeignKey(User,
+                               related_name='article_author',
+                               on_delete=models.CASCADE)
     contains = models.TextField(max_length=5000)
     photo = models.ImageField(upload_to=user_directory_path, blank=True)
+    comments = models.ManyToManyField('Comment',
+                                      related_name='article_comments')
+    likers = models.ManyToManyField(User, related_name='article_likers')
     date_created = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return self.contains
+
+    class Meta:
+        ordering = ['-date_created']
+
+    def get_user(self):
+        return self.author
+
+
+class Comment(models.Model):
+    author = models.ForeignKey(User,
+                               related_name='comment_author',
+                               on_delete=models.CASCADE)
+    article = models.ForeignKey(Article,
+                                related_name='article_comment',
+                                on_delete=models.CASCADE)
+    contains = models.TextField(max_length=5000)
+    photo = models.ImageField(upload_to=user_directory_path, blank=True)
+    date_created = models.DateTimeField(default=timezone.now)
 
     class Meta:
         ordering = ['-date_created']
@@ -142,3 +166,4 @@ pre_delete.connect(pre_delete_friendship, sender=Friendship)
 post_save.connect(post_save_message, sender=Message)
 pre_delete.connect(pre_delete_message, sender=Message)
 post_save.connect(post_save_article, sender=Article)
+post_save.connect(post_save_comment, sender=Comment)

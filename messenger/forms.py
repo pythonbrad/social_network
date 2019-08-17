@@ -1,5 +1,5 @@
 from django import forms
-from .models import Message, User, Article
+from .models import Message, User, Article, Comment
 from django.db.models import Q
 from django.utils import timezone
 import string
@@ -30,12 +30,20 @@ class SigninForm(forms.ModelForm):
             'class': 'input',
         })
 
+    password_verification = forms.CharField(
+        widget=forms.PasswordInput(attrs={
+            'class': 'input',
+            'placeholder': 'Retape your password'
+        }),
+        required=True,
+        help_text='Retape your password')
+
     class Meta:
         model = User
         fields = ['username', 'email', 'date_of_birth', 'password', 'photo']
 
     def clean_username(self):
-        username = self.cleaned_data['username']
+        username = self.cleaned_data['username'].lower()
         min_length = 4
         max_length = 30
         if len(username) < min_length:
@@ -57,7 +65,11 @@ class SigninForm(forms.ModelForm):
                     'username',
                     'username should not contains a special character')
                 break
-        return username.lower()
+        return username
+
+    def clean_email(self):
+        email = self.cleaned_data['email'].lower()
+        return email
 
     def clean_password(self):
         password = self.cleaned_data['password']
@@ -91,6 +103,17 @@ class SigninForm(forms.ModelForm):
             self.add_error('date_of_birth', 'You are too young.')
         return date_of_birth
 
+    def clean(self):
+        password = self.cleaned_data['password']
+        if "password_verification" in self.cleaned_data:
+            password_verification = self.cleaned_data['password_verification']
+        else:
+            password_verification = ''
+        if password != password_verification:
+            self.add_error(
+                'password_verification', 'Password verification and'
+                ' password are different')
+
 
 class LoginForm(forms.Form):
     def __init__(self, *args, **kwargs):
@@ -109,22 +132,27 @@ class LoginForm(forms.Form):
             'Type your Password'
         })
 
-    username_or_email = forms.CharField()
-    password = forms.CharField()
+    username_or_email = forms.CharField(required=True)
+    password = forms.CharField(required=True)
 
     def clean(self):
-        username_or_email = self.cleaned_data['username_or_email'].lower()
-        password = self.cleaned_data['password']
-        user = User.objects.filter(
-            Q(username=username_or_email) | Q(email=username_or_email))
-        if user:
-            user = user.filter(password=password)
-            if user:
-                self.user = user[0]
-            else:
-                self.add_error('password', 'password invalid')
+        if 'username_or_email' not in self.cleaned_data:
+            pass
+        elif 'password' not in self.cleaned_data:
+            pass
         else:
-            self.add_error('username_or_email', 'username|email invalid')
+            username_or_email = self.cleaned_data['username_or_email'].lower()
+            password = self.cleaned_data['password']
+            user = User.objects.filter(
+                Q(username=username_or_email) | Q(email=username_or_email))
+            if user:
+                user = user.filter(password=password)
+                if user:
+                    self.user = user[0]
+                else:
+                    self.add_error('password', 'password invalid')
+            else:
+                self.add_error('username_or_email', 'username|email invalid')
 
     def get_user(self):
         return self.user
@@ -174,6 +202,37 @@ class ArticleForm(forms.ModelForm):
 
     class Meta:
         model = Article
+        fields = ['contains', 'photo']
+
+    def clean_photo(self):
+        photo = self.cleaned_data['photo']
+        if photo:
+            max_size = 1024 * 1024  # 1MB
+            if photo.size > max_size:
+                self.add_error(
+                    'photo', 'The photo should be lower to 1MB->1024KB,'
+                    ' this photo has %sMB-->%sKo' %
+                    (photo.size / 1000 / 1000, photo.size / 1000))
+            else:
+                pass
+        else:
+            pass
+        return photo
+
+
+class CommentForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['contains'].widget = forms.Textarea()
+        self.fields['contains'].widget.attrs.update({
+            'class':
+            'textarea',
+            'placeholder':
+            'Enter your message'
+        })
+
+    class Meta:
+        model = Comment
         fields = ['contains', 'photo']
 
     def clean_photo(self):

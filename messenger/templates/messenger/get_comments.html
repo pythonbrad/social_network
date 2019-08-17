@@ -1,0 +1,48 @@
+{% extends 'messenger/panel.html' %}
+{% block column_contains %}
+    <div class="message is-small">
+        <div class="message-header">
+            <p>{{ article.author }}</p>
+        </div>
+        <div class="message-body">
+            {% if article.photo %}
+                <img src="{{ article.photo.url }}">
+            {% endif %}
+            <p>{{ article.contains }}</p>
+            <p><i>Send Il y'a {{ article.date_created|timesince:datetime }}</i></p>
+            <a href="{% url 'liked_article' article.pk %}?next={{ request.path }}?page={{ articles.number }}" class="button is-small is-primary">
+                    {% if request.user in article.likers.all %}
+                        Unliked
+                    {% else %}
+                        Liked
+                    {% endif %}
+                    ({{ article.likers.count }})
+                </a>
+                <a href="{% url 'create_comment' article.pk %}?next={{ request.path }}?page={{ articles.number }}" class="button is-small is-link">Comment ({{ article.comments.count }})
+                <a href="{% url 'share_article' article.pk %}?next={{ request.path }}?page={{ articles.number }}" class="button is-small is-warning">Share with my friends</a>
+        </div>
+    </div>
+    <br/>
+    {% for comment in comments %}
+        <div class="message is-small {% if comment.author == request.user %}is-link{% else %}is-primary{% endif %}">
+            <div class="message-header">
+                <p>{{ comment.author }}</p>
+                {% if comment.author == request.user %}
+                    <a class="delete is-small" href="{% url 'delete_comment' comment.pk %}?next={{ request.path }}?page={{ comments.number }}"></a>
+                {% endif %}
+            </div>
+            <div class="message-body">
+                {% if comment.photo %}
+                    <img src="{{ comment.photo.url }}">
+                {% endif %}
+                <p>{{ comment.contains }}</p>
+                <p><i>Send: Il y'a {{ comment.date_created|timesince:datetime }}</i></p>
+            </div>
+        </div>
+    {% empty %}
+        <p>Nothing for the moment</p>
+    {% endfor %}
+    {% with comments as data_to_pagin %}
+        {% include 'messenger/pagin.html' %}
+    {% endwith %}
+{% endblock %}
