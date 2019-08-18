@@ -4,6 +4,10 @@
     <h1 class="subtitle">
         Articles: {{ articles.paginator.count }}
     </h1>
+    {% with articles as data_to_pagin %}
+        {% include 'messenger/pagin.html' %}
+    {% endwith %}
+    <br/>
     {% for article in articles %}
         <div class="message is-small">
             <div class="message-header">
@@ -34,7 +38,4 @@
     {% empty %}
         Nothing for the moment
     {% endfor %}
-    {% with articles as data_to_pagin %}
-        {% include 'messenger/pagin.html' %}
-    {% endwith %}
 {% endblock %}

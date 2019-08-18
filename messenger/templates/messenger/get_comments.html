@@ -23,6 +23,10 @@
         </div>
     </div>
     <br/>
+    {% with comments as data_to_pagin %}
+        {% include 'messenger/pagin.html' %}
+    {% endwith %}
+    <br/>
     {% for comment in comments %}
         <div class="message is-small {% if comment.author == request.user %}is-link{% else %}is-primary{% endif %}">
             <div class="message-header">
@@ -42,7 +46,4 @@
     {% empty %}
         <p>Nothing for the moment</p>
     {% endfor %}
-    {% with comments as data_to_pagin %}
-        {% include 'messenger/pagin.html' %}
-    {% endwith %}
 {% endblock %}

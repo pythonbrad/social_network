@@ -20,6 +20,7 @@ class SigninForm(forms.ModelForm):
             'placeholder':
             'Enter your email'
         })
+        self.fields['date_of_birth'].help_text = "Eg: 2010-10-10"
         self.fields['date_of_birth'].widget = forms.DateInput(
             attrs={'type': 'date'})
         self.fields['date_of_birth'].widget.attrs.update({
@@ -161,7 +162,7 @@ class LoginForm(forms.Form):
 class MessageForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['contains'].widget = forms.Textarea()
+        self.fields['contains'].widget = forms.Textarea(attrs={'style': 'height: 100%'})
         self.fields['contains'].widget.attrs.update({
             'class':
             'textarea',
@@ -192,7 +193,7 @@ class MessageForm(forms.ModelForm):
 class ArticleForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['contains'].widget = forms.Textarea()
+        self.fields['contains'].widget = forms.Textarea(attrs={'style': 'height: 100%'})
         self.fields['contains'].widget.attrs.update({
             'class':
             'textarea',
@@ -223,7 +224,7 @@ class ArticleForm(forms.ModelForm):
 class CommentForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['contains'].widget = forms.Textarea()
+        self.fields['contains'].widget = forms.Textarea(attrs={'style': 'height: 100%'})
         self.fields['contains'].widget.attrs.update({
             'class':
             'textarea',

@@ -250,12 +250,13 @@ def get_messages_view(request, pk):
             messages = request.user.messages.filter(
                 Q(receiver=user)
                 | Q(sender=user))
-            page = request.GET.get('page', 1)
+            page = request.GET.get('page', None)
             paginator = Paginator(messages, 10)
             try:
                 messages = paginator.page(page)
             except PageNotAnInteger:
-                messages = paginator.page(1)
+                last_page = paginator.page_range[-1]
+                messages = paginator.page(last_page)
             except EmptyPage:
                 messages = paginator.page(paginator.num_pages)
             for message in messages:
@@ -372,12 +373,13 @@ def articles_view(request):
             else:
                 pass
         articles = _
-        page = request.GET.get('page', 1)
+        page = request.GET.get('page', None)
         paginator = Paginator(articles, 10)
         try:
             articles = paginator.page(page)
         except PageNotAnInteger:
-            articles = paginator.page(1)
+            last_page = paginator.page_range[-1]
+            articles = paginator.page(last_page)
         except EmptyPage:
             articles = paginator.page(paginator.num_pages)
         return render(
@@ -441,13 +443,14 @@ def create_comment_view(request, pk):
 def get_comments_view(request, pk):
     if request.user.is_authenticated:
         article = get_object_or_404(Article, pk=pk)
-        page = request.GET.get('page', 1)
+        page = request.GET.get('page', None)
         comments = article.comments.all()
         paginator = Paginator(comments, 10)
         try:
             comments = paginator.page(page)
         except PageNotAnInteger:
-            comments = paginator.page(1)
+            last_page = paginator.page_range[-1]
+            comments = paginator.page(last_page)
         except EmptyPage:
             comments = paginator.page(paginator.num_pages)
         return render(

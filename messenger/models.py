@@ -39,9 +39,6 @@ class User(AbstractUser):
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['date_of_birth', 'email']
 
-    class Meta:
-        ordering = ['-date_of_birth']
-
     def get_user(self):
         return self
 
@@ -95,7 +92,7 @@ class Message(models.Model):
     date_created = models.DateTimeField(default=timezone.now)
 
     class Meta:
-        ordering = ['received', '-date_created']
+        ordering = ['date_created']
 
     def __str__(self):
         return self.contains
@@ -137,7 +134,7 @@ class Article(models.Model):
         return self.contains
 
     class Meta:
-        ordering = ['-date_created']
+        ordering = ['date_created']
 
     def get_user(self):
         return self.author
@@ -155,7 +152,7 @@ class Comment(models.Model):
     date_created = models.DateTimeField(default=timezone.now)
 
     class Meta:
-        ordering = ['-date_created']
+        ordering = ['date_created']
 
     def get_user(self):
         return self.author
