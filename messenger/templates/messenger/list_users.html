@@ -2,34 +2,45 @@
 {% block column_contains %}
     <h1 class="subtitle">List users ({{ users.paginator.count }})</h1>
     {% for user in users %}
-        <div class="card">
-            <a href="{% url 'user_details' user.pk %}" title="Click to see his details">
-                <header class="card-header">
-                    {{ user.username }}
-                </header>
-            </a>
-            <div class="card-content">
-                <div class="card-image" align="center">
-                    {% if user.photo %}
-                        <img src="{{ user.photo.url }}">
-                    {% else %}
-                        no image
-                    {% endif %}
-                </div>
-                <p>Adhesion: {{ user.date_joined }}</p>
-                <p>Date of birth: {{ user.date_of_birth }}</p>
-            </div>
-            <footer class="card-footer">
-                {% if user in friends %}
-                    Already friend
-                {% elif user in waiting_friends %}
-                    <a class="button is-danger is-small card-footer-item" disabled>Friendship in waiting</a>
-                {% else %}
-                    <a class="button is-success is-small card-footer-item" href="{% url 'create_friendship' user.pk %}">
-                        Send friendship
-                    </a>
+        <div class="box">
+            <article class="media">
+                {% if user.photo %}
+                    <div class="media-left">
+                        <figure class="image is-64x64">
+                            <img src="{{ user.photo.url }}" alt="Image">
+                        </figure>
+                    </div>
                 {% endif %}
-            </footer>
+                <div class="media-content">
+                    <div class="content">
+                        <p>
+                            <a href="{% url 'user_details' user.pk %}">
+                                <strong>
+                                    {% if user in request.user.friends.all or user == request.user %}
+                                        {{ user.first_name }} {{ user.last_name }}
+                                    {% endif %}
+                                </strong>
+                                <small>&nbsp;@{{ user }}</small></a> <small style="float:right;"></small>
+                            </a>
+                        </p>
+                        <p>Adhesion: {{ user.date_joined }}</p>
+                        <p>Date of birth: {{ user.date_of_birth }}</p>
+                    </div>
+                    <nav class="level">
+                        <div class="level-left">
+                            {% if user in friends %}
+                                <a class="level-item button is-danger is-small card-footer-item" disabled>Already friend</a>
+                            {% elif user in waiting_friends %}
+                                <a class="level-item button is-danger is-small card-footer-item" disabled>Friendship in waiting</a>
+                            {% else %}
+                                <a class="level-item button is-success is-small card-footer-item" href="{% url 'create_friendship' user.pk %}">
+                                    Send friendship
+                                </a>
+                            {% endif %}
+                        </div>
+                    </nav>
+                </div>
+            </article>
         </div>
     {% empty %}
         No others users for the moment

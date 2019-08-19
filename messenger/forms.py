@@ -30,6 +30,15 @@ class SigninForm(forms.ModelForm):
         self.fields['password'].widget.attrs.update({
             'class': 'input',
         })
+        self.fields['photo'].help_text = "*Optionnel"
+        self.fields['first_name'].help_text = "*Optionnel"
+        self.fields['first_name'].widget.attrs.update({
+            'class': 'input',
+        })
+        self.fields['last_name'].help_text = "*Optionnel"
+        self.fields['last_name'].widget.attrs.update({
+            'class': 'input',
+        })
 
     password_verification = forms.CharField(
         widget=forms.PasswordInput(attrs={
@@ -41,7 +50,10 @@ class SigninForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'date_of_birth', 'password', 'photo']
+        fields = [
+            'username', 'email', 'date_of_birth', 'password', 'photo',
+            'first_name', 'last_name'
+        ]
 
     def clean_username(self):
         username = self.cleaned_data['username'].lower()
@@ -91,7 +103,7 @@ class SigninForm(forms.ModelForm):
                 self.add_error(
                     'photo', 'The photo should be lower to 1MB->1024KB,'
                     ' this photo has %sMB-->%sKo' %
-                    (photo.size / 1000 / 1000, photo.size / 1000))
+                    (int(photo.size / 1000 / 1000), int(photo.size / 1000)))
             else:
                 pass
         else:
@@ -162,7 +174,8 @@ class LoginForm(forms.Form):
 class MessageForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['contains'].widget = forms.Textarea(attrs={'style': 'height: 100%'})
+        self.fields['contains'].widget = forms.Textarea(
+            attrs={'style': 'height: 100%'})
         self.fields['contains'].widget.attrs.update({
             'class':
             'textarea',
@@ -193,7 +206,8 @@ class MessageForm(forms.ModelForm):
 class ArticleForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['contains'].widget = forms.Textarea(attrs={'style': 'height: 100%'})
+        self.fields['contains'].widget = forms.Textarea(
+            attrs={'style': 'height: 100%'})
         self.fields['contains'].widget.attrs.update({
             'class':
             'textarea',
@@ -224,7 +238,8 @@ class ArticleForm(forms.ModelForm):
 class CommentForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['contains'].widget = forms.Textarea(attrs={'style': 'height: 100%'})
+        self.fields['contains'].widget = forms.Textarea(
+            attrs={'style': 'height: 100%'})
         self.fields['contains'].widget.attrs.update({
             'class':
             'textarea',

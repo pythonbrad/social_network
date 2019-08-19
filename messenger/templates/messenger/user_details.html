@@ -1,27 +1,29 @@
 {% extends 'messenger/panel.html' %}
 {% block column_contains %}
     <div class="card">
-        <header class="card-header">
+        <header class="card-header subtitle">
             {{ user.username }}
         </header>
         <div class="card-content">
             <div class="card-image" align="center">
                 {% if user.photo %}
-                    <img src="{{ user.photo.url }}">
+                    <figure class="image is-128x128">
+                        <img src="{{ user.photo.url }}">
+                    </figure>
                 {% else %}
                     no image
                 {% endif %}
             </div>
-            <p>Adhesion: {{ user.date_joined }}</p>
-            <p>Date of birth: {{ user.date_of_birth }}</p>
+            <p><b>Adhesion:</b> {{ user.date_joined }}</p>
+            <p><b>Date of birth:</b> {{ user.date_of_birth }}</p>
             {% if user in friends or user == request.user %}
-                <p>Friends: {{ user.friends.count }}</p>
-                <p>Active: {{ user.is_active }}</p>
-                <p>Date joined: {{ user.date_created }}</p>
-                <p>Last login: Il y'a {{ user.last_login|timesince:datetime }}</p>
-                <p>Email: {{ user.email|default:"No entry" }}</p>
-                <p>First name: {{ user.first_name|default:"No entry" }}</p>
-                <p>Last name: {{ user.last_name|default:"No entry" }}</p>
+                <p><b>Friends:</b> {{ user.friends.count }}</p>
+                <p><b>Active:</b> {{ user.is_active }}</p>
+                <p><b>Date joined:</b> {{ user.date_created }}</p>
+                <p><b>Last login:</b> {{ user.last_login|timesince:datetime }}</p>
+                <p><b>Email:</b> {{ user.email|default:"No entry" }}</p>
+                <p><b>First name:</b> {{ user.first_name|default:"No entry" }}</p>
+                <p><b>Last name:</b> {{ user.last_name|default:"No entry" }}</p>
             {% endif %}
         </div>
         {% if user != request.user %}

@@ -2,28 +2,20 @@
 {% block contains %}
     <div class="tabs is-centered is-fullwidth is-small">
         <ul>
-            <li><a href="{% url 'articles' %}">Actualite</a></li>
-            <li><a href="{% url 'messages' %}">
-                Messages
-                {% with request.user.messages.first as rumf %}
-                    {% if rumf.received is False and rumf.receiver == request.user %}
-                        &nbsp;<font color="red">(New)</font>
-                    {% endif %}
-                {% endwith %}
-            </a></li>
-            <li><a href="{% url 'list_friends' %}">Friends</a></li>
-            <li><a href="{% url 'list_friendships' %}">
-                Friendships
-                {% if request.user.waiting_friends.count %}
-                    &nbsp;<font color="red">(New)</font>
-                {% endif %}
-            </a></li>
-            <li><a href="{% url 'list_notifications' %}">
-                Notifications
-                {% if request.user.notifications.first.received is False %}
-                    &nbsp;<font color="red">(New)</font>
-                {% endif %}
-            <li><a>Settings</a></li>
+            {% with request.user.get_state as user_state %}
+                <li><a href="{% url 'articles' %}">Actualite</a></li>
+                <li><a href="{% url 'messages' %}">
+                    Messages ({{ user_state.new_messages.count }})
+                </a></li>
+                <li><a href="{% url 'list_friends' %}">Friends</a></li>
+                <li><a href="{% url 'list_friendships' %}">
+                    Friendships ({{ user_state.waiting_friends.count }})
+                </a></li>
+                <li><a href="{% url 'list_notifications' %}">
+                    Notifications ({{ user_state.new_notifications.count }})
+                </a></li>
+                <li><a>Settings</a></li>
+            {% endwith %}
         </ul>
     </div>
     <div class='columns is-mobile'>

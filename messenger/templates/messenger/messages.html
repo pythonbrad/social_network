@@ -2,36 +2,47 @@
 {% block column_contains %}
     <h1 class="subtitle">Select a discussion ({{ users.paginator.count }})</h1>
     {% for last_message in last_messages %}
-        <div class="card">
-            <header class="card-header">
-                {{ last_message.user.username }}
-                {% if last_message.message %}
-                    {% if not last_message.message.received and request.user == last_message.message.receiver %}
-                        &nbsp;
-                        <a class="button is-small is-primary">
-                            Has New
-                        </a>
-                    {% endif %}
+        <div class="box">
+            <article class="media">
+                {% if last_message.user.photo %}
+                    <div class="media-left">
+                        <figure class="image is-64x64">
+                            <img src="{{ last_message.user.photo.url }}" alt="Image">
+                        </figure>
+                    </div>
                 {% endif %}
-            </header>
-            <div class="card-content">
-                <div class="card-image" align="center">
-                    {% if user.photo %}
-                        <img src="{{ user.photo.url }}" width="100" height="100">
-                    {% else %}
-                        no image
-                    {% endif %}
+                <div class="media-content">
+                    <div class="content">
+                        <p>
+                            <a href="{% url 'user_details' last_message.user.pk %}">
+                                <strong>
+                                    {% if last_message.user in request.user.friends.all or last_message.user == request.user %}
+                                        {{ last_message.user.first_name }} {{ last_message.user.last_name }}
+                                    {% endif %}
+                                </strong>
+                                <small>&nbsp;@{{ last_message.user }}</small>
+                            </a> <small style="float:right;">{{ last_message.message.date_created|timesince:datetime }}</small>
+                            <br>
+                            <b>Last Message:</b> {{ last_message.message.contains|truncatechars:255 }}
+                            {% if not last_message.message.received and last_message.message.receiver == request.user %}
+                                <p><span class="button is-primary is-small">Has New</span></p>
+                            {% endif %}
+                        </p>
+                        {% if last_message.message.photo %}
+                            <p>
+                                <figure class="image">
+                                    <img src="{{ last_message.message.photo.url }}" alt="Image">
+                                </figure>
+                            </p>
+                        {% endif %}
+                    </div>
+                    <nav class="level">
+                        <div class="level-left">
+                            <a href="{% url 'get_messages' last_message.user.pk %}" class="level-item button is-small is-info">Open</a>
+                        </div>
+                    </nav>
                 </div>
-                {% if last_message.message %}
-                    <p class="label">Last message:</p><p>{{ last_message.message.contains|truncatechars:30 }}</p>
-                    <i>Il y'a {{ last_message.message.date_created|timesince:datetime }}</i>
-                {% else %}
-                    No messages
-                {% endif %}
-            </div>
-            <footer class="card-footer">
-                <a href="{% url 'get_messages' last_message.user.pk %}" class="button is-small card-footer-item is-info">Open</a>
-            </footer>
+            </article>
         </div>
     {% empty %}
         Nothing for the moment

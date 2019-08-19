@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import AbstractUser
@@ -9,7 +10,6 @@ from .signals import post_save_message
 from .signals import pre_delete_message
 from .signals import post_save_article
 from .signals import post_save_comment
-from django.conf import settings
 
 
 def user_directory_path(instance, filename):
@@ -25,6 +25,8 @@ class User(AbstractUser):
     photo = models.ImageField(upload_to=user_directory_path,
                               blank=True,
                               default=settings.MEDIA_ROOT + '/no-image.png')
+    first_name = models.CharField(max_length=50, blank=True)
+    last_name = models.CharField(max_length=50, blank=True)
     notifications = models.ManyToManyField('Notification')
     friends = models.ManyToManyField('User', related_name='friends_list')
     waiting_friends = models.ManyToManyField(
@@ -42,6 +44,13 @@ class User(AbstractUser):
     def get_user(self):
         return self
 
+    def get_state(self):
+        new_notifications = self.notifications.filter(received=False)
+        waiting_friends = Friendship.objects.filter(receiver=self,
+                                                    is_valided=False)
+        new_messages = self.messages.filter(receiver=self, received=False)
+        return locals()
+
 
 class Contact(models.Model):
     own = models.ForeignKey(User,
@@ -53,7 +62,7 @@ class Contact(models.Model):
     date_last_message = models.DateTimeField(default=timezone.now)
 
     class Meta:
-        ordering = ['-date_last_message']
+        ordering = ['date_last_message']
 
     def __str__(self):
         return self.user.username
@@ -72,7 +81,7 @@ class Friendship(models.Model):
     date_created = models.DateTimeField(default=timezone.now)
 
     class Meta:
-        ordering = ['is_valided', '-date_created']
+        ordering = ['-date_created']
 
     def __str__(self):
         return "%s and %s" % (self.sender, self.receiver)
@@ -116,7 +125,12 @@ class Notification(models.Model):
         return self.message
 
     class Meta:
-        ordering = ['received', '-date_created']
+        ordering = ['date_created']
+
+    def get_new(self):
+        notifications = Notification.objects.filter(receiver=self.receiver,
+                                                    received=False)
+        return notifications
 
 
 class Article(models.Model):

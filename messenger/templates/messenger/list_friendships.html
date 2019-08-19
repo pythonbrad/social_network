@@ -3,38 +3,53 @@
     <a class="button is-primary is-small" href="{% url 'list_users' %}">Find friends</a>
     <h1 class="subtitle">Frienship en attente ({{ friendships.paginator.count }})</h1>
     {% for friendship in friendships %}
-        <div class="card">
-            {% if friendship.sender != request.user %}
-                <a href="{% url 'user_details' friendship.sender.pk %}" title="Click to see his details">
-                    <header class="card-header">
-                        Demande d'amitier de {{ friendship.sender }}
-                    </header>
-                </a>
-            {% else %}
-                <a href="{% url 'user_details' friendship.receiver.pk %}" title="Click to see his details">
-                    <header class="card-header">
-                        Demande d'amitier avec {{ friendship.receiver }} en attente
-                    </header>
-                </a>
-            {% endif %}
-            <p>Depuis {{ friendship.date_created|timesince:datetime }}</p>
-            <div class="card-content">
-                {{ friendship.message }}
-            </div>
-            <footer class="card-footer">
-                <a class="button is-danger is-small card-footer-item" href="{% url 'delete_friendship' friendship.pk %}">
-                    {% if friendship.sender != request.user %}
-                        Refuser
-                    {% else %}
-                        Annuler
-                    {% endif %}
-                </a>
-                {% if friendship.sender != request.user %}
-                    <a class="button is-success is-small card-footer-item" href="{% url 'accept_friendship' friendship.pk %}">
-                        Accepter
-                    </a>
+        <div class="box">
+            <article class="media">
+                {% if friendship.sender != request.user and friendship.sender.photo %}
+                    <div class="media-left">
+                        <figure class="image is-64x64">
+                            <img src="{{ friendship.sender.photo.url }}" alt="Image">
+                        </figure>
+                    </div>
+                {% elif friendship.sender == request.user and friendship.receiver.photo %}
+                    <div class="media-left">
+                        <figure class="image is-64x64">
+                            <img src="{{ friendship.receiver.photo.url }}" alt="Image">
+                        </figure>
+                    </div>
                 {% endif %}
-            </footer>
+                <div class="media-content">
+                    <div class="content">
+                        <p>
+                            {% if friendship.sender != request.user %}
+                                <a href="{% url 'user_details' friendship.sender.pk %}" title="Click to see his details"><small>@{{ friendship.sender }}</a></small> <small style="float:right;">{{ friendship.date_created|timesince:datetime }}</small>
+                                <br/>
+                                Demande d'amitier de {{ friendship.sender }}
+                            {% else %}
+                                <a href="{% url 'user_details' friendship.receiver.pk %}" title="Click to see his details"><small>@{{ friendship.receiver }}</a></small> <small style="float:right;">{{ friendship.date_created|timesince:datetime }}</small>
+                                <br/>
+                                Demande d'amitier avec {{ friendship.receiver }} en attente
+                            {% endif %}
+                        </p>
+                    </div>
+                    <nav class="level">
+                        <div class="level-left">
+                            <a class="level-item button is-danger is-small" href="{% url 'delete_friendship' friendship.pk %}">
+                                {% if friendship.sender != request.user %}
+                                    Refuser
+                                {% else %}
+                                    Annuler
+                                {% endif %}
+                            </a>
+                            {% if friendship.sender != request.user %}
+                                <a class="level-item button is-success is-small" href="{% url 'accept_friendship' friendship.pk %}">
+                                    Accepter
+                                </a>
+                            {% endif %}
+                        </div>
+                    </nav>
+                </div>
+            </article>
         </div>
     {% empty %}
         <p>Nothing for the moment</p>

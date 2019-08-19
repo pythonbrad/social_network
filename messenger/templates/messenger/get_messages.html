@@ -2,6 +2,9 @@
 {% block column_contains %}
     <h1 class="subtitle">
         Discussion with {{ user.username }} ({{ messages.paginator.count }})
+        <figure class="image is-64x64">
+            <img src="{{ user.photo.url }}" alt="Image">
+        </figure>
     </h1>
     <a href="{% url 'user_details' user.pk %}" class="button is-link is-small">See his details</a>
     <a href="{% url 'send_message' user.pk %}" class="button is-primary is-small">Send message</a>
@@ -11,29 +14,45 @@
     {% endwith %}
     <br/>
     {% for message in messages %}
-        <div class="message is-small {% if message.sender == request.user %}is-link{% else %}is-primary{% endif %}">
-            <div class="message-header">
-                <p>{{ message.sender }}</p>
-                {% if message.sender == request.user %}
-                    <a class="delete is-small" href="{% url 'delete_message' message.pk %}?next={{ request.path }}?page={{ messages.number }}"></a>
-                {% endif %}
-            </div>
-            <div class="message-body">
-                {% if message.photo %}
-                    <img src="{{ message.photo.url }}">
-                {% endif %}
-                <p>{{ message.contains }}</p>
-                <p><i>Send by {{ message.sender }}: Il y'a {{ message.date_created|timesince:datetime }}</i></p>
-                <p>
-                    <i>
-                        {% if message.received %}
-                            Received by {{ message.receiver }}: Il y'a {{ message.date_received|timesince:datetime }}
-                        {% else %}
-                            Not received by {{ message.receiver }}
+        <div class="box">
+            <article class="media">
+                <div class="media-content">
+                    <div class="content">
+                        <p>
+                            <a href="{% url 'user_details' message.sender.pk %}">
+                                <strong>
+                                    {% if message.sender in request.user.friends.all or message.sender == request.user %}
+                                        {{ message.sender.first_name }} {{ message.sender.last_name }}
+                                    {% endif %}
+                                </strong>
+                                <small>&nbsp;@{{ message.sender }}</small></a> <small style="float:right;">{{ message.date_created|timesince:datetime }}</small>
+                            <br>
+                            {{ message.contains|truncatechars:255 }}
+                        </p>
+                        {% if message.photo %}
+                            <p>
+                                <figure class="image">
+                                    <img src="{{ message.photo.url }}" alt="Image">
+                                </figure>
+                            </p>
                         {% endif %}
-                    </i>
-                </p>
-            </div>
+                    </div>
+                    <nav class="level">
+                        <div class="level-left">
+                            <i class="level-item">
+                                {% if message.received %}
+                                    <font color='green'>Received: {{ message.date_received|timesince:datetime }}</font>
+                                {% else %}
+                                    <font color='red'>Not received</font>
+                                {% endif %}
+                            </i>
+                            {% if message.sender == request.user %}
+                                <a class="level-item button is-small is-danger" href="{% url 'delete_message' message.pk %}?next={{ request.path }}?page={{ messages.number }}">Delete</a>
+                            {% endif %}
+                        </div>
+                    </nav>
+                </div>
+            </article>
         </div>
     {% empty %}
         <p>Nothing for the moment</p>

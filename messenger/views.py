@@ -250,6 +250,8 @@ def get_messages_view(request, pk):
             messages = request.user.messages.filter(
                 Q(receiver=user)
                 | Q(sender=user))
+            first_new_message = messages.order_by('date_created').filter(
+                received=False, sender=user).first()
             page = request.GET.get('page', None)
             paginator = Paginator(messages, 10)
             try:
@@ -291,12 +293,13 @@ def delete_message_view(request, pk):
 def messages_view(request):
     if request.user.is_authenticated:
         users = [contact.user for contact in request.user.contacts.all()]
-        page = request.GET.get('page', 1)
+        page = request.GET.get('page', None)
         paginator = Paginator(users, 10)
         try:
             users = paginator.page(page)
         except PageNotAnInteger:
-            users = paginator.page(1)
+            last_page = paginator.page_range[-1]
+            users = paginator.page(last_page)
         except EmptyPage:
             users = paginator.page(paginator.num_pages)
         last_messages = []
@@ -306,7 +309,7 @@ def messages_view(request):
                 | Q(receiver=user))
             last_messages.append({
                 'user': user,
-                'message': message[0] if message else [],
+                'message': message.last() if message else [],
             })
         return render(
             request, 'messenger/messages.html', {
@@ -322,12 +325,13 @@ def messages_view(request):
 def list_notifications_view(request):
     if request.user.is_authenticated:
         notifications = request.user.notifications.all()
-        page = request.GET.get('page', 1)
+        page = request.GET.get('page', None)
         paginator = Paginator(notifications, 10)
         try:
             notifications = paginator.page(page)
         except PageNotAnInteger:
-            notifications = paginator.page(1)
+            last_page = paginator.page_range[-1]
+            notifications = paginator.page(last_page)
         except EmptyPage:
             notifications = paginator.page(paginator.num_pages)
         for notification in notifications:

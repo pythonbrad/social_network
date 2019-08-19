@@ -7,35 +7,9 @@
     {% with articles as data_to_pagin %}
         {% include 'messenger/pagin.html' %}
     {% endwith %}
-    <br/>
     {% for article in articles %}
-        <div class="message is-small">
-            <div class="message-header">
-                <a href="{% url 'user_details' article.author.pk %}">{{ article.author }}</a>
-                {% if article.author == request.user %}
-                    <a class="delete is-small" href="{% url 'delete_article' article.pk %}?next={{ request.path }}?page={{ articles.number }}"></a>
-                {% endif %}
-            </div>
-            <div class="message-body">
-                {% if article.photo %}
-                    <img src="{{ article.photo.url }}">
-                {% endif %}
-                <p>{{ article.contains|truncatechars:100 }}</p>
-                <p><i>Send Il y'a {{ article.date_created|timesince:datetime }}</i></p>
-                <a href="{% url 'liked_article' article.pk %}?next={{ request.path }}?page={{ articles.number }}" class="button is-small is-primary">
-                    {% if request.user in article.likers.all %}
-                        Unliked
-                    {% else %}
-                        Liked
-                    {% endif %}
-                    ({{ article.likers.count }})
-                </a>
-                <a href="{% url 'create_comment' article.pk %}?next={{ request.path }}?page={{ articles.number }}" class="button is-small is-link">Comment ({{ article.comments.count }})</a>
-                <a href="{% url 'get_comments' article.pk %}" class="button is-small is-link">See more</a>
-                <a href="{% url 'share_article' article.pk %}?next={{ request.path }}?page={{ articles.number }}" class="button is-small is-warning">Share with my friends</a>
-            </div>
-        </div>
+        {% include "messenger/article.html" with zone_comment=False %}
     {% empty %}
-        Nothing for the moment
+        <h1>Nothing for the moment, Make you many friends to see more articles.</h1>
     {% endfor %}
 {% endblock %}
