@@ -12,7 +12,7 @@ def home_view(request):
     if not request.user.is_authenticated:
         return render(request, 'messenger/home.html', {'title': 'Home'})
     else:
-        return redirect('panel')
+        return redirect('articles')
 
 
 def signin_view(request):
@@ -29,7 +29,7 @@ def signin_view(request):
             'form': form,
         })
     else:
-        return redirect('panel')
+        return redirect('home')
 
 
 def login_view(request):
@@ -39,7 +39,7 @@ def login_view(request):
             if form.is_valid():
                 user = form.get_user()
                 auth.login(request, user)
-                return redirect('panel')
+                return redirect('home')
         else:
             form = LoginForm()
         return render(request, 'messenger/login.html', {
@@ -47,7 +47,7 @@ def login_view(request):
             'form': form
         })
     else:
-        return redirect('panel')
+        return redirect('home')
 
 
 def logout_view(request):
@@ -59,7 +59,7 @@ def logout_view(request):
 def panel_view(request):
     if request.user.is_authenticated:
         return render(request, 'messenger/panel.html', {
-            'title': 'Panel',
+            'title': 'panel',
         })
     else:
         return redirect('login')
@@ -191,7 +191,7 @@ def delete_friend_view(request, pk):
 
 def delete_notification_view(request, pk):
     if request.user.is_authenticated:
-        redirect_to = request.GET.get('next', 'panel')
+        redirect_to = request.GET.get('next', 'home')
         # receiver=request.user for more security
         notification = get_object_or_404(Notification,
                                          receiver=request.user,
@@ -238,7 +238,7 @@ def send_message_view(request, pk):
                 'form': form,
             })
         else:
-            return redirect('panel')
+            return redirect('home')
     else:
         return redirect('login')
 
@@ -250,8 +250,6 @@ def get_messages_view(request, pk):
             messages = request.user.messages.filter(
                 Q(receiver=user)
                 | Q(sender=user))
-            first_new_message = messages.order_by('date_created').filter(
-                received=False, sender=user).first()
             page = request.GET.get('page', None)
             paginator = Paginator(messages, 10)
             try:
@@ -274,7 +272,7 @@ def get_messages_view(request, pk):
                     'user': user,
                 })
         else:
-            return redirect('panel')
+            return redirect('home')
     else:
         return redirect('login')
 
@@ -398,7 +396,7 @@ def articles_view(request):
 
 def delete_article_view(request, pk):
     if request.user.is_authenticated:
-        redirect_to = request.GET.get('next', 'panel')
+        redirect_to = request.GET.get('next', 'home')
         # author=request.user for more security
         article = get_object_or_404(Article, author=request.user, pk=pk)
         article.delete()
@@ -422,7 +420,7 @@ def liked_article_view(request, pk):
 
 def create_comment_view(request, pk):
     if request.user.is_authenticated:
-        redirect_to = request.GET.get('next', 'panel')
+        redirect_to = request.GET.get('next', 'home')
         article = get_object_or_404(Article, pk=pk)
         if request.POST:
             form = CommentForm(request.POST, request.FILES)
@@ -470,7 +468,7 @@ def get_comments_view(request, pk):
 
 def delete_comment_view(request, pk):
     if request.user.is_authenticated:
-        redirect_to = request.GET.get('next', 'panel')
+        redirect_to = request.GET.get('next', 'home')
         # author=request.user for more security
         comment = get_object_or_404(Comment, author=request.user, pk=pk)
         comment.delete()
@@ -481,7 +479,7 @@ def delete_comment_view(request, pk):
 
 def share_article_view(request, pk):
     if request.user.is_authenticated:
-        redirect_to = request.GET.get('next', 'panel')
+        redirect_to = request.GET.get('next', 'home')
         article = get_object_or_404(Article, pk=pk)
         for friend in request.user.friends.all():
             friend.notifications.create(

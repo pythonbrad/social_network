@@ -70,6 +70,8 @@ class SigninForm(forms.ModelForm):
         elif " " in username:
             self.add_error('username',
                            'username should not contains the space')
+        elif username[0] in '0123456789':
+            self.add_error('username', 'username should not begin with a number')
         else:
             pass
         for i in string.punctuation:
@@ -109,6 +111,24 @@ class SigninForm(forms.ModelForm):
         else:
             pass
         return photo
+
+    def clean_first_name(self, tag='first_name'):
+        first_name = self.cleaned_data[tag].capitalize(
+        )
+        max_length = 30
+        if len(first_name) > max_length:
+            self.add_error(
+                tag, '%s is too long, max %s characters' % (tag, max_length))
+        elif " " in first_name:
+            self.add_error(tag, '%s should not contains the space' % tag)
+        elif first_name[0] in '0123456789':
+            self.add_error(tag, '%s should not begin with a number' % tag)
+        else:
+            pass
+        return first_name
+
+    def clean_last_name(self):
+        return self.clean_first_name(tag='last_name')
 
     def clean_date_of_birth(self):
         date_of_birth = self.cleaned_data['date_of_birth']
