@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import AbstractUser
@@ -24,7 +23,7 @@ class User(AbstractUser):
     email = models.EmailField(unique=True)
     photo = models.ImageField(upload_to=user_directory_path,
                               blank=True,
-                              default=settings.MEDIA_ROOT + '/no-image.png')
+                              default='no-image.png')
     first_name = models.CharField(max_length=50, blank=True)
     last_name = models.CharField(max_length=50, blank=True)
     notifications = models.ManyToManyField('Notification')

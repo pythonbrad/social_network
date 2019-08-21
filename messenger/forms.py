@@ -116,13 +116,16 @@ class SigninForm(forms.ModelForm):
         first_name = self.cleaned_data[tag].capitalize(
         )
         max_length = 30
-        if len(first_name) > max_length:
-            self.add_error(
-                tag, '%s is too long, max %s characters' % (tag, max_length))
-        elif " " in first_name:
-            self.add_error(tag, '%s should not contains the space' % tag)
-        elif first_name[0] in '0123456789':
-            self.add_error(tag, '%s should not begin with a number' % tag)
+        if first_name:
+            if len(first_name) > max_length:
+                self.add_error(
+                    tag, '%s is too long, max %s characters' % (tag, max_length))
+            elif " " in first_name:
+                self.add_error(tag, '%s should not contains the space' % tag)
+            elif first_name[0] in '0123456789':
+                self.add_error(tag, '%s should not begin with a number' % tag)
+            else:
+                pass
         else:
             pass
         return first_name
