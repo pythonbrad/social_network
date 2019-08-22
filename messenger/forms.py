@@ -59,7 +59,9 @@ class SigninForm(forms.ModelForm):
         username = self.cleaned_data['username'].lower()
         min_length = 4
         max_length = 30
-        if len(username) < min_length:
+        if User.objects.filter(username=username):
+            self.add_error('username', 'This username is already used')
+        elif len(username) < min_length:
             self.add_error(
                 'username',
                 'username is too short, min %s characters' % min_length)
@@ -84,6 +86,10 @@ class SigninForm(forms.ModelForm):
 
     def clean_email(self):
         email = self.cleaned_data['email'].lower()
+        if User.objects.filter(email=email):
+            self.add_error('email', 'This email is already used')
+        else:
+            pass
         return email
 
     def clean_password(self):
@@ -140,15 +146,19 @@ class SigninForm(forms.ModelForm):
         return date_of_birth
 
     def clean(self):
-        password = self.cleaned_data['password']
-        if "password_verification" in self.cleaned_data:
-            password_verification = self.cleaned_data['password_verification']
+        if 'password' not in self.cleaned_data:
+            pass
+        elif "password_verification" not in self.cleaned_data:
+            pass
         else:
-            password_verification = ''
-        if password != password_verification:
-            self.add_error(
-                'password_verification', 'Password verification and'
-                ' password are different')
+            password = self.cleaned_data['password']
+            password_verification = self.cleaned_data['password_verification']
+            if password != password_verification:
+                self.add_error(
+                    'password_verification', 'Password verification and'
+                    ' password are different')
+            else:
+                pass
 
 
 class LoginForm(forms.Form):

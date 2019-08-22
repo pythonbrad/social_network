@@ -18,9 +18,9 @@ def user_directory_path(instance, filename):
 
 # Create your models here.
 class User(AbstractUser):
-    username = models.CharField(unique=True, max_length=50, primary_key=True)
+    username = models.CharField(max_length=50, primary_key=True)
     date_of_birth = models.DateField()
-    email = models.EmailField(unique=True)
+    email = models.EmailField()
     photo = models.ImageField(upload_to=user_directory_path,
                               blank=True,
                               default='no_image.png')

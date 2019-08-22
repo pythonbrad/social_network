@@ -30,6 +30,21 @@ def post_save_friendship(sender, instance, created, **kwargs):
                 url=reverse('user_details', args=(instance.receiver.pk, )),
             )
 
+            for friend in instance.sender.friends.all():
+                friend.notifications.create(
+                    receiver=friend,
+                    message="%s is now in friendship with %s" %
+                    (instance.sender, instance.receiver),
+                    obj_pk=instance.pk,
+                    url=reverse('user_details', args=(instance.receiver, )))
+            for friend in instance.receiver.friends.all():
+                friend.notifications.create(
+                    receiver=friend,
+                    message="%s is now in friendship with %s" %
+                    (instance.receiver, instance.sender),
+                    obj_pk=instance.pk,
+                    url=reverse('user_details', args=(instance.sender, )))
+
         else:
             pass
 
@@ -50,7 +65,7 @@ def pre_delete_friendship(sender, instance, **kwargs):
             receiver=instance.receiver,
             message='your friendship with %s has been canceled' %
             (instance.sender),
-            url=reverse('user_details', args=(instance.sender.pk,)),
+            url=reverse('user_details', args=(instance.sender.pk, )),
             obj_pk=instance.pk,
         )
     else:
@@ -59,7 +74,7 @@ def pre_delete_friendship(sender, instance, **kwargs):
         receiver=instance.sender,
         message='your friendship with %s has been canceled' %
         (instance.receiver),
-        url=reverse('user_details', args=(instance.receiver.pk,)),
+        url=reverse('user_details', args=(instance.receiver.pk, )),
         obj_pk=instance.pk,
     )
 
@@ -121,7 +136,7 @@ def post_save_comment(sender, instance, created, **kwargs):
                     receiver=liker,
                     message='%s has comments an article' % instance.author,
                     obj_pk=instance.pk,
-                    url=reverse('get_comments', args=(instance.article.pk,)),
+                    url=reverse('get_comments', args=(instance.article.pk, )),
                 )
             else:
                 pass
@@ -130,7 +145,7 @@ def post_save_comment(sender, instance, created, **kwargs):
                 receiver=instance.article.author,
                 message='%s has comments your article' % instance.author,
                 obj_pk=instance.pk,
-                url=reverse('get_comments', args=(instance.article.pk,)),
+                url=reverse('get_comments', args=(instance.article.pk, )),
             )
         else:
             pass
