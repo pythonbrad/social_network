@@ -59,7 +59,11 @@ class SigninForm(forms.ModelForm):
         username = self.cleaned_data['username'].lower()
         min_length = 4
         max_length = 30
-        if User.objects.filter(username=username):
+        if len(username) < min_length:
+            self.add_error(
+                'username',
+                'username is too short, min %s characters' % min_length)
+        elif User.objects.filter(username=username):
             self.add_error('username', 'This username is already used')
         elif len(username) < min_length:
             self.add_error(
