@@ -23,7 +23,7 @@ class User(AbstractUser):
     email = models.EmailField(unique=True)
     photo = models.ImageField(upload_to=user_directory_path,
                               blank=True,
-                              default='no-image.png')
+                              default='no_image.png')
     first_name = models.CharField(max_length=50, blank=True)
     last_name = models.CharField(max_length=50, blank=True)
     notifications = models.ManyToManyField('Notification')
