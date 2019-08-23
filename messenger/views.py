@@ -68,9 +68,7 @@ def panel_view(request):
 def list_friendship_view(request):
     if request.user.is_authenticated:
         # Pour data frienship, use it
-        friendships = Friendship.objects.filter(Q(sender=request.user)
-                                                | Q(receiver=request.user),
-                                                is_valided=False)
+        friendships = Friendship.get_not_valid(user=request.user)
         page = request.GET.get('page', 1)
         paginator = Paginator(friendships, 10)
         try:
@@ -93,11 +91,8 @@ def create_friendship_view(request, pk):
     if request.user.is_authenticated:
         if request.user.pk != pk:
             future_friend = get_object_or_404(User, pk=pk)
-            friends = request.user.friends.all()
-            waiting_friends = request.user.waiting_friends.all()
+            friends = request.user.get_list_friends(in_waiting=None)
             if future_friend in friends:
-                pass
-            elif future_friend in waiting_friends:
                 pass
             else:
                 Friendship.objects.create(sender=request.user,
@@ -144,8 +139,8 @@ def list_users_view(request):
             users = paginator.page(1)
         except EmptyPage:
             users = paginator.page(paginator.num_pages)
-        friends = request.user.friends.all()
-        waiting_friends = request.user.waiting_friends.all()
+        friends = request.user.get_list_friends(in_waiting=False)
+        waiting_friends = request.user.get_list_friends(in_waiting=True)
         return render(
             request, 'messenger/list_users.html', {
                 'title': 'List users',
@@ -159,7 +154,7 @@ def list_users_view(request):
 
 def list_friends_view(request):
     if request.user.is_authenticated:
-        friends = request.user.friends.all()
+        friends = request.user.get_list_friends()
         page = request.GET.get('page', 1)
         paginator = Paginator(friends, 10)
         try:
@@ -205,8 +200,8 @@ def delete_notification_view(request, pk):
 def user_details_view(request, pk):
     if request.user.is_authenticated:
         user = get_object_or_404(User, pk=pk)
-        friends = request.user.friends.all()
-        waiting_friends = request.user.waiting_friends.all()
+        friends = request.user.get_list_friends()
+        waiting_friends = request.user.get_list_friends(in_waiting=True)
         return render(
             request, 'messenger/user_details.html', {
                 'title': 'User details',
@@ -247,9 +242,7 @@ def get_messages_view(request, pk):
     if request.user.is_authenticated:
         if request.user.pk != pk:
             user = get_object_or_404(User, pk=pk)
-            messages = request.user.messages.filter(
-                Q(receiver=user)
-                | Q(sender=user))
+            messages = Message.get(user1=user, user2=request.user)
             page = request.GET.get('page', None)
             paginator = Paginator(messages, 10)
             try:
@@ -302,9 +295,7 @@ def messages_view(request):
             users = paginator.page(paginator.num_pages)
         last_messages = []
         for user in users:
-            message = request.user.messages.filter(
-                Q(sender=user)
-                | Q(receiver=user))
+            message = Message.get(user1=user, user2=request.user)
             last_messages.append({
                 'user': user,
                 'message': message.last() if message else [],
@@ -322,7 +313,7 @@ def messages_view(request):
 
 def list_notifications_view(request):
     if request.user.is_authenticated:
-        notifications = request.user.notifications.all()
+        notifications = Notification.get(user=request.user)
         page = request.GET.get('page', None)
         paginator = Paginator(notifications, 10)
         try:
@@ -368,7 +359,7 @@ def articles_view(request):
     if request.user.is_authenticated:
         articles = Article.objects.all()
         _ = []
-        friends = request.user.friends.all()
+        friends = request.user.get_list_friends()
         for article in articles:
             if article.author in friends or article.author == request.user:
                 _.append(article)
@@ -481,8 +472,8 @@ def share_article_view(request, pk):
     if request.user.is_authenticated:
         redirect_to = request.GET.get('next', 'home')
         article = get_object_or_404(Article, pk=pk)
-        for friend in request.user.friends.all():
-            friend.notifications.create(
+        for friend in request.user.get_list_friends():
+            Notification.objects.create(
                 receiver=friend,
                 message="%s said: Can you see this article of %s?" %
                 (request.user.username, article.author.username),

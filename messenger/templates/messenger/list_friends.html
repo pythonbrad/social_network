@@ -15,7 +15,7 @@
                     <p>
                         <a href="{% url 'user_details' friend.pk %}">
                             <strong>
-                                {% if friend in request.user.friends.all or friend == request.user %}
+                                {% if friend in request.user.get_list_friends or friend == request.user %}
                                     {{ friend.first_name }} {{ friend.last_name }}
                                 {% endif %}
                             </strong>

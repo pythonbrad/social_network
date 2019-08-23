@@ -12,7 +12,7 @@
                         <p>
                             <a href="{% url 'user_details' article.author.pk %}">
                                 <strong>
-                                    {% if article.author in request.user.friends.all or article.author == request.user %}
+                                    {% if article.author in request.user.get_list_friends or article.author == request.user %}
                                         {{ article.author.first_name }} {{ article.author.last_name }}
                                     {% endif %}
                                 </strong>
@@ -46,7 +46,7 @@
                             {% if zone_comment is True %}
                                 <a href="{% url 'create_comment' article.pk %}?next={{ request.path }}?page={{ articles.number }}" class="level-item button is-small is-link">Comment ({{ article.comments.count }})</a>
                                 {% if article.author == request.user %}
-                                    <a class="level-item button is-small is-danger" href="{% url 'delete_article' article.pk %}?next={{ request.path }}?page={{ articles.number }}">Delete</a>
+                                    <a class="level-item button is-small is-danger" href="{% url 'delete_article' article.pk %}?next={% url 'articles' %}">Delete</a>
                                 {% endif %}
                             {% elif zone_comment is False %}
                                 <a class="level-item button is-small is-primary" href="{% url 'liked_article' article.pk %}?next={{ request.path }}?page={{ articles.number }}">

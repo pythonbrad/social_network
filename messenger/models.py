@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from django.db.models import Q
 from django.contrib.auth.models import AbstractUser
 from django.db.models.signals import post_save
 from django.db.models.signals import pre_delete
@@ -26,11 +27,6 @@ class User(AbstractUser):
                               default='no_image.png')
     first_name = models.CharField(max_length=50, blank=True)
     last_name = models.CharField(max_length=50, blank=True)
-    notifications = models.ManyToManyField('Notification')
-    friends = models.ManyToManyField('User', related_name='friends_list')
-    waiting_friends = models.ManyToManyField(
-        'User', related_name='waiting_friends_list')
-    messages = models.ManyToManyField('Message')
     """
     No replace friendship, the contact save all the users
      with who a user has communicated same if this user is not his friend
@@ -44,11 +40,35 @@ class User(AbstractUser):
         return self
 
     def get_state(self):
-        new_notifications = self.notifications.filter(received=False)
-        waiting_friends = Friendship.objects.filter(receiver=self,
-                                                    is_valided=False)
-        new_messages = self.messages.filter(receiver=self, received=False)
+        new_notifications = Notification.get_new(user=self)
+        waiting_friends = Friendship.get_not_valid(user=self)
+        new_messages = Message.get_new(user=self)
         return locals()
+
+    def get_list_friends(self, in_waiting=False):
+        if in_waiting is not None:
+            if in_waiting:
+                friendships = Friendship.get_not_valid(self)
+            else:
+                friendships = Friendship.get_valid(self)
+        else:
+            friendships = Friendship.get(self)
+        friends = []
+        for friendship in friendships:
+            if friendship.sender != self:
+                friends.append(friendship.sender)
+            else:
+                friends.append(friendship.receiver)
+        return friends
+
+    def create_notification(self, message, obj_pk, url):
+        return Notification.objects.create(receiver=self,
+                                           message=message,
+                                           obj_pk=obj_pk,
+                                           url=url)
+
+    def get_notification(self, obj_pk):
+        return Notification.objects.filter(obj_pk=obj_pk)
 
 
 class Contact(models.Model):
@@ -85,6 +105,17 @@ class Friendship(models.Model):
     def __str__(self):
         return "%s and %s" % (self.sender, self.receiver)
 
+    def get(user):
+        return Friendship.objects.filter(Q(sender=user) | Q(receiver=user))
+
+    def get_not_valid(user):
+        return Friendship.objects.filter(Q(sender=user) | Q(receiver=user),
+                                         is_valided=False)
+
+    def get_valid(user):
+        return Friendship.objects.filter(Q(sender=user) | Q(receiver=user),
+                                         is_valided=True)
+
 
 class Message(models.Model):
     sender = models.ForeignKey(User,
@@ -108,6 +139,14 @@ class Message(models.Model):
     def get_user(self):
         return self.sender
 
+    def get(user1, user2):
+        return Message.objects.filter(
+            Q(sender=user1, receiver=user2) | Q(sender=user2, receiver=user1))
+
+    def get_new(user):
+        return Message.objects.filter(Q(sender=user) | Q(receiver=user),
+                                      received=False)
+
 
 class Notification(models.Model):
     receiver = models.ForeignKey(User,
@@ -126,10 +165,11 @@ class Notification(models.Model):
     class Meta:
         ordering = ['date_created']
 
-    def get_new(self):
-        notifications = Notification.objects.filter(receiver=self.receiver,
-                                                    received=False)
-        return notifications
+    def get_new(user):
+        return Notification.objects.filter(receiver=user, received=False)
+
+    def get(user):
+        return Notification.objects.filter(Q(receiver=user))
 
 
 class Article(models.Model):
