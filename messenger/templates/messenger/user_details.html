@@ -17,7 +17,7 @@
             <p><b>Adhesion:</b> {{ user.date_joined }}</p>
             <p><b>Date of birth:</b> {{ user.date_of_birth }}</p>
             {% if user in friends or user == request.user %}
-                <p><b>Friends:</b> {{ user.friends.count }}</p>
+                <p><b>Friends:</b> {{ user.get_list_friends|length }}</p>
                 <p><b>Active:</b> {{ user.is_active }}</p>
                 <p><b>Date joined:</b> {{ user.date_created }}</p>
                 <p><b>Last login:</b> {{ user.last_login|timesince:datetime }}</p>

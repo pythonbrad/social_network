@@ -23,6 +23,7 @@ SECRET_KEY = '0k3uv6_se*5=49n6$!mw6$j)#k8ri1@ma(g495pmj8y++2)1t+'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+print('PUT DEBUG=False in production')
 
 ALLOWED_HOSTS = [
     '127.0.0.1',
