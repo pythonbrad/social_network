@@ -14,11 +14,11 @@
                 <li><a href="{% url 'list_notifications' %}">
                     Notifications ({{ user_state.new_notifications.count }})
                 </a></li>
-                <li><a>Settings</a></li>
+                <li><a href="{% url 'settings' %}">Settings</a></li>
             {% endwith %}
         </ul>
     </div>
-    <div class='columns is-mobile'>
+    <div class='columns'>
         <div class="column is-one-fifth"></div>
         <div class="column">
             {% block column_contains %}

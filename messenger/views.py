@@ -1,10 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404, reverse
-from .forms import SigninForm, LoginForm, MessageForm, ArticleForm, CommentForm
+from .forms import SigninForm, LoginForm, MessageForm
+from .forms import ArticleForm, CommentForm, ChangePhotoForm, ChangePasswordForm, ChangeDataUserForm
 from django.contrib import auth
 from django.utils import timezone
-from .models import Message, Friendship, User, Notification, Article, Comment
+from .models import Message, Friendship, User
+from .models import Notification, Article, Comment
 from django.db.models import Q
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from datetime import date
 
 
 # Create your views here.
@@ -480,5 +483,126 @@ def share_article_view(request, pk):
                 url=reverse('get_comments', args=(pk, )),
                 obj_pk=pk)
         return redirect(redirect_to)
+    else:
+        return redirect('login')
+
+
+def settings_view(request):
+    if request.user.is_authenticated:
+        datas = [
+            {
+                'title': 'My informations',
+                'body': 'Modify your informations',
+                'url': reverse('user_settings'),
+            },
+            {
+                'title': 'Photo of profil',
+                'body': 'Change your photo of profil',
+                'url': reverse('photo_settings'),
+            },
+            {
+                'title': 'Password',
+                'body': 'Change your password',
+                'url': reverse('password_settings'),
+            },
+        ]
+        return render(request, 'messenger/settings.html', {
+            'title': 'Settings',
+            'datas': datas,
+        })
+    else:
+        return redirect('login')
+
+
+def user_settings_view(request):
+    if request.user.is_authenticated:
+        if request.POST:
+            form = ChangeDataUserForm(request.POST, request.FILES)
+            password_entry = request.POST.get('password', None)
+            if password_entry != request.user.password:
+                form.add_error('password', 'password verification error')
+            else:
+                date_now = timezone.now()
+                date_now = date(date_now.year, date_now.month, date_now.day)
+                date_last_update = request.user.date_updated
+                date_last_update = date(date_last_update.year,
+                                        date_last_update.month,
+                                        date_last_update.day)
+                days_wait = (date_now - date_last_update).days
+                days_to_wait = 30
+                if days_wait < days_to_wait:
+                    form.add_error(
+                        'password',
+                        'You should wait %s days to change this information'
+                        ', last update: %s' %
+                        (days_to_wait - days_wait, date_last_update))
+                else:
+                    pass
+            if form.is_valid():
+                request.user.first_name = form.cleaned_data['first_name']
+                request.user.last_name = form.cleaned_data['last_name']
+                request.user.date_of_birth = form.cleaned_data['date_of_birth']
+                request.user.date_updated = timezone.now()
+                request.user.save()
+                return redirect('settings')
+            else:
+                pass
+        else:
+            form = ChangeDataUserForm({
+                'date_of_birth': request.user.date_of_birth,
+                'first_name': request.user.first_name,
+                'last_name': request.user.last_name
+            })
+        return render(
+            request, 'messenger/settings.html', {
+                'title': 'User Settings',
+                'form': form,
+                'settings_url': reverse('user_settings'),
+            })
+    else:
+        return redirect('login')
+
+
+def photo_settings_view(request):
+    if request.user.is_authenticated:
+        if request.POST:
+            form = ChangePhotoForm(request.POST, request.FILES)
+            if form.is_valid():
+                request.user.photo = form.cleaned_data['photo']
+                request.user.save()
+                return redirect('settings')
+        else:
+            form = ChangePhotoForm()
+        return render(
+            request, 'messenger/settings.html', {
+                'title': 'Photo Settings',
+                'form': form,
+                'settings_url': reverse('photo_settings'),
+            })
+    else:
+        return redirect('login')
+
+
+def password_settings_view(request):
+    if request.user.is_authenticated:
+        if request.POST:
+            form = ChangePasswordForm(request.POST, request.FILES)
+            old_password = request.POST.get('old_password', None)
+            if old_password != request.user.password:
+                form.add_error('old_password', 'Old password error')
+            else:
+                pass
+            if form.is_valid():
+                request.user.password = form.cleaned_data['password']
+                request.user.save()
+                return redirect('settings')
+        else:
+            form = ChangePasswordForm()
+        return render(
+            request, 'messenger/settings.html', {
+                'title': 'Password Settings',
+                'form': form,
+                'settings_url': reverse('password_settings'),
+            })
     else:
         return redirect('login')

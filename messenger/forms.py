@@ -5,6 +5,22 @@ from django.utils import timezone
 import string
 
 
+def photo_contraint(self):
+    photo = self.cleaned_data['photo']
+    if not type(photo) is str:
+        max_size = 1024 * 1024  # 1MB
+        if photo.size > max_size:
+            self.add_error(
+                'photo', 'The photo should be lower to 1MB->1024KB,'
+                ' this photo has %sMB-->%sKo' %
+                (int(photo.size / 1000 / 1000), int(photo.size / 1000)))
+        else:
+            pass
+    else:
+        pass
+    return photo
+
+
 class SigninForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -77,7 +93,8 @@ class SigninForm(forms.ModelForm):
             self.add_error('username',
                            'username should not contains the space')
         elif username[0] in '0123456789':
-            self.add_error('username', 'username should not begin with a number')
+            self.add_error('username',
+                           'username should not begin with a number')
         else:
             pass
         for i in string.punctuation:
@@ -108,28 +125,16 @@ class SigninForm(forms.ModelForm):
         return password
 
     def clean_photo(self):
-        photo = self.cleaned_data['photo']
-        if not type(photo) is str:
-            max_size = 1024 * 1024  # 1MB
-            if photo.size > max_size:
-                self.add_error(
-                    'photo', 'The photo should be lower to 1MB->1024KB,'
-                    ' this photo has %sMB-->%sKo' %
-                    (int(photo.size / 1000 / 1000), int(photo.size / 1000)))
-            else:
-                pass
-        else:
-            pass
-        return photo
+        return photo_contraint(self)
 
     def clean_first_name(self, tag='first_name'):
-        first_name = self.cleaned_data[tag].capitalize(
-        )
+        first_name = self.cleaned_data[tag]
         max_length = 30
         if first_name:
             if len(first_name) > max_length:
                 self.add_error(
-                    tag, '%s is too long, max %s characters' % (tag, max_length))
+                    tag,
+                    '%s is too long, max %s characters' % (tag, max_length))
             elif " " in first_name:
                 self.add_error(tag, '%s should not contains the space' % tag)
             elif first_name[0] in '0123456789':
@@ -225,19 +230,7 @@ class MessageForm(forms.ModelForm):
         fields = ['contains', 'photo']
 
     def clean_photo(self):
-        photo = self.cleaned_data['photo']
-        if photo:
-            max_size = 1024 * 1024  # 1MB
-            if photo.size > max_size:
-                self.add_error(
-                    'photo', 'The photo should be lower to 1MB->1024KB,'
-                    ' this photo has %sMB-->%sKo' %
-                    (photo.size / 1000 / 1000, photo.size / 1000))
-            else:
-                pass
-        else:
-            pass
-        return photo
+        return photo_contraint(self)
 
 
 class ArticleForm(forms.ModelForm):
@@ -257,19 +250,7 @@ class ArticleForm(forms.ModelForm):
         fields = ['contains', 'photo']
 
     def clean_photo(self):
-        photo = self.cleaned_data['photo']
-        if photo:
-            max_size = 1024 * 1024  # 1MB
-            if photo.size > max_size:
-                self.add_error(
-                    'photo', 'The photo should be lower to 1MB->1024KB,'
-                    ' this photo has %sMB-->%sKo' %
-                    (photo.size / 1000 / 1000, photo.size / 1000))
-            else:
-                pass
-        else:
-            pass
-        return photo
+        return photo_contraint(self)
 
 
 class CommentForm(forms.ModelForm):
@@ -289,16 +270,92 @@ class CommentForm(forms.ModelForm):
         fields = ['contains', 'photo']
 
     def clean_photo(self):
-        photo = self.cleaned_data['photo']
-        if photo:
-            max_size = 1024 * 1024  # 1MB
-            if photo.size > max_size:
-                self.add_error(
-                    'photo', 'The photo should be lower to 1MB->1024KB,'
-                    ' this photo has %sMB-->%sKo' %
-                    (photo.size / 1000 / 1000, photo.size / 1000))
-            else:
-                pass
-        else:
+        return photo_contraint(self)
+
+
+class ChangeDataUserForm(forms.Form):
+    first_name = forms.CharField(
+        required=True,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'input',
+                'placeholder': 'Enter the new first name',
+                'type': 'text',
+            }))
+    last_name = forms.CharField(
+        required=True,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'input',
+                'placeholder': 'Enter the new last name',
+                'type': 'text',
+            }))
+    date_of_birth = forms.DateField(
+        required=True,
+        widget=forms.DateInput(
+            attrs={
+                'class': 'input',
+                'placeholder': 'Enter the new date of birth',
+                'type': 'date',
+            }))
+    password = forms.CharField(
+        required=True,
+        widget=forms.PasswordInput(attrs={
+            'class': 'input',
+            'placeholder': 'Enter your password'
+        }),
+        help_text='Enter your password to valid the modifications')
+
+    def clean_date_of_birth(self):
+        return SigninForm.clean_date_of_birth(self)
+
+    def clean_first_name(self, tag='first_name'):
+        return SigninForm.clean_first_name(self, tag=tag)
+
+    def clean_last_name(self):
+        return self.clean_first_name(tag='last_name')
+
+
+class ChangePhotoForm(forms.Form):
+    photo = forms.ImageField()
+
+    def clean_photo(self):
+        return photo_contraint(self)
+
+
+class ChangePasswordForm(forms.Form):
+    old_password = forms.CharField(
+        required=True,
+        widget=forms.PasswordInput(attrs={
+            'class': 'input',
+            'placeholder': 'Enter the old password'
+        }))
+    password = forms.CharField(
+        required=True,
+        widget=forms.PasswordInput(attrs={
+            'class': 'input',
+            'placeholder': 'Enter the new password'
+        }))
+    password_verification = forms.CharField(
+        required=True,
+        widget=forms.PasswordInput(attrs={
+            'class': 'input',
+            'placeholder': 'Enter the new password'
+        }))
+
+    def clean_password(self):
+        print(dir(self))
+        return SigninForm.clean_password(self)
+
+    def clean(self):
+        if 'password' not in self.cleaned_data:
             pass
-        return photo
+        elif 'password_verification' not in self.cleaned_data:
+            pass
+        else:
+            password = self.cleaned_data['password']
+            password_verification = self.cleaned_data['password_verification']
+            if password != password_verification:
+                self.add_error(
+                    'password_verification', 'Password verification and'
+                    ' password are different')

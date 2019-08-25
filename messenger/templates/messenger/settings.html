@@ -1,0 +1,20 @@
+{% extends 'messenger/panel.html' %}
+{% block column_contains %}
+    {% if form %}
+        {% include "messenger/forms.html" %}
+    {% else %}
+        {% for data in datas%}
+            <div class="message is-small">
+                <header class="message-header">
+                    {{ data.title }}
+                </header>
+                <div class="message-body">
+                    {{ data.body }}
+                </div>
+                <footer class="message-footer">
+                    <a href="{{ data.url }}" class="button is-small is-info">Open</a>
+                </footer>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endblock %}

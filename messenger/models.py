@@ -33,6 +33,7 @@ class User(AbstractUser):
     """
     contacts = models.ManyToManyField('Contact', related_name='contacts_list')
     date_created = models.DateField(default=timezone.now)
+    date_updated = models.DateField(default=timezone.now)
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['date_of_birth', 'email']
 
