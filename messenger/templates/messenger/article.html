@@ -1,9 +1,13 @@
         <div class="box">
             <article class="media">
-                {% if article.author.photo and not request.user.no_media %}
+                {% if article.author.photo %}
                     <div class="media-left">
                         <figure class="image is-64x64">
-                            <img src="{{ article.author.photo.url }}" alt="Image">
+                            {% if request.user.no_media %}
+                                <a href="{{ article.author.photo.url }}">See Media</a>
+                            {% else %}
+                                <img src="{{ article.author.photo.url }}" alt="Image">
+                            {% endif %}
                         </figure>
                     </div>
                 {% endif %}
@@ -33,10 +37,14 @@
                                 {% endfor %}
                             {% endif %}
                         </p>
-                        {% if article.photo and not request.user.no_media %}
+                        {% if article.photo %}
                             <p>
                                 <figure class="image">
-                                    <img src="{{ article.photo.url }}" alt="Image">
+                                    {% if request.user.no_media %}
+                                        <a href="{{ article.photo.url }}">See Media</a>
+                                    {% else %}
+                                        <img src="{{ article.photo.url }}" alt="Image">
+                                    {% endif %}
                                 </figure>
                             </p>
                         {% endif %}

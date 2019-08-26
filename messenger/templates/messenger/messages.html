@@ -5,10 +5,14 @@
     {% for last_message in last_messages %}
         <div class="box">
             <article class="media">
-                {% if last_message.user.photo and not request.user.no_media %}
+                {% if last_message.user.photo %}
                     <div class="media-left">
                         <figure class="image is-64x64">
-                            <img src="{{ last_message.user.photo.url }}" alt="Image">
+                            {% if request.user.no_media %}
+                                <a href="{{ last_message.user.photo.url }}">See Media</a>
+                            {% else %}
+                                <img src="{{ last_message.user.photo.url }}" alt="Image">
+                            {% endif %}
                         </figure>
                     </div>
                 {% endif %}
@@ -29,10 +33,14 @@
                                 <p><span class="button is-primary is-small">Has New</span></p>
                             {% endif %}
                         </p>
-                        {% if last_message.message.photo and not request.user.no_media %}
+                        {% if last_message.message.photo %}
                             <p>
                                 <figure class="image">
-                                    <img src="{{ last_message.message.photo.url }}" alt="Image">
+                                    {% if request.user.no_media %}
+                                        <a href="{{ last_message.message.photo.url }}">See Media</a>
+                                    {% else %}
+                                        <img src="{{ last_message.message.photo.url }}" alt="Image">
+                                    {% endif %}
                                 </figure>
                             </p>
                         {% endif %}

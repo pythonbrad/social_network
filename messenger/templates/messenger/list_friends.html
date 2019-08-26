@@ -5,10 +5,14 @@
     {% for friend in friends %}
         <div class="box">
             <div class="columns">
-                {% if friend.photo and not request.user.no_media %}
+                {% if friend.photo %}
                     <div class="column is-2 is-marginless">
                         <div class="image is-64x64">
-                            <img src="{{ friend.photo.url }}">
+                            {% if request.user.no_media %}
+                                <a href="{{ friend.photo.url }}">See Media</a>
+                            {% else %}
+                                <img src="{{ friend.photo.url }}">
+                            {% endif %}
                         </div>
                     </div>
                 {% endif %}

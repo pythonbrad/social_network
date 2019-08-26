@@ -6,9 +6,13 @@
         </header>
         <div class="card-content">
             <div class="card-image" align="center">
-                {% if user.photo and not request.user.no_media %}
+                {% if user.photo %}
                     <figure class="image is-128x128">
-                        <img src="{{ user.photo.url }}">
+                        {% if request.user.no_media %}
+                            <a href="{{ user.photo.url }}">See Media</a>
+                        {% else %}
+                            <img src="{{ user.photo.url }}">
+                        {% endif %}
                     </figure>
                 {% endif %}
             </div>

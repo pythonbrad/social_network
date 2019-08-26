@@ -146,8 +146,7 @@ class Message(models.Model):
             Q(sender=user1, receiver=user2) | Q(sender=user2, receiver=user1))
 
     def get_new(user):
-        return Message.objects.filter(Q(sender=user) | Q(receiver=user),
-                                      received=False)
+        return Message.objects.filter(Q(receiver=user), received=False)
 
 
 class Notification(models.Model):

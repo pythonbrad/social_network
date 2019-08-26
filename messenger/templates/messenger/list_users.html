@@ -5,10 +5,14 @@
     {% for user in users %}
         <div class="box">
             <article class="media">
-                {% if user.photo and not request.user.no_media %}
+                {% if user.photo %}
                     <div class="media-left">
                         <figure class="image is-64x64">
-                            <img src="{{ user.photo.url }}" alt="Image">
+                            {% if request.user.no_media %}
+                            <a href="{{ user.photo.url }}">See Media</a>
+                            {% else %}
+                                <img src="{{ user.photo.url }}" alt="Image">
+                            {% endif %}
                         </figure>
                     </div>
                 {% endif %}
