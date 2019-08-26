@@ -2,16 +2,16 @@
 {% block column_contains %}
     <h1 class="subtitle">
         Discussion with {{ user.username }} ({{ messages.paginator.count }})
+    </h1>
+    <p>
         <figure class="image is-64x64">
             <img src="{{ user.photo.url }}" alt="Image">
         </figure>
-    </h1>
+    </p>
     <a href="{% url 'user_details' user.pk %}" class="button is-link is-small">See his details</a>
     <a href="{% url 'send_message' user.pk %}" class="button is-primary is-small">Send message</a>
     <br/><br/>
-    {% with messages as data_to_pagin %}
-        {% include 'messenger/pagin.html' %}
-    {% endwith %}
+    {% include 'messenger/pagin_up.html' with data_to_pagin=messages %}
     <br/>
     {% for message in messages %}
         <div class="box">
@@ -57,4 +57,5 @@
     {% empty %}
         <p>Nothing for the moment</p>
     {% endfor %}
+    {% include 'messenger/pagin_down.html' with data_to_pagin=messages %}
 {% endblock %}

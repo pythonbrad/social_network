@@ -1,6 +1,7 @@
 {% extends 'messenger/panel.html' %}
 {% block column_contains %}
     <h1 class="subtitle">List users ({{ users.paginator.count }})</h1>
+    {% include 'messenger/pagin_up.html' with data_to_pagin=users %}
     {% for user in users %}
         <div class="box">
             <article class="media">
@@ -45,7 +46,5 @@
     {% empty %}
         No others users for the moment
     {% endfor %}
-    {% with users as data_to_pagin %}
-        {% include 'messenger/pagin.html' %}
-    {% endwith %}
+    {% include 'messenger/pagin_down.html' with data_to_pagin=users %}
 {% endblock %}

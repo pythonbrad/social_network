@@ -2,9 +2,6 @@
     <nav class="pagination is-small" role="navigation" aria-label="pagination">
         <ul class="pagination-list">
             {% if data_to_pagin.has_other_pages %}
-                {% if data_to_pagin.has_previous %}
-                    <li><a class="pagination-previous" href="?page={{ data_to_pagin.previous_page_number }}">Previous</a></li>
-                {% endif %}
                 {% if data_to_pagin.has_next %}
                     <li><a class="pagination-next" href="?page={{ data_to_pagin.next_page_number }}">Next</a></li>
                 {% endif %}

@@ -1,6 +1,7 @@
 {% extends 'messenger/panel.html' %}
 {% block column_contains %}
     <h1 class="subtitle">Select a discussion ({{ users.paginator.count }})</h1>
+    {% include 'messenger/pagin_up.html' with data_to_pagin=users %}
     {% for last_message in last_messages %}
         <div class="box">
             <article class="media">
@@ -47,7 +48,5 @@
     {% empty %}
         Nothing for the moment
     {% endfor %}
-    {% with users as data_to_pagin %}
-        {% include 'messenger/pagin.html' %}
-    {% endwith %}
+    {% include 'messenger/pagin_down.html' with data_to_pagin=users %}
 {% endblock %}

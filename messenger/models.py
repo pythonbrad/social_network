@@ -203,6 +203,7 @@ class Comment(models.Model):
                                 on_delete=models.CASCADE)
     contains = models.TextField(max_length=5000)
     photo = models.ImageField(upload_to=user_directory_path, blank=True)
+    likers = models.ManyToManyField(User, related_name='comment_likers')
     date_created = models.DateTimeField(default=timezone.now)
 
     class Meta:

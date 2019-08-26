@@ -4,6 +4,7 @@
         <div class="message-header">
             <span>Notification ({{ notifications.paginator.count }})</span>
         </div>
+        {% include 'messenger/pagin_up.html' with data_to_pagin=notifications %}
         {% for notification in notifications %}
             <div class="message-body">
                 <a href="{{ notification.url }}">
@@ -17,8 +18,6 @@
                 Nothing for the moment
             </div>
         {% endfor %}
-        {% with notifications as data_to_pagin %}
-            {% include 'messenger/pagin.html' %}
-        {% endwith %}
+        {% include 'messenger/pagin_down.html' with data_to_pagin=notifications %}
     </div>
 {% endblock %}

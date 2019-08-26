@@ -4,12 +4,11 @@
     <h1 class="subtitle">
         Articles: {{ articles.paginator.count }}
     </h1>
-    {% with articles as data_to_pagin %}
-        {% include 'messenger/pagin.html' %}
-    {% endwith %}
+    {% include 'messenger/pagin_up.html' with data_to_pagin=articles %}
     {% for article in articles %}
         {% include "messenger/article.html" with zone_comment=False %}
     {% empty %}
         <h1>Nothing for the moment, Make you many friends to see more articles.</h1>
     {% endfor %}
+    {% include 'messenger/pagin_down.html' with data_to_pagin=articles %}
 {% endblock %}

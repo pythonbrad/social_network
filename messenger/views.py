@@ -486,6 +486,20 @@ def delete_comment_view(request, pk):
         return redirect('login')
 
 
+def liked_comment_view(request, pk):
+    if request.user.is_authenticated:
+        comment = get_object_or_404(Comment, pk=pk)
+        redirect_to = request.GET.get(
+            'next', reverse('get_comments', args=(comment.article.pk, )))
+        if request.user in comment.likers.all():
+            comment.likers.remove(request.user)
+        else:
+            comment.likers.add(request.user)
+        return redirect(redirect_to)
+    else:
+        return redirect('login')
+
+
 def share_article_view(request, pk):
     if request.user.is_authenticated:
         redirect_to = request.GET.get('next', 'home')
@@ -585,6 +599,10 @@ def photo_settings_view(request):
             if form.is_valid():
                 request.user.photo = form.cleaned_data['photo']
                 request.user.save()
+                Article.objects.create(
+                    author=request.user,
+                    contains='Has change his photo of profil',
+                    photo=request.user.photo)
                 return redirect('settings')
         else:
             form = ChangePhotoForm(initial={'photo': request.user.photo})

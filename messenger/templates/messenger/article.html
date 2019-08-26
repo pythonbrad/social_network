@@ -44,12 +44,17 @@
                     <nav class="level">
                         <div class="level-left">
                             {% if zone_comment is True %}
-                                <a href="{% url 'create_comment' article.pk %}?next={{ request.path }}?page={{ articles.number }}" class="level-item button is-small is-link">Comment ({{ article.comments.count }})</a>
+                                <a href="{% url 'create_comment' article.pk %}?next={{ request.path }}" class="level-item button is-small is-link">Comment ({{ article.comments.count }})</a>
                                 {% if article.author == request.user %}
                                     <a class="level-item button is-small is-danger" href="{% url 'delete_article' article.pk %}?next={% url 'articles' %}">Delete</a>
                                 {% endif %}
                             {% elif zone_comment is False %}
-                                <a class="level-item button is-small is-primary" href="{% url 'liked_article' article.pk %}?next={{ request.path }}?page={{ articles.number }}">
+                                {% if article.author == request.user %}
+                                    <a class="level-item button is-small is-danger" href="{% url 'delete_article' article.pk %}?next={{ request.path }}?page={{ articles.number }}">Delete</a>
+                                {% endif %}
+                                <a class="level-item button is-small is-link" href="{% url 'get_comments' article.pk %}">More</a>
+                            {% else %}
+                                <a class="level-item button is-small is-primary" href="{% url 'liked_comment' article.pk %}?next={{ request.path }}?page={{ articles.number }}">
                                     {% if request.user in article.likers.all %}
                                         Unliked
                                     {% else %}
@@ -57,12 +62,6 @@
                                     {% endif %}
                                     ({{ article.likers.count }})
                                 </a>
-                                <a class="level-item button is-small is-link" href="{% url 'get_comments' article.pk %}">See more</a>
-                                <a class="level-item button is-small is-warning" href="{% url 'share_article' article.pk %}?next={{ request.path }}?page={{ articles.number }}">Share</a>
-                                {% if article.author == request.user %}
-                                    <a class="level-item button is-small is-danger" href="{% url 'delete_article' article.pk %}?next={{ request.path }}?page={{ articles.number }}">Delete</a>
-                                {% endif %}
-                            {% else %}
                                 {% if article.author == request.user %}
                                     <a class="level-item button is-small is-danger" href="{% url 'delete_comment' article.pk %}?next={{ request.path }}?page={{ articles.number }}">Delete</a>
                                 {% endif %}
