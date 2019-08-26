@@ -1,12 +1,27 @@
-from django.shortcuts import render, redirect, get_object_or_404, reverse
-from .forms import SigninForm, LoginForm, MessageForm
-from .forms import ArticleForm, CommentForm, ChangePhotoForm, ChangePasswordForm, ChangeDataUserForm
+from django.shortcuts import render
+from django.shortcuts import redirect
+from django.shortcuts import get_object_or_404
+from django.shortcuts import reverse
 from django.contrib import auth
 from django.utils import timezone
-from .models import Message, Friendship, User
-from .models import Notification, Article, Comment
 from django.db.models import Q
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.core.paginator import Paginator
+from django.core.paginator import PageNotAnInteger
+from django.core.paginator import EmptyPage
+from .forms import SigninForm
+from .forms import LoginForm
+from .forms import MessageForm
+from .forms import ArticleForm
+from .forms import CommentForm
+from .forms import ChangePhotoForm
+from .forms import ChangePasswordForm
+from .forms import ChangeDataUserForm
+from .models import Message
+from .models import Friendship
+from .models import User
+from .models import Notification
+from .models import Article
+from .models import Comment
 from datetime import date
 
 

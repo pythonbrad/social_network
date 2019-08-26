@@ -1,13 +1,16 @@
 from django import forms
-from .models import Message, User, Article, Comment
 from django.db.models import Q
 from django.utils import timezone
+from .models import Message
+from .models import User
+from .models import Article
+from .models import Comment
 import string
 
 
 def photo_contraint(self):
     photo = self.cleaned_data['photo']
-    if not type(photo) is str:
+    if not type(photo) is str and photo:
         max_size = 1024 * 1024  # 1MB
         if photo.size > max_size:
             self.add_error(
