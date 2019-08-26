@@ -275,7 +275,7 @@ class CommentForm(forms.ModelForm):
 
 class ChangeDataUserForm(forms.Form):
     first_name = forms.CharField(
-        required=True,
+        required=False,
         widget=forms.TextInput(
             attrs={
                 'class': 'input',
@@ -283,7 +283,7 @@ class ChangeDataUserForm(forms.Form):
                 'type': 'text',
             }))
     last_name = forms.CharField(
-        required=True,
+        required=False,
         widget=forms.TextInput(
             attrs={
                 'class': 'input',
