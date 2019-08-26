@@ -572,7 +572,7 @@ def photo_settings_view(request):
                 request.user.save()
                 return redirect('settings')
         else:
-            form = ChangePhotoForm()
+            form = ChangePhotoForm(initial={'photo': request.user.photo})
         return render(
             request, 'messenger/settings.html', {
                 'title': 'Photo Settings',
