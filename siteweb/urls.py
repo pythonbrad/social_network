@@ -22,6 +22,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('messenger.urls')),
+    path('maintenance-mode/', include('maintenance_mode.urls')),
 ]
 
 if settings.DEBUG:
