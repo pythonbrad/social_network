@@ -6,13 +6,13 @@
     {% for friendship in friendships %}
         <div class="box">
             <article class="media">
-                {% if friendship.sender != request.user and friendship.sender.photo %}
+                {% if friendship.sender != request.user and friendship.sender.photo and not request.user.no_media %}
                     <div class="media-left">
                         <figure class="image is-64x64">
                             <img src="{{ friendship.sender.photo.url }}" alt="Image">
                         </figure>
                     </div>
-                {% elif friendship.sender == request.user and friendship.receiver.photo %}
+                {% elif friendship.sender == request.user and friendship.receiver.photo and not request.user.no_media %}
                     <div class="media-left">
                         <figure class="image is-64x64">
                             <img src="{{ friendship.receiver.photo.url }}" alt="Image">

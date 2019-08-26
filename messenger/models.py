@@ -32,6 +32,7 @@ class User(AbstractUser):
      with who a user has communicated same if this user is not his friend
     """
     contacts = models.ManyToManyField('Contact', related_name='contacts_list')
+    no_media = models.BooleanField(default=False)
     date_created = models.DateField(default=timezone.now)
     date_updated = models.DateField(default=timezone.now)
     USERNAME_FIELD = 'username'

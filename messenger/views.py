@@ -518,23 +518,26 @@ def share_article_view(request, pk):
 
 def settings_view(request):
     if request.user.is_authenticated:
-        datas = [
-            {
-                'title': 'My informations',
-                'body': 'Modify your informations',
-                'url': reverse('user_settings'),
-            },
-            {
-                'title': 'Photo of profil',
-                'body': 'Change your photo of profil',
-                'url': reverse('photo_settings'),
-            },
-            {
-                'title': 'Password',
-                'body': 'Change your password',
-                'url': reverse('password_settings'),
-            },
-        ]
+        datas = [{
+            'title': 'My informations',
+            'body': 'Modify your informations',
+            'url': reverse('user_settings'),
+        }, {
+            'title': 'Photo of profil',
+            'body': 'Change your photo of profil',
+            'url': reverse('photo_settings'),
+        }, {
+            'title': 'Password',
+            'body': 'Change your password',
+            'url': reverse('password_settings'),
+        }, {
+            'title':
+            '%s Media' % ('Enable' if request.user.no_media else 'Disable'),
+            'body':
+            'Click on open to Enable or Disable media to control his datas',
+            'url':
+            reverse('no_media_settings'),
+        }]
         return render(request, 'messenger/settings.html', {
             'title': 'Settings',
             'datas': datas,
@@ -637,5 +640,14 @@ def password_settings_view(request):
                 'form': form,
                 'settings_url': reverse('password_settings'),
             })
+    else:
+        return redirect('login')
+
+
+def no_media_settings_view(request):
+    if request.user.is_authenticated:
+        request.user.no_media = False if request.user.no_media else True
+        request.user.save()
+        return redirect('settings')
     else:
         return redirect('login')

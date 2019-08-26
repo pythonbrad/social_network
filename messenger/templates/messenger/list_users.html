@@ -5,7 +5,7 @@
     {% for user in users %}
         <div class="box">
             <article class="media">
-                {% if user.photo %}
+                {% if user.photo and not request.user.no_media %}
                     <div class="media-left">
                         <figure class="image is-64x64">
                             <img src="{{ user.photo.url }}" alt="Image">

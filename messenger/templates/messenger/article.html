@@ -1,6 +1,6 @@
         <div class="box">
             <article class="media">
-                {% if article.author.photo %}
+                {% if article.author.photo and not request.user.no_media %}
                     <div class="media-left">
                         <figure class="image is-64x64">
                             <img src="{{ article.author.photo.url }}" alt="Image">
@@ -19,7 +19,7 @@
                                 <small>&nbsp;@{{ article.author }}</small>
                             </a> <small style="float:right;">{{ article.date_created|timesince:datetime }}</small>
                             <br>
-                            {% if zone_comment == False %}
+                            {% if zone_comment is False %}
                                 {% with article.contains.splitlines as acs %}
                                     {% if acs|length > 1 %}
                                         {{ acs.0|truncatechars:255 }}...
@@ -33,7 +33,7 @@
                                 {% endfor %}
                             {% endif %}
                         </p>
-                        {% if article.photo %}
+                        {% if article.photo and not request.user.no_media %}
                             <p>
                                 <figure class="image">
                                     <img src="{{ article.photo.url }}" alt="Image">
@@ -49,6 +49,15 @@
                                     <a class="level-item button is-small is-danger" href="{% url 'delete_article' article.pk %}?next={% url 'articles' %}">Delete</a>
                                 {% endif %}
                             {% elif zone_comment is False %}
+                                <a class="level-item button is-small is-primary" href="{% url 'liked_article' article.pk %}?next={{ request.path }}?page={{ articles.number }}">
+                                    {% if request.user in article.likers.all %}
+                                        Unliked
+                                    {% else %}
+                                        Liked
+                                    {% endif %}
+                                    ({{ article.likers.count }})
+                                </a>
+                                <a class="level-item button is-small is-warning" href="{% url 'share_article' article.pk %}?next={{ request.path }}?page={{ articles.number }}">Share</a>
                                 {% if article.author == request.user %}
                                     <a class="level-item button is-small is-danger" href="{% url 'delete_article' article.pk %}?next={{ request.path }}?page={{ articles.number }}">Delete</a>
                                 {% endif %}

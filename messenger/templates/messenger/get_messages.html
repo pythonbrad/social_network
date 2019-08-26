@@ -4,9 +4,11 @@
         Discussion with {{ user.username }} ({{ messages.paginator.count }})
     </h1>
     <p>
-        <figure class="image is-64x64">
-            <img src="{{ user.photo.url }}" alt="Image">
-        </figure>
+        {% if user.photo and not request.user.no_media %}
+            <figure class="image is-64x64">
+                <img src="{{ user.photo.url }}" alt="Image">
+            </figure>
+        {% endif %}
     </p>
     <a href="{% url 'user_details' user.pk %}" class="button is-link is-small">See his details</a>
     <a href="{% url 'send_message' user.pk %}" class="button is-primary is-small">Send message</a>
@@ -29,7 +31,7 @@
                             <br>
                             {{ message.contains|truncatechars:255 }}
                         </p>
-                        {% if message.photo %}
+                        {% if message.photo and not request.user.no_media %}
                             <p>
                                 <figure class="image">
                                     <img src="{{ message.photo.url }}" alt="Image">

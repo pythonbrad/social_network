@@ -6,12 +6,10 @@
         </header>
         <div class="card-content">
             <div class="card-image" align="center">
-                {% if user.photo %}
+                {% if user.photo and not request.user.no_media %}
                     <figure class="image is-128x128">
                         <img src="{{ user.photo.url }}">
                     </figure>
-                {% else %}
-                    no image
                 {% endif %}
             </div>
             <p><b>Adhesion:</b> {{ user.date_joined }}</p>

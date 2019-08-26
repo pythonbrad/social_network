@@ -66,4 +66,7 @@ urlpatterns = [
     path('settings/password',
          views.password_settings_view,
          name='password_settings'),
+    path('settings/no_media',
+         views.no_media_settings_view,
+         name='no_media_settings'),
 ]
