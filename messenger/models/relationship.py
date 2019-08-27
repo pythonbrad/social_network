@@ -52,6 +52,10 @@ class Friendship(models.Model):
         return Friendship.objects.filter(Q(sender=user) | Q(receiver=user),
                                          is_valided=True)
 
+    def get_new(user):
+        return Friendship.get_not_valid(user).filter(receiver=user,
+                                                     is_valided=False)
+
 
 post_save.connect(post_save_friendship, sender=Friendship)
 pre_delete.connect(pre_delete_friendship, sender=Friendship)
