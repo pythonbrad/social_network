@@ -61,8 +61,8 @@ def pre_delete_friendship(sender, instance, **kwargs):
 def post_save_message(sender, instance, created, **kwargs):
     if created:
 
-        if not instance.sender.contacts.filter(own=instance.sender,
-                                               user=instance.receiver):
+        if not instance.sender.contacts.filter(
+                own=instance.sender, user=instance.receiver).exists():
             instance.sender.contacts.create(own=instance.sender,
                                             user=instance.receiver)
             instance.receiver.contacts.create(own=instance.receiver,

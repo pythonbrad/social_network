@@ -1,27 +1,9 @@
+from .utils import photo_contraint
+from messenger.models import User
 from django import forms
 from django.db.models import Q
 from django.utils import timezone
-from .models import Message
-from .models import User
-from .models import Article
-from .models import Comment
 import string
-
-
-def photo_contraint(self):
-    photo = self.cleaned_data['photo']
-    if not type(photo) is str and photo:
-        max_size = 1024 * 1024  # 1MB
-        if photo.size > max_size:
-            self.add_error(
-                'photo', 'The photo should be lower to 1MB->1024KB,'
-                ' this photo has %sMB-->%sKo' %
-                (int(photo.size / 1000 / 1000), int(photo.size / 1000)))
-        else:
-            pass
-    else:
-        pass
-    return photo
 
 
 class SigninForm(forms.ModelForm):
@@ -82,7 +64,7 @@ class SigninForm(forms.ModelForm):
             self.add_error(
                 'username',
                 'username is too short, min %s characters' % min_length)
-        elif User.objects.filter(username=username):
+        elif User.objects.filter(username=username).exists():
             self.add_error('username', 'This username is already used')
         elif len(username) < min_length:
             self.add_error(
@@ -110,7 +92,7 @@ class SigninForm(forms.ModelForm):
 
     def clean_email(self):
         email = self.cleaned_data['email'].lower()
-        if User.objects.filter(email=email):
+        if User.objects.filter(email=email).exists():
             self.add_error('email', 'This email is already used')
         else:
             pass
@@ -203,9 +185,9 @@ class LoginForm(forms.Form):
             password = self.cleaned_data['password']
             user = User.objects.filter(
                 Q(username=username_or_email) | Q(email=username_or_email))
-            if user:
+            if user.exists():
                 user = user.filter(password=password)
-                if user:
+                if user.exists():
                     self.user = user[0]
                 else:
                     self.add_error('password', 'password invalid')
@@ -214,151 +196,3 @@ class LoginForm(forms.Form):
 
     def get_user(self):
         return self.user
-
-
-class MessageForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['contains'].widget = forms.Textarea(
-            attrs={'style': 'height: 100%'})
-        self.fields['contains'].widget.attrs.update({
-            'class':
-            'textarea',
-            'placeholder':
-            'Enter your message'
-        })
-
-    class Meta:
-        model = Message
-        fields = ['contains', 'photo']
-
-    def clean_photo(self):
-        return photo_contraint(self)
-
-
-class ArticleForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['contains'].widget = forms.Textarea(
-            attrs={'style': 'height: 100%'})
-        self.fields['contains'].widget.attrs.update({
-            'class':
-            'textarea',
-            'placeholder':
-            'Enter your message'
-        })
-
-    class Meta:
-        model = Article
-        fields = ['contains', 'photo']
-
-    def clean_photo(self):
-        return photo_contraint(self)
-
-
-class CommentForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['contains'].widget = forms.Textarea(
-            attrs={'style': 'height: 100%'})
-        self.fields['contains'].widget.attrs.update({
-            'class':
-            'textarea',
-            'placeholder':
-            'Enter your message'
-        })
-
-    class Meta:
-        model = Comment
-        fields = ['contains', 'photo']
-
-    def clean_photo(self):
-        return photo_contraint(self)
-
-
-class ChangeDataUserForm(forms.Form):
-    first_name = forms.CharField(
-        required=False,
-        widget=forms.TextInput(
-            attrs={
-                'class': 'input',
-                'placeholder': 'Enter the new first name',
-                'type': 'text',
-            }))
-    last_name = forms.CharField(
-        required=False,
-        widget=forms.TextInput(
-            attrs={
-                'class': 'input',
-                'placeholder': 'Enter the new last name',
-                'type': 'text',
-            }))
-    date_of_birth = forms.DateField(
-        required=True,
-        widget=forms.DateInput(
-            attrs={
-                'class': 'input',
-                'placeholder': 'Enter the new date of birth',
-                'type': 'date',
-            }))
-    password = forms.CharField(
-        required=True,
-        widget=forms.PasswordInput(attrs={
-            'class': 'input',
-            'placeholder': 'Enter your password'
-        }),
-        help_text='Enter your password to valid the modifications')
-
-    def clean_date_of_birth(self):
-        return SigninForm.clean_date_of_birth(self)
-
-    def clean_first_name(self, tag='first_name'):
-        return SigninForm.clean_first_name(self, tag=tag)
-
-    def clean_last_name(self):
-        return self.clean_first_name(tag='last_name')
-
-
-class ChangePhotoForm(forms.Form):
-    photo = forms.ImageField()
-
-    def clean_photo(self):
-        return photo_contraint(self)
-
-
-class ChangePasswordForm(forms.Form):
-    old_password = forms.CharField(
-        required=True,
-        widget=forms.PasswordInput(attrs={
-            'class': 'input',
-            'placeholder': 'Enter the old password'
-        }))
-    password = forms.CharField(
-        required=True,
-        widget=forms.PasswordInput(attrs={
-            'class': 'input',
-            'placeholder': 'Enter the new password'
-        }))
-    password_verification = forms.CharField(
-        required=True,
-        widget=forms.PasswordInput(attrs={
-            'class': 'input',
-            'placeholder': 'Enter the new password'
-        }))
-
-    def clean_password(self):
-        print(dir(self))
-        return SigninForm.clean_password(self)
-
-    def clean(self):
-        if 'password' not in self.cleaned_data:
-            pass
-        elif 'password_verification' not in self.cleaned_data:
-            pass
-        else:
-            password = self.cleaned_data['password']
-            password_verification = self.cleaned_data['password_verification']
-            if password != password_verification:
-                self.add_error(
-                    'password_verification', 'Password verification and'
-                    ' password are different')
