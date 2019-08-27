@@ -1,9 +1,11 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
+from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.db.models import Q
 from messenger.models import Friendship
 from .utils import build_paginator
+from messenger.models import User
 
 
 def list_friendship_view(request):
@@ -48,6 +50,7 @@ def delete_friendship_view(request, pk):
         return redirect('list_friendships')
     else:
         return redirect('login')
+
 
 def accept_friendship_view(request, pk):
     if request.user.is_authenticated:
