@@ -1,12 +1,13 @@
 {% extends 'messenger/panel.html' %}
+{% load i18n %}
 {% block column_contains %}
     {% include "messenger/article.html" with zone_comment=True %}
-    <h1 class="subtitle">Comments</h1>
+    <h1 class="subtitle">{% trans "Comments" %}</h1>
     {% include 'messenger/pagin_up.html' with data_to_pagin=comments %}
     {% for comment in comments %}
         {% include "messenger/article.html" with article=comment zone_comment=None articles=comments %}
     {% empty %}
-        <p>Nothing for the moment</p>
+        <p>{% trans "Nothing for the moment" %}</p>
     {% endfor %}
     {% include 'messenger/pagin_down.html' with data_to_pagin=comments %}
 {% endblock %}

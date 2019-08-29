@@ -1,7 +1,8 @@
 {% extends 'messenger/panel.html' %}
+{% load i18n %}
 {% block column_contains %}
-    <a class="button is-primary is-small" href="{% url 'list_users' %}">Find friends</a>
-    <h1 class="subtitle">Frienship en attente ({{ friendships.paginator.count }})</h1>
+    <a class="button is-primary is-small" href="{% url 'list_users' %}">{% trans "Find friends" %}</a>
+    <h1 class="subtitle">{% trans "Frienship en attente" %} ({{ friendships.paginator.count }})</h1>
     {% include 'messenger/pagin_up.html' with data_to_pagin=friendships %}
     {% for friendship in friendships %}
         <div class="box">
@@ -10,7 +11,7 @@
                     <div class="media-left">
                         <figure class="image is-64x64">
                             {% if request.user.no_media %}
-                                <a href="friendship.sender.photo.url">See Media</a>
+                                <a href="friendship.sender.photo.url">{% trans "See Media" %}</a>
                             {% else %}
                                 <img src="{{ friendship.sender.photo.url }}" alt="Image">
                             {% endif %}
@@ -20,7 +21,7 @@
                     <div class="media-left">
                         <figure class="image is-64x64">
                             {% if request.user.no_media %}
-                                <a href="{{ friendship.receiver.photo.url }}">See Media</a>
+                                <a href="{{ friendship.receiver.photo.url }}">{% trans "See Media" %}</a>
                             {% else %}
                                 <img src="{{ friendship.receiver.photo.url }}" alt="Image">
                             {% endif %}
@@ -33,11 +34,11 @@
                             {% if friendship.sender != request.user %}
                                 <a href="{% url 'user_details' friendship.sender.pk %}" title="Click to see his details"><small>@{{ friendship.sender }}</a></small> <small style="float:right;">{{ friendship.date_created|timesince:datetime }}</small>
                                 <br/>
-                                Demande d'amitier de {{ friendship.sender }}
+                                {% blocktrans with friendship.sender as user %}Asking friendship from {{ user }}{% endblocktrans %}
                             {% else %}
                                 <a href="{% url 'user_details' friendship.receiver.pk %}" title="Click to see his details"><small>@{{ friendship.receiver }}</a></small> <small style="float:right;">{{ friendship.date_created|timesince:datetime }}</small>
                                 <br/>
-                                Demande d'amitier avec {{ friendship.receiver }} en attente
+                                {% blocktrans with friendship.receiver as user %}Asking friendship with {{ user }} en attente{% endblocktrans %}
                             {% endif %}
                         </p>
                     </div>
@@ -45,14 +46,14 @@
                         <div class="level-left">
                             <a class="level-item button is-danger is-small" href="{% url 'delete_friendship' friendship.pk %}">
                                 {% if friendship.sender != request.user %}
-                                    Refuser
+                                    {% trans "Abort" %}
                                 {% else %}
-                                    Annuler
+                                    {% trans "Cancel" %}
                                 {% endif %}
                             </a>
                             {% if friendship.sender != request.user %}
                                 <a class="level-item button is-success is-small" href="{% url 'accept_friendship' friendship.pk %}">
-                                    Accepter
+                                    {% trans "Accept" %}
                                 </a>
                             {% endif %}
                         </div>
@@ -61,7 +62,7 @@
             </article>
         </div>
     {% empty %}
-        <p>Nothing for the moment</p>
+        <p>{% trans "Nothing for the moment" %}</p>
     {% endfor %}
     {% include 'messenger/pagin_down.html' with data_to_pagin=friendships %}
 {% endblock %}

@@ -3,6 +3,7 @@ from django.shortcuts import redirect
 from django.shortcuts import reverse
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
+from django.utils.translation import gettext as _
 from messenger.models import Message
 from messenger.models import User
 from messenger.forms import MessageForm
@@ -23,7 +24,7 @@ def send_message_view(request, pk):
             else:
                 form = MessageForm()
             return render(request, 'messenger/send_message.html', {
-                'title': 'Send message',
+                'title': _('Send message'),
                 'user': user,
                 'form': form,
             })
@@ -46,7 +47,7 @@ def get_messages_view(request, pk):
                     message.save()
             return render(
                 request, 'messenger/get_messages.html', {
-                    'title': 'Messages',
+                    'title': _('Messages'),
                     'messages': messages,
                     'datetime': timezone.now(),
                     'user': user,
@@ -81,7 +82,7 @@ def messages_view(request):
             })
         return render(
             request, 'messenger/messages.html', {
-                'title': 'Messages',
+                'title': _('Messages'),
                 'datetime': timezone.now(),
                 'users': users,
                 'last_messages': last_messages,

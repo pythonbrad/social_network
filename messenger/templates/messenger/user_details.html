@@ -1,4 +1,5 @@
 {% extends 'messenger/panel.html' %}
+{% load i18n %}
 {% block column_contains %}
     <div class="card">
         <header class="card-header subtitle">
@@ -9,35 +10,35 @@
                 {% if user.photo %}
                     <figure class="image is-128x128">
                         {% if request.user.no_media %}
-                            <a href="{{ user.photo.url }}">See Media</a>
+                            <a href="{{ user.photo.url }}">{% trans "See Media" %}</a>
                         {% else %}
                             <img src="{{ user.photo.url }}">
                         {% endif %}
                     </figure>
                 {% endif %}
             </div>
-            <p><b>Adhesion:</b> {{ user.date_joined }}</p>
-            <p><b>Date of birth:</b> {{ user.date_of_birth }}</p>
+            <p><b>{% trans "Adhesion" %}:</b> {{ user.date_joined }}</p>
+            <p><b>{% trans "Date of birth" %}:</b> {{ user.date_of_birth }}</p>
             {% if user in friends or user == request.user %}
-                <p><b>Friends:</b> {{ user.get_list_friends|length }}</p>
-                <p><b>Active:</b> {{ user.is_active }}</p>
-                <p><b>Date joined:</b> {{ user.date_created }}</p>
-                <p><b>Last login:</b> {{ user.last_login|timesince:datetime }}</p>
-                <p><b>Email:</b> {{ user.email|default:"No entry" }}</p>
-                <p><b>First name:</b> {{ user.first_name|default:"No entry" }}</p>
-                <p><b>Last name:</b> {{ user.last_name|default:"No entry" }}</p>
+                <p><b>{% trans "Friends" %}:</b> {{ user.get_list_friends|length }}</p>
+                <p><b>{% trans "Active" %}:</b> {{ user.is_active }}</p>
+                <p><b>{% trans "Date joined" %}:</b> {{ user.date_created }}</p>
+                <p><b>{% trans "Last login" %}:</b> {{ user.last_login|timesince:datetime }}</p>
+                <p><b>{% trans "Email" %}:</b> {{ user.email|default:"No entry" }}</p>
+                <p><b>{% trans "First name" %}:</b> {{ user.first_name|default:"No entry" }}</p>
+                <p><b>{% trans "Last name" %}:</b> {{ user.last_name|default:"No entry" }}</p>
             {% endif %}
         </div>
         {% if user != request.user %}
             <footer class="card-footer">
-                <a href="{% url 'send_message' user.pk %}" class="button is-link is-small card-footer-item">Send message</a>
+                <a href="{% url 'send_message' user.pk %}" class="button is-link is-small card-footer-item">{% trans "Send message" %}</a>
                 {% if user in friends %}
-                    <a class="button is-danger is-small card-footer-item" href="{% url 'delete_friend' user.pk %}">Delete friendship</a>
+                    <a class="button is-danger is-small card-footer-item" href="{% url 'delete_friend' user.pk %}">{% trans "Delete friendship" %}</a>
                 {% elif user in waiting_friends %}
-                    <a class="button is-danger is-small card-footer-item" disabled>Friendship in waiting</a>
+                    <a class="button is-danger is-small card-footer-item" disabled>{% trans "Friendship in waiting" %}</a>
                 {% else %}
                     <a class="button is-success is-small card-footer-item" href="{% url 'create_friendship' user.pk %}">
-                        Send friendship
+                        {% trans "Send friendship" %}
                     </a>
                 {% endif %}
             </footer>

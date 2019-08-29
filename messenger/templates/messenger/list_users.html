@@ -1,6 +1,7 @@
 {% extends 'messenger/panel.html' %}
+{% load i18n %}
 {% block column_contains %}
-    <h1 class="subtitle">List users ({{ users.paginator.count }})</h1>
+    <h1 class="subtitle">{% trans "List users" %} ({{ users.paginator.count }})</h1>
     {% include 'messenger/pagin_up.html' with data_to_pagin=users %}
     {% for user in users %}
         <div class="box">
@@ -9,7 +10,7 @@
                     <div class="media-left">
                         <figure class="image is-64x64">
                             {% if request.user.no_media %}
-                            <a href="{{ user.photo.url }}">See Media</a>
+                            <a href="{{ user.photo.url }}">{% trans "See Media" %}</a>
                             {% else %}
                                 <img src="{{ user.photo.url }}" alt="Image">
                             {% endif %}
@@ -28,18 +29,18 @@
                                 <small>&nbsp;@{{ user }}</small></a> <small style="float:right;"></small>
                             </a>
                         </p>
-                        <p>Adhesion: {{ user.date_joined }}</p>
-                        <p>Date of birth: {{ user.date_of_birth }}</p>
+                        <p>{% trans "Adhesion" %}: {{ user.date_joined }}</p>
+                        <p>{% trans "Date of birth" %}: {{ user.date_of_birth }}</p>
                     </div>
                     <nav class="level">
                         <div class="level-left">
                             {% if user in friends %}
-                                <a class="level-item button is-danger is-small card-footer-item" disabled>Already friend</a>
+                                <a class="level-item button is-danger is-small card-footer-item" disabled>{% trans "Already friend" %}</a>
                             {% elif user in waiting_friends %}
-                                <a class="level-item button is-danger is-small card-footer-item" disabled>Friendship in waiting</a>
+                                <a class="level-item button is-danger is-small card-footer-item" disabled>{% trans "Friendship in waiting" %}</a>
                             {% else %}
                                 <a class="level-item button is-success is-small card-footer-item" href="{% url 'create_friendship' user.pk %}">
-                                    Send friendship
+                                    {% trans "Send friendship" %}
                                 </a>
                             {% endif %}
                         </div>
@@ -48,7 +49,7 @@
             </article>
         </div>
     {% empty %}
-        No others users for the moment
+        {% trans "Not others users for the moment" %}
     {% endfor %}
     {% include 'messenger/pagin_down.html' with data_to_pagin=users %}
 {% endblock %}

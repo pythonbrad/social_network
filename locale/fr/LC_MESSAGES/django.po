@@ -1,0 +1,730 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-08-29 16:32+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. Translators: This message is a help text
+#: .\messenger\forms\account.py:18
+msgid "Enter your username"
+msgstr ""
+
+#. Translators: This message is a help text
+#: .\messenger\forms\account.py:25
+msgid "Enter your email"
+msgstr "Entrer ton addresse email"
+
+#. Translators: This message is a help text
+#: .\messenger\forms\account.py:28
+#, python-format
+msgid "Eg: %(date)s"
+msgstr "Exemple: %(date)s"
+
+#. Translators: This message is a help text
+#: .\messenger\forms\account.py:41 .\messenger\forms\account.py:43
+#: .\messenger\forms\account.py:47
+msgid "*Optional"
+msgstr "*Optionnel"
+
+#. Translators: This message is a help text
+#: .\messenger\forms\account.py:57 .\messenger\forms\account.py:61
+msgid "Retype your password"
+msgstr "Retape ton mot de passe"
+
+#. Translators: This message is a error text
+#: .\messenger\forms\account.py:78 .\messenger\forms\account.py:87
+#, python-format
+msgid "username is too short, min %(min_length)d characters"
+msgstr "nom d'utilisateur is trop court, minimum %(min_length)d caracteres"
+
+#. Translators: This message is a error text
+#: .\messenger\forms\account.py:82
+msgid "This username is already used"
+msgstr "Ce nom d'utilisateur est deja utilisé"
+
+#. Translators: This message is a error text
+#: .\messenger\forms\account.py:93
+#, python-format
+msgid "username is too long, max %(max_length)d characters"
+msgstr "nom d'utilisateur est trop long, maximun %(max_length)d caracteres"
+
+#. Translators: This message is a error text
+#: .\messenger\forms\account.py:99
+msgid "username should not contains the space"
+msgstr "nom d'utilisateur ne doit pas contenir d'espace"
+
+#. Translators: This message is a error text
+#: .\messenger\forms\account.py:104
+msgid "username should not begin with a number"
+msgstr "nom d'utilisateur ne doit pas commencer avec un nombre"
+
+#. Translators: This message is a error text
+#: .\messenger\forms\account.py:112
+msgid "username should not contains a special character"
+msgstr "nom d'utilisateur ne doit pas contenir un caractère spécial"
+
+#. Translators: This message is a error text
+#: .\messenger\forms\account.py:122
+msgid "This email is already used"
+msgstr "Cette email est déja utilisé"
+
+#. Translators: This message is a error text
+#: .\messenger\forms\account.py:134
+#, python-format
+msgid "password is too short, min %(min_length)d characters"
+msgstr "mot de passe est trop court, minimun %(min_length)d caractères"
+
+#. Translators: This message is a error text
+#: .\messenger\forms\account.py:151
+#, python-format
+msgid "%(tag)s is too long, max %(max_length)d characters"
+msgstr "%(tag)s est trop long, maximun %(max_length)d caractères"
+
+#. Translators: This message is a error text
+#: .\messenger\forms\account.py:159
+#, python-format
+msgid "%(tag)s should not contains the space"
+msgstr "%(tag)s ne doit pas contenir d'espace"
+
+#. Translators: This message is a error text
+#: .\messenger\forms\account.py:164
+#, python-format
+msgid "%(tag)s should not begin with a number"
+msgstr "%(tag)s ne doit pas commencer avec un nombre"
+
+#. Translators: This message is a error text
+#: .\messenger\forms\account.py:180
+msgid "You are too young."
+msgstr "Tu es trop jeune."
+
+#. Translators: This message is a error text
+#: .\messenger\forms\account.py:195 .\messenger\forms\setting.py:121
+msgid "Password verification and password are different"
+msgstr "Mot de passe de vérification et mot de passe sont différent"
+
+#. Translators: This message is a help text
+#: .\messenger\forms\account.py:209
+msgid "Type your Username or Email"
+msgstr "Tape ton nom d'utilisateur or ton email"
+
+#. Translators: This message is a help text
+#: .\messenger\forms\account.py:217
+msgid "Type your Password"
+msgstr "Tape ton mot de passe"
+
+#. Translators: This message is a error text
+#: .\messenger\forms\account.py:241
+msgid "password invalid"
+msgstr "mot de passe invalid"
+
+#. Translators: This message is a error text
+#: .\messenger\forms\account.py:246
+msgid "username or email invalid"
+msgstr "nom d'utilisateur ou email invalide"
+
+#. Translators: This message is a help text
+#: .\messenger\forms\article.py:18 .\messenger\forms\article.py:39
+#: .\messenger\forms\message.py:17
+msgid "Enter your message"
+msgstr "Entre ton message"
+
+#. Translators: This message is a help text
+#: .\messenger\forms\setting.py:16
+msgid "Enter the new first name"
+msgstr "Entre le nouveau prénom"
+
+#. Translators: This message is a help text
+#: .\messenger\forms\setting.py:40
+msgid "Enter the new date of birth"
+msgstr "Entre la nouvelle date de naissance"
+
+#. Translators: This message is a help text
+#: .\messenger\forms\setting.py:52
+msgid "Enter your password"
+msgstr "Entre ton mot de passe"
+
+#. Translators: This message is a help text
+#: .\messenger\forms\setting.py:82
+msgid "Enter the old password"
+msgstr "Entre l'ancien mot de passe"
+
+#. Translators: This message is a help text
+#: .\messenger\forms\setting.py:92 .\messenger\forms\setting.py:102
+msgid "Enter the new password"
+msgstr "Entre le nouveau mot de passe"
+
+#. Translators: This message is a error text
+#: .\messenger\forms\utils.py:12
+#, python-format
+msgid ""
+"The photo should be lower to 1MB or 1024KB, this photo has %(size_in_mb)dMB or "
+"%(size_in_kb)dKb"
+msgstr "La photo doit être inferirur à 1MB ou 1024KB, cette photo as %(size_in_mb) ou "
+"%(size_in_kb)dKb"
+
+#: .\messenger\models\article.py:17 .\messenger\models\article.py:59
+msgid "authors"
+msgstr "Auteurs"
+
+#: .\messenger\models\article.py:18 .\messenger\models\article.py:64
+#: .\messenger\models\message.py:25
+msgid "contains"
+msgstr "contenue"
+
+#: .\messenger\models\article.py:24
+msgid "comments"
+msgstr "commentaires"
+
+#: .\messenger\models\article.py:27 .\messenger\models\article.py:70
+msgid "likers"
+msgstr "Interessés"
+
+#: .\messenger\models\article.py:29 .\messenger\models\article.py:72
+#: .\messenger\models\message.py:38 .\messenger\models\notification.py:22
+#: .\messenger\models\relationship.py:53 .\messenger\models\user.py:36
+msgid "date of creation"
+msgstr "date de creation"
+
+#: .\messenger\models\article.py:63
+msgid "article"
+msgstr ""
+
+#: .\messenger\models\article.py:67 .\messenger\models\message.py:29
+#: .\messenger\models\user.py:20
+msgid "photo"
+msgstr ""
+
+#: .\messenger\models\message.py:17 .\messenger\models\relationship.py:38
+msgid "senders"
+msgstr "expéditeurs"
+
+#: .\messenger\models\message.py:22 .\messenger\models\notification.py:13
+#: .\messenger\models\relationship.py:43
+msgid "receivers"
+msgstr "destinataires"
+
+#: .\messenger\models\message.py:32
+msgid "is received?"
+msgstr "est reçue?"
+
+#: .\messenger\models\message.py:35
+msgid "date of reception"
+msgstr "date de reception"
+
+#: .\messenger\models\notification.py:16 .\messenger\models\relationship.py:47
+msgid "message"
+msgstr ""
+
+#: .\messenger\models\relationship.py:16
+msgid "owns"
+msgstr "propriétaires"
+
+#: .\messenger\models\relationship.py:21
+msgid "users"
+msgstr "utilisateurs"
+
+#: .\messenger\models\relationship.py:24
+msgid "date of last message"
+msgstr "date du dernier message"
+
+#: .\messenger\models\relationship.py:46
+msgid "Hello, I would be your friend"
+msgstr "Salut, Je voudrais être ton amis"
+
+#: .\messenger\models\relationship.py:50
+msgid "is valided?"
+msgstr "est validé?"
+
+#: .\messenger\models\user.py:14
+msgid "username"
+msgstr "nom d'utilisateur"
+
+#: .\messenger\models\user.py:15
+msgid "date of birth"
+msgstr "date de naissance"
+
+#: .\messenger\models\user.py:16
+msgid "email"
+msgstr ""
+
+#: .\messenger\models\user.py:23
+msgid "first name"
+msgstr "prénom"
+
+#: .\messenger\models\user.py:26
+msgid "last name"
+msgstr "dernier nom"
+
+#: .\messenger\models\user.py:33
+msgid "contacts"
+msgstr ""
+
+#: .\messenger\models\user.py:34
+msgid "no media?"
+msgstr "pas de media?"
+
+#: .\messenger\models\user.py:38
+msgid "date of update"
+msgstr "date de mise à jour"
+
+#: .\messenger\signals.py:9
+#, python-format
+msgid "%(user)s said \"%(message)s\""
+msgstr "%(user)s a déclaré \"%(message)s\""
+
+#: .\messenger\signals.py:20
+#, python-format
+msgid "%(user)s has accepted your friendship"
+msgstr "%(user)s as accepté ton demande d'amitié"
+
+#: .\messenger\signals.py:28 .\messenger\signals.py:37
+#, python-format
+msgid "%(user1)s is now in friendship with %(user2)s"
+msgstr "%(user1)s est maintenant en amitié avec %(user2)s"
+
+#: .\messenger\signals.py:56 .\messenger\signals.py:64
+#, python-format
+msgid "your friendship with %(user)s has been canceled"
+msgstr "ton amitié avec %(user)s a été annulé"
+
+#: .\messenger\signals.py:89
+#, python-format
+msgid "New message from %(user)s"
+msgstr "Nouveau message de %(user)s"
+
+#: .\messenger\signals.py:107
+#, python-format
+msgid "%(user)s has publish a new article"
+msgstr "%(user)s as publié un nouveau article"
+
+#: .\messenger\signals.py:122
+#, python-format
+msgid "%(user1)s has comments an article of %(user2)s that you has liked"
+msgstr "%(user1)s a commenté un article de %(user2)s que tu as aimé"
+
+#: .\messenger\signals.py:134
+#, python-format
+msgid "%(user)s has comments your article"
+msgstr "%(user)s a commenté ton article"
+
+#: .\messenger\templates\messenger\article.html:8
+#: .\messenger\templates\messenger\article.html:45
+#: .\messenger\templates\messenger\get_messages.html:43
+#: .\messenger\templates\messenger\list_friends.html:13
+#: .\messenger\templates\messenger\list_friendships.html:14
+#: .\messenger\templates\messenger\list_friendships.html:24
+#: .\messenger\templates\messenger\list_users.html:13
+#: .\messenger\templates\messenger\messages.html:13
+#: .\messenger\templates\messenger\messages.html:41
+#: .\messenger\templates\messenger\user_details.html:13
+msgid "See Media"
+msgstr "Voir le media"
+
+#: .\messenger\templates\messenger\article.html:56
+msgid "Comment"
+msgstr "Commenter"
+
+#: .\messenger\templates\messenger\article.html:58
+#: .\messenger\templates\messenger\article.html:71
+#: .\messenger\templates\messenger\article.html:84
+#: .\messenger\templates\messenger\get_messages.html:61
+msgid "Delete"
+msgstr "Supprimer"
+
+#: .\messenger\templates\messenger\article.html:58
+#: .\messenger\templates\messenger\article.html:77
+msgid "Unliked"
+msgstr "Je n'aime plus"
+
+#: .\messenger\templates\messenger\article.html:60
+#: .\messenger\templates\messenger\article.html:79
+msgid "Liked"
+msgstr "J'aime"
+
+#: .\messenger\templates\messenger\article.html:65
+msgid "Share"
+msgstr "Partager"
+
+#: .\messenger\templates\messenger\article.html:73
+msgid "More"
+msgstr "Plus"
+
+#: .\messenger\templates\messenger\articles.html:6
+#: .\messenger\views\article.py:46
+msgid "Articles"
+msgstr ""
+
+#: .\messenger\templates\messenger\articles.html:4
+msgid "Create a new article"
+msgstr "Créer un nouveau article"
+
+#: .\messenger\templates\messenger\articles.html:12
+msgid "Nothing for the moment, Make you many friends to see more articles."
+msgstr ""
+
+#: .\messenger\templates\messenger\base.html:18
+msgid "Logout"
+msgstr "Déconnection"
+
+#: .\messenger\templates\messenger\create_article.html:4
+msgid "New Article"
+msgstr "Nouveau article"
+
+#: .\messenger\templates\messenger\create_comment.html:4
+msgid "New Comment"
+msgstr "Nouveau commentaire"
+
+#: .\messenger\templates\messenger\get_comments.html:5
+#: .\messenger\views\article.py:109
+msgid "Comments"
+msgstr "Commentaires"
+
+#: .\messenger\templates\messenger\get_comments.html:10
+#: .\messenger\templates\messenger\get_messages.html:69
+#: .\messenger\templates\messenger\list_friendships.html:65
+#: .\messenger\templates\messenger\messages.html:58
+#: .\messenger\templates\messenger\notifications.html:19
+msgid "Nothing for the moment"
+msgstr "Rien pour le moment"
+
+#: .\messenger\templates\messenger\get_messages.html:5
+#, python-format
+msgid " Discussion with %(username)s "
+msgstr "Conversation avec %(username)s"
+
+#: .\messenger\templates\messenger\get_messages.html:18
+msgid "See his details"
+msgstr "Voir ses détails"
+
+#: .\messenger\templates\messenger\get_messages.html:19
+#: .\messenger\templates\messenger\list_friends.html:31
+#: .\messenger\templates\messenger\user_details.html:36
+#: .\messenger\views\message.py:27
+msgid "Send message"
+msgstr "Envoyer message"
+
+#: .\messenger\templates\messenger\get_messages.html:55
+msgid "Received"
+msgstr "Reçue"
+
+#: .\messenger\templates\messenger\get_messages.html:57
+msgid "Not received"
+msgstr "Non reçue"
+
+#: .\messenger\templates\messenger\home.html:5
+msgid "Already member, or not still member, done a choice"
+msgstr "Déja membre, ou pas encore membre; fait ton choix"
+
+#: .\messenger\templates\messenger\home.html:8
+msgid "Already member"
+msgstr "Déja membre"
+
+#: .\messenger\templates\messenger\home.html:11
+msgid "Not still member"
+msgstr "Pas encore membre"
+
+#: .\messenger\templates\messenger\list_friends.html:4
+#: .\messenger\views\user.py:34
+msgid "List friends"
+msgstr "Liste d'amis"
+
+#: .\messenger\templates\messenger\list_friends.html:36
+msgid "Not friends for the moment"
+msgstr "Pas d'amis pour le moment"
+
+#: .\messenger\templates\messenger\list_friendships.html:4
+msgid "Find friends"
+msgstr "Trouver des amis"
+
+#: .\messenger\templates\messenger\list_friendships.html:5
+msgid "Frienship en attente"
+msgstr "Demande d'amitié en attente"
+
+#: .\messenger\templates\messenger\list_friendships.html:37
+#, python-format
+msgid "Asking friendship from %(user)s"
+msgstr "Demande d'amitié de %(user)s"
+
+#: .\messenger\templates\messenger\list_friendships.html:41
+#, python-format
+msgid "Asking friendship with %(user)s en attente"
+msgstr "Demande d'amitié avec %(user)s en attente"
+
+#: .\messenger\templates\messenger\list_friendships.html:49
+msgid "Abort"
+msgstr "Refusé"
+
+#: .\messenger\templates\messenger\list_friendships.html:51
+msgid "Cancel"
+msgstr "Annulé"
+
+#: .\messenger\templates\messenger\list_friendships.html:56
+msgid "Accept"
+msgstr "Accepter"
+
+#: .\messenger\templates\messenger\list_users.html:4
+#: .\messenger\views\user.py:20
+msgid "List users"
+msgstr "List d'utilisateurs"
+
+#: .\messenger\templates\messenger\list_users.html:32
+#: .\messenger\templates\messenger\user_details.html:20
+msgid "Adhesion"
+msgstr "Adhésion"
+
+#: .\messenger\templates\messenger\list_users.html:33
+#: .\messenger\templates\messenger\user_details.html:21
+msgid "Date of birth"
+msgstr "Date de naissance"
+
+#: .\messenger\templates\messenger\list_users.html:38
+msgid "Already friend"
+msgstr "Déja amis"
+
+#: .\messenger\templates\messenger\list_users.html:40
+#: .\messenger\templates\messenger\user_details.html:38
+msgid "Friendship in waiting"
+msgstr "Amitié en attente"
+
+#: .\messenger\templates\messenger\list_users.html:43
+#: .\messenger\templates\messenger\user_details.html:41
+msgid "Send friendship"
+msgstr "Envoyer une demande d'amitié"
+
+#: .\messenger\templates\messenger\list_users.html:52
+msgid "Not others users for the moment"
+msgstr "Pas d'autres utilisateurs pour le moment"
+
+#: .\messenger\templates\messenger\login.html:4
+msgid "I have not a account"
+msgstr "J'ai pas de compte"
+
+#: .\messenger\templates\messenger\messages.html:4
+msgid "Select a discussion"
+msgstr "Selectionner une conversation"
+
+#: .\messenger\templates\messenger\messages.html:32
+msgid "Last Message"
+msgstr "Dernier message"
+
+#: .\messenger\templates\messenger\messages.html:51
+#: .\messenger\templates\messenger\settings.html:16
+msgid "Open"
+msgstr "Ouvrir"
+
+#: .\messenger\templates\messenger\notifications.html:6
+msgid "Notification"
+msgstr ""
+
+#: .\messenger\templates\messenger\notifications.html:15
+#, python-format
+msgid "Ago %(date_created)s "
+msgstr "Il y'a %(date_created)s"
+
+#: .\messenger\templates\messenger\pagin_down.html:6
+msgid "Next"
+msgstr "Suivant"
+
+#: .\messenger\templates\messenger\pagin_up.html:6
+msgid "Previous"
+msgstr "Précédent"
+
+#: .\messenger\templates\messenger\panel.html:7
+msgid "News"
+msgstr "Actualité"
+
+#: .\messenger\templates\messenger\panel.html:9 .\messenger\views\message.py:50
+#: .\messenger\views\message.py:85
+msgid "Messages"
+msgstr ""
+
+#: .\messenger\templates\messenger\panel.html:11
+#: .\messenger\templates\messenger\user_details.html:23
+msgid "Friends"
+msgstr "Amis"
+
+#: .\messenger\templates\messenger\panel.html:13
+msgid "Friendships"
+msgstr "Amitiés"
+
+#: .\messenger\templates\messenger\panel.html:16
+#: .\messenger\views\notification.py:33
+msgid "Notifications"
+msgstr ""
+
+#: .\messenger\templates\messenger\panel.html:18
+#: .\messenger\views\setting.py:37
+msgid "Settings"
+msgstr "Paramètre"
+
+#: .\messenger\templates\messenger\panel.html:26
+msgid "Select a menu"
+msgstr "Selectionner un menu"
+
+#: .\messenger\templates\messenger\send_message.html:4
+#, python-format
+msgid "Message to %(username)s "
+msgstr "Message à %(username)s"
+
+#: .\messenger\templates\messenger\signin.html:4
+msgid "I have a account"
+msgstr "J'ai un compe"
+
+#: .\messenger\templates\messenger\user_details.html:24
+msgid "Active"
+msgstr "Actif"
+
+#: .\messenger\templates\messenger\user_details.html:25
+msgid "Date joined"
+msgstr "Date d'adhésion"
+
+#: .\messenger\templates\messenger\user_details.html:26
+msgid "Last login"
+msgstr "Dernière connexion"
+
+#: .\messenger\templates\messenger\user_details.html:27
+msgid "Email"
+msgstr ""
+
+#: .\messenger\templates\messenger\user_details.html:28
+msgid "First name"
+msgstr "Prénom"
+
+#: .\messenger\templates\messenger\user_details.html:29
+msgid "Last name"
+msgstr "Dernier nom"
+
+#: .\messenger\templates\messenger\user_details.html:36
+msgid "Delete friendship"
+msgstr "Supprimer l'amitié"
+
+#: .\messenger\views\__init__.py:15
+msgid "Home"
+msgstr "Domicile"
+
+#: .\messenger\views\__init__.py:23
+msgid "Panel"
+msgstr ""
+
+#: .\messenger\views\account.py:19
+msgid "Signin"
+msgstr "S'inscrire"
+
+#: .\messenger\views\account.py:37
+msgid "Login"
+msgstr "Se connecter"
+
+#: .\messenger\views\article.py:25
+msgid "Create article"
+msgstr "Creer un article"
+
+#: .\messenger\views\article.py:93
+msgid "Create comment"
+msgstr "Creer un commentaire"
+
+#: .\messenger\views\friendship.py:19
+msgid "List friendship"
+msgstr "Liste d'amitié"
+
+#: .\messenger\views\setting.py:16
+msgid "My informations"
+msgstr "Mes informations"
+
+#: .\messenger\views\setting.py:17
+msgid "Modify your informations"
+msgstr "Modifier mes informations"
+
+#: .\messenger\views\setting.py:20
+msgid "Photo of profil"
+msgstr "Photo de profil"
+
+#: .\messenger\views\setting.py:21
+msgid "Change your photo of profil"
+msgstr "Changer de photo de profil"
+
+#: .\messenger\views\setting.py:24
+msgid "Password"
+msgstr "Mot de passe"
+
+msgid "password"
+msgstr "Mot de passe"
+
+#: .\messenger\views\setting.py:25
+msgid "Change your password"
+msgstr "Changer de mot de passe"
+
+#: .\messenger\views\setting.py:30
+msgid "Enable"
+msgstr "Activer"
+
+#: .\messenger\views\setting.py:30
+msgid "Disable"
+msgstr "Désactiver"
+
+#: .\messenger\views\setting.py:32
+msgid "Click on open to Enable or Disable media to control his datas"
+msgstr "Click sur ouvrir pour activer ou désactiver les médias pour contrôler ta consommation de données"
+
+#. Translators: This message is a error text
+#: .\messenger\forms\accounts.py:61
+msgid "password verification"
+msgstr "vérification de mot de passe"
+
+#: .\messenger\forms\accounts.py
+msgid "Username or Email"
+msgstr "Nom d'utilisateur ou adresse email"
+
+#. Translators: This message is a error text
+#: .\messenger\views\setting.py:53
+msgid "password verification error"
+msgstr "vérification de mot de passe a échoué"
+
+#. Translators: This message is a error text
+#: .\messenger\views\setting.py:62
+#, python-format
+msgid ""
+"You should wait %(days_to_wait)d days to change this information, last "
+"update: %(days_wait)s"
+msgstr "Tu doit attendre %(days_to_wait)d jours pour changer cette information, dernière mise à jour: update: %(days_wait)s"
+
+#: .\messenger\views\setting.py:86
+msgid "User Settings"
+msgstr "Paramètre utilisateur"
+
+#: .\messenger\views\setting.py:103
+msgid "Has changed his photo of profil"
+msgstr "a changé sa photo de profil"
+
+#: .\messenger\views\setting.py:110
+msgid "Photo Settings"
+msgstr "Paramètre de photo"
+
+#. Translators: This message is a error text
+#: .\messenger\views\setting.py:127
+msgid "Old password error"
+msgstr "Ancien mot de passe érronné"
+
+msgid "old password"
+msgstr "ancien mot de passe"
+
+#: .\messenger\views\setting.py:138
+msgid "Password Settings"
+msgstr "Paramètre de mot de passe"
+
+#: .\messenger\views\user.py:61
+msgid "User details"
+msgstr "Détails utilisateurs"

@@ -69,4 +69,7 @@ urlpatterns = [
     path('settings/no_media',
          views.no_media_settings_view,
          name='no_media_settings'),
+    path('settings/language/<lang>',
+         views.set_language,
+         name='set_language'),
 ]

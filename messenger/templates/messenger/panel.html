@@ -1,20 +1,21 @@
 {% extends 'messenger/base.html' %}
+{% load i18n %}
 {% block contains %}
     <div class="tabs is-centered is-fullwidth is-small">
         <ul>
             {% with request.user.get_state as user_state %}
-                <li><a href="{% url 'articles' %}">Actualite</a></li>
+                <li><a href="{% url 'articles' %}">{% trans "Actualite" %}</a></li>
                 <li><a href="{% url 'messages' %}">
-                    Messages ({{ user_state.new_messages.count }})
+                    {% trans "Messages" %} ({{ user_state.new_messages.count }})
                 </a></li>
-                <li><a href="{% url 'list_friends' %}">Friends</a></li>
+                <li><a href="{% url 'list_friends' %}">{% trans "Friends" %}</a></li>
                 <li><a href="{% url 'list_friendships' %}">
-                    Friendships ({{ user_state.waiting_friends.count }})
+                    {%trans "Friendships" %} ({{ user_state.waiting_friends.count }})
                 </a></li>
                 <li><a href="{% url 'list_notifications' %}">
-                    Notifications ({{ user_state.new_notifications.count }})
+                    {% trans "Notifications" %} ({{ user_state.new_notifications.count }})
                 </a></li>
-                <li><a href="{% url 'settings' %}">Settings</a></li>
+                <li><a href="{% url 'settings' %}">{% trans "Settings" %}</a></li>
             {% endwith %}
         </ul>
     </div>
@@ -22,7 +23,7 @@
         <div class="column is-one-fifth"></div>
         <div class="column">
             {% block column_contains %}
-                <center>Select a menu</center>
+                <center>{% trans "Select a menu" %}</center>
             {% endblock %}
         </div>
         <div class="column is-one-fifth">

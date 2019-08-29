@@ -3,6 +3,7 @@ from messenger.models import User
 from django import forms
 from django.db.models import Q
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 import string
 
 
@@ -13,15 +14,20 @@ class SigninForm(forms.ModelForm):
             'class':
             'input',
             'placeholder':
-            'Enter your username'
+            # Translators: This message is a help text
+            _('Enter your username')
         })
         self.fields['email'].widget.attrs.update({
             'class':
             'input',
             'placeholder':
-            'Enter your email'
+            # Translators: This message is a help text
+            _('Enter your email')
         })
-        self.fields['date_of_birth'].help_text = "Eg: 2010-10-10"
+        # Translators: This message is a help text
+        self.fields['date_of_birth'].help_text = _("Eg: %(date)s") % {
+            'date': '2010-10-10'
+        }
         self.fields['date_of_birth'].widget = forms.DateInput(
             attrs={'type': 'date'})
         self.fields['date_of_birth'].widget.attrs.update({
@@ -31,23 +37,29 @@ class SigninForm(forms.ModelForm):
         self.fields['password'].widget.attrs.update({
             'class': 'input',
         })
-        self.fields['photo'].help_text = "*Optionnel"
-        self.fields['first_name'].help_text = "*Optionnel"
+        # Translators: This message is a help text
+        self.fields['photo'].help_text = _("*Optional")
+        # Translators: This message is a help text
+        self.fields['first_name'].help_text = _("*Optional")
         self.fields['first_name'].widget.attrs.update({
             'class': 'input',
         })
-        self.fields['last_name'].help_text = "*Optionnel"
+        self.fields['last_name'].help_text = _("*Optional")
         self.fields['last_name'].widget.attrs.update({
             'class': 'input',
         })
 
     password_verification = forms.CharField(
-        widget=forms.PasswordInput(attrs={
-            'class': 'input',
-            'placeholder': 'Retape your password'
-        }),
+        widget=forms.PasswordInput(
+            attrs={
+                'class': 'input',
+                # Translators: This message is a help text
+                'placeholder': _('Retype your password')
+            }),
         required=True,
-        help_text='Retape your password')
+        # Translators: This message is a help text
+        help_text=_('Retype your password'),
+        label=_('password verification').capitalize())
 
     class Meta:
         model = User
@@ -63,37 +75,52 @@ class SigninForm(forms.ModelForm):
         if len(username) < min_length:
             self.add_error(
                 'username',
-                'username is too short, min %s characters' % min_length)
+                # Translators: This message is a error text
+                _('username is too short, min %(min_length)d characters') %
+                {'min_length': min_length})
         elif User.objects.filter(username=username).exists():
-            self.add_error('username', 'This username is already used')
+            # Translators: This message is a error text
+            self.add_error('username', _('This username is already used'))
         elif len(username) < min_length:
             self.add_error(
                 'username',
-                'username is too short, min %s characters' % min_length)
+                # Translators: This message is a error text
+                _('username is too short, min %(min_length)d characters') %
+                {'min_length': min_length})
         elif len(username) > max_length:
             self.add_error(
                 'username',
-                'username is too long, max %s characters' % max_length)
+                # Translators: This message is a error text
+                _('username is too long, max %(max_length)d characters') %
+                {'max_length': max_length})
         elif " " in username:
-            self.add_error('username',
-                           'username should not contains the space')
+            self.add_error(
+                'username',
+                # Translators: This message is a error text
+                _('username should not contains the space'))
         elif username[0] in '0123456789':
-            self.add_error('username',
-                           'username should not begin with a number')
+            self.add_error(
+                'username',
+                # Translators: This message is a error text
+                _('username should not begin with a number'))
         else:
             pass
         for i in string.punctuation:
             if i in username:
                 self.add_error(
                     'username',
-                    'username should not contains a special character')
+                    # Translators: This message is a error text
+                    _('username should not contains a special character'))
                 break
         return username
 
     def clean_email(self):
         email = self.cleaned_data['email'].lower()
         if User.objects.filter(email=email).exists():
-            self.add_error('email', 'This email is already used')
+            self.add_error(
+                'email',
+                # Translators: This message is a error text
+                _('This email is already used'))
         else:
             pass
         return email
@@ -104,7 +131,9 @@ class SigninForm(forms.ModelForm):
         if len(password) < min_length:
             self.add_error(
                 'password',
-                'password is too short, min %s characters' % min_length)
+                # Translators: This message is a error text
+                _('password is too short, min %(min_length)d characters') %
+                {'min_length': min_length})
         else:
             pass
         return password
@@ -119,11 +148,21 @@ class SigninForm(forms.ModelForm):
             if len(first_name) > max_length:
                 self.add_error(
                     tag,
-                    '%s is too long, max %s characters' % (tag, max_length))
+                    # Translators: This message is a error text
+                    _('%(tag)s is too long, max %(max_length)d characters') % {
+                        'tag': tag,
+                        'max_length': max_length
+                    })
             elif " " in first_name:
-                self.add_error(tag, '%s should not contains the space' % tag)
+                self.add_error(
+                    tag,
+                    # Translators: This message is a error text
+                    _('%(tag)s should not contains the space') % {'tag': tag})
             elif first_name[0] in '0123456789':
-                self.add_error(tag, '%s should not begin with a number' % tag)
+                self.add_error(
+                    tag,
+                    # Translators: This message is a error text
+                    _('%(tag)s should not begin with a number') % {'tag': tag})
             else:
                 pass
         else:
@@ -136,7 +175,10 @@ class SigninForm(forms.ModelForm):
     def clean_date_of_birth(self):
         date_of_birth = self.cleaned_data['date_of_birth']
         if date_of_birth.year >= timezone.now().year:
-            self.add_error('date_of_birth', 'You are too young.')
+            self.add_error(
+                'date_of_birth',
+                # Translators: This message is a error text
+                _('You are too young.'))
         return date_of_birth
 
     def clean(self):
@@ -149,8 +191,10 @@ class SigninForm(forms.ModelForm):
             password_verification = self.cleaned_data['password_verification']
             if password != password_verification:
                 self.add_error(
-                    'password_verification', 'Password verification and'
-                    ' password are different')
+                    'password_verification',
+                    # Translators: This message is a error text
+                    _('Password verification and'
+                      ' password are different'))
             else:
                 pass
 
@@ -162,18 +206,21 @@ class LoginForm(forms.Form):
             'class':
             'input',
             'placeholder':
-            'Type your Username or Email'
+            # Translators: This message is a help text
+            _('Type your Username or Email')
         })
         self.fields['password'].widget = forms.PasswordInput()
         self.fields['password'].widget.attrs.update({
             'class':
             'input',
             'placeholder':
-            'Type your Password'
+            # Translators: This message is a help text
+            _('Type your Password')
         })
 
-    username_or_email = forms.CharField(required=True)
-    password = forms.CharField(required=True)
+    username_or_email = forms.CharField(required=True,
+                                        label=_('Username or Email'))
+    password = forms.CharField(required=True, label=_('password'))
 
     def clean(self):
         if 'username_or_email' not in self.cleaned_data:
@@ -190,9 +237,15 @@ class LoginForm(forms.Form):
                 if user.exists():
                     self.user = user[0]
                 else:
-                    self.add_error('password', 'password invalid')
+                    self.add_error(
+                        'password',
+                        # Translators: This message is a error text
+                        _('password invalid'))
             else:
-                self.add_error('username_or_email', 'username|email invalid')
+                self.add_error(
+                    'username_or_email',
+                    # Translators: This message is a error text
+                    _('username or email invalid'))
 
     def get_user(self):
         return self.user

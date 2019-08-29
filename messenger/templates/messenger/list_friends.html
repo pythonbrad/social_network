@@ -1,6 +1,7 @@
 {% extends 'messenger/panel.html' %}
+{% load i18n %}
 {% block column_contains %}
-    <h1 class="subtitle">List friends ({{ friends.paginator.count }})</h1>
+    <h1 class="subtitle">{% trans "List friends" %} ({{ friends.paginator.count }})</h1>
     {% include 'messenger/pagin_up.html' with data_to_pagin=friends %}
     {% for friend in friends %}
         <div class="box">
@@ -9,7 +10,7 @@
                     <div class="column is-2 is-marginless">
                         <div class="image is-64x64">
                             {% if request.user.no_media %}
-                                <a href="{{ friend.photo.url }}">See Media</a>
+                                <a href="{{ friend.photo.url }}">{% trans "See Media" %}</a>
                             {% else %}
                                 <img src="{{ friend.photo.url }}">
                             {% endif %}
@@ -27,12 +28,12 @@
                             <small>&nbsp;@{{ friend }}</small></a> <small style="float:right;"></small>
                         </a>
                     </p>
-                    <a href="{% url 'send_message' friend.pk %}" class="button is-link is-small">Send message</a>
+                    <a href="{% url 'send_message' friend.pk %}" class="button is-link is-small">{% trans "Send message" %}</a>
                 </div>
             </div>
         </div>
     {% empty %}
-        No friends for the moment
+        {% trans "Not friends for the moment" %}
     {% endfor %}
     {% include 'messenger/pagin_down.html' with data_to_pagin=friends %}
 {% endblock %}

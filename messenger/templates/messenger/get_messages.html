@@ -1,7 +1,8 @@
 {% extends 'messenger/panel.html' %}
+{% load i18n %}
 {% block column_contains %}
     <h1 class="subtitle">
-        Discussion with {{ user.username }} ({{ messages.paginator.count }})
+        {% blocktrans with user.username as username %} Discussion with {{ username }} {% endblocktrans %} ({{ messages.paginator.count }})
     </h1>
     <p>
         {% if user.photo %}
@@ -14,8 +15,8 @@
             </figure>
         {% endif %}
     </p>
-    <a href="{% url 'user_details' user.pk %}" class="button is-link is-small">See his details</a>
-    <a href="{% url 'send_message' user.pk %}" class="button is-primary is-small">Send message</a>
+    <a href="{% url 'user_details' user.pk %}" class="button is-link is-small">{%trans "See his details" %}</a>
+    <a href="{% url 'send_message' user.pk %}" class="button is-primary is-small">{% trans "Send message" %}</a>
     <br/><br/>
     {% include 'messenger/pagin_up.html' with data_to_pagin=messages %}
     <br/>
@@ -39,7 +40,7 @@
                             <p>
                                 <figure class="image">
                                     {% if request.user.no_media %}
-                                        <a href="{{ message.photo.url }}">See Media</a>
+                                        <a href="{{ message.photo.url }}">{% trans "See Media" %}</a>
                                     {% else %}
                                         <img src="{{ message.photo.url }}" alt="Image">
                                     {% endif %}
@@ -51,13 +52,13 @@
                         <div class="level-left">
                             <i class="level-item">
                                 {% if message.received %}
-                                    <font color='green'>Received: {{ message.date_received|timesince:datetime }}</font>
+                                    <font color='green'>{% trans "Received" %}: {{ message.date_received|timesince:datetime }}</font>
                                 {% else %}
-                                    <font color='red'>Not received</font>
+                                    <font color='red'>{% trans "Not received" %}</font>
                                 {% endif %}
                             </i>
                             {% if message.sender == request.user %}
-                                <a class="level-item button is-small is-danger" href="{% url 'delete_message' message.pk %}?next={{ request.path }}?page={{ messages.number }}">Delete</a>
+                                <a class="level-item button is-small is-danger" href="{% url 'delete_message' message.pk %}?next={{ request.path }}?page={{ messages.number }}">{% trans "Delete" %}</a>
                             {% endif %}
                         </div>
                     </nav>
@@ -65,7 +66,7 @@
             </article>
         </div>
     {% empty %}
-        <p>Nothing for the moment</p>
+        <p>{% trans "Nothing for the moment" %}</p>
     {% endfor %}
     {% include 'messenger/pagin_down.html' with data_to_pagin=messages %}
 {% endblock %}

@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models import Q
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 from django.db.models.signals import post_save
 from django.db.models.signals import pre_delete
 from messenger.signals import post_save_message
@@ -9,17 +10,32 @@ from .utils import user_directory_path
 
 
 class Message(models.Model):
-    sender = models.ForeignKey('User',
-                               related_name='message_sender',
-                               on_delete=models.CASCADE)
-    receiver = models.ForeignKey('User',
-                                 related_name='message_receiver',
-                                 on_delete=models.CASCADE)
-    contains = models.TextField(max_length=5000)
-    photo = models.ImageField(upload_to=user_directory_path, blank=True)
-    received = models.BooleanField(default=False)
-    date_received = models.DateTimeField(default=timezone.now)
-    date_created = models.DateTimeField(default=timezone.now)
+    sender = models.ForeignKey(
+        'User',
+        related_name='message_senders',
+        on_delete=models.CASCADE,
+        verbose_name=_('senders'))
+    receiver = models.ForeignKey(
+        'User',
+        related_name='message_receivers',
+        on_delete=models.CASCADE,
+        verbose_name=_('receivers'))
+    contains = models.TextField(
+        max_length=5000,
+        verbose_name=_('contains'))
+    photo = models.ImageField(
+        upload_to=user_directory_path,
+        blank=True,
+        verbose_name=_('photo'))
+    received = models.BooleanField(
+        default=False,
+        verbose_name=_('is received?'))
+    date_received = models.DateTimeField(
+        default=timezone.now,
+        verbose_name=_('date of reception'))
+    date_created = models.DateTimeField(
+        default=timezone.now,
+        verbose_name=_('date of creation'))
 
     class Meta:
         ordering = ['date_created']

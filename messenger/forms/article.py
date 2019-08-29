@@ -1,4 +1,5 @@
 from django import forms
+from django.utils.translation import gettext_lazy as _
 from messenger.models import Article
 from messenger.models import Comment
 from .utils import photo_contraint
@@ -13,7 +14,8 @@ class ArticleForm(forms.ModelForm):
             'class':
             'textarea',
             'placeholder':
-            'Enter your message'
+            # Translators: This message is a help text
+            _('Enter your message')
         })
 
     class Meta:
@@ -33,7 +35,8 @@ class CommentForm(forms.ModelForm):
             'class':
             'textarea',
             'placeholder':
-            'Enter your message'
+            # Translators: This message is a help text
+            _('Enter your message')
         })
 
     class Meta:

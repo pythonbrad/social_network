@@ -1,4 +1,5 @@
 {% extends 'messenger/base2.html' %}
+{% load i18n %}
 {% block footer %}
-    <a href="{% url 'signin' %}">I have not a account</a>
+    <a href="{% url 'signin' %}">{% trans "I have not a account" %}</a>
 {% endblock %}

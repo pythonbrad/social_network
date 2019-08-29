@@ -3,6 +3,7 @@ from django.shortcuts import redirect
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
 from django.utils import timezone
+from django.utils.translation import gettext as _
 from messenger.models import Friendship
 from messenger.models import User
 from .utils import build_paginator
@@ -16,7 +17,7 @@ def list_users_view(request):
         waiting_friends = request.user.get_list_friends(in_waiting=True)
         return render(
             request, 'messenger/list_users.html', {
-                'title': 'List users',
+                'title': _('List users'),
                 'users': users,
                 'friends': friends,
                 'waiting_friends': waiting_friends,
@@ -30,7 +31,7 @@ def list_friends_view(request):
         friends = request.user.get_list_friends()
         friends = build_paginator(request, friends)
         return render(request, 'messenger/list_friends.html', {
-            'title': 'List friends',
+            'title': _('List friends'),
             'friends': friends,
         })
     else:
@@ -57,7 +58,7 @@ def user_details_view(request, pk):
         waiting_friends = request.user.get_list_friends(in_waiting=True)
         return render(
             request, 'messenger/user_details.html', {
-                'title': 'User details',
+                'title': _('User details'),
                 'user': user,
                 'friends': friends,
                 'waiting_friends': waiting_friends,

@@ -3,18 +3,25 @@ from django.db.models import Q
 from django.db.models.signals import pre_delete
 from django.db.models.signals import post_save
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 from messenger.signals import post_save_friendship
 from messenger.signals import pre_delete_friendship
 
 
 class Contact(models.Model):
-    own = models.ForeignKey('User',
-                            on_delete=models.CASCADE,
-                            related_name='contact_own')
-    user = models.ForeignKey('User',
-                             on_delete=models.CASCADE,
-                             related_name='contact_user')
-    date_last_message = models.DateTimeField(default=timezone.now)
+    own = models.ForeignKey(
+        'User',
+        on_delete=models.CASCADE,
+        related_name='contact_owns',
+        verbose_name=_('owns'))
+    user = models.ForeignKey(
+        'User',
+        on_delete=models.CASCADE,
+        related_name='contact_users',
+        verbose_name=_('users'))
+    date_last_message = models.DateTimeField(
+        default=timezone.now,
+        verbose_name=_('date of last message'))
 
     class Meta:
         ordering = ['date_last_message']
@@ -24,16 +31,26 @@ class Contact(models.Model):
 
 
 class Friendship(models.Model):
-    sender = models.ForeignKey('User',
-                               on_delete=models.CASCADE,
-                               related_name='friendship_sender')
-    receiver = models.ForeignKey('User',
-                                 on_delete=models.CASCADE,
-                                 related_name='friendship_receiver')
-    message = models.CharField(max_length=100,
-                               default="Hello, I would be your friend")
-    is_valided = models.BooleanField(default=False)
-    date_created = models.DateTimeField(default=timezone.now)
+    sender = models.ForeignKey(
+        'User',
+        on_delete=models.CASCADE,
+        related_name='friendship_senders',
+        verbose_name=_('senders'))
+    receiver = models.ForeignKey(
+        'User',
+        on_delete=models.CASCADE,
+        related_name='friendship_receivers',
+        verbose_name=_('receivers'))
+    message = models.CharField(
+        max_length=100,
+        default=_("Hello, I would be your friend"),
+        verbose_name=_('message'))
+    is_valided = models.BooleanField(
+        default=False,
+        verbose_name=_('is valided?'))
+    date_created = models.DateTimeField(
+        default=timezone.now,
+        verbose_name=_('date of creation'))
 
     class Meta:
         ordering = ['-date_created']

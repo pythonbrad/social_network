@@ -1,6 +1,7 @@
 {% extends 'messenger/panel.html' %}
+{% load i18n %}
 {% block column_contains %}
-    <h1 class="subtitle">Select a discussion ({{ users.paginator.count }})</h1>
+    <h1 class="subtitle">{% trans "Select a discussion" %} ({{ users.paginator.count }})</h1>
     {% include 'messenger/pagin_up.html' with data_to_pagin=users %}
     {% for last_message in last_messages %}
         <div class="box">
@@ -9,7 +10,7 @@
                     <div class="media-left">
                         <figure class="image is-64x64">
                             {% if request.user.no_media %}
-                                <a href="{{ last_message.user.photo.url }}">See Media</a>
+                                <a href="{{ last_message.user.photo.url }}">{% trans "See Media" %}</a>
                             {% else %}
                                 <img src="{{ last_message.user.photo.url }}" alt="Image">
                             {% endif %}
@@ -28,7 +29,7 @@
                                 <small>&nbsp;@{{ last_message.user }}</small>
                             </a> <small style="float:right;">{{ last_message.message.date_created|timesince:datetime }}</small>
                             <br>
-                            <b>Last Message:</b> {{ last_message.message.contains|truncatechars:255 }}
+                            <b>{% trans "Last Message" %}:</b> {{ last_message.message.contains|truncatechars:255 }}
                             {% if not last_message.message.received and last_message.message.receiver == request.user %}
                                 <p><span class="button is-primary is-small">Has New</span></p>
                             {% endif %}
@@ -37,7 +38,7 @@
                             <p>
                                 <figure class="image">
                                     {% if request.user.no_media %}
-                                        <a href="{{ last_message.message.photo.url }}">See Media</a>
+                                        <a href="{{ last_message.message.photo.url }}">{% trans "See Media" %}</a>
                                     {% else %}
                                         <img src="{{ last_message.message.photo.url }}" alt="Image">
                                     {% endif %}
@@ -47,14 +48,14 @@
                     </div>
                     <nav class="level">
                         <div class="level-left">
-                            <a href="{% url 'get_messages' last_message.user.pk %}" class="level-item button is-small is-info">Open</a>
+                            <a href="{% url 'get_messages' last_message.user.pk %}" class="level-item button is-small is-info">{% trans "Open" %}</a>
                         </div>
                     </nav>
                 </div>
             </article>
         </div>
     {% empty %}
-        Nothing for the moment
+        {% trans "Nothing for the moment" %}
     {% endfor %}
     {% include 'messenger/pagin_down.html' with data_to_pagin=users %}
 {% endblock %}

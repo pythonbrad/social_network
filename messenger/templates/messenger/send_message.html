@@ -1,6 +1,7 @@
 {% extends 'messenger/panel.html' %}
+{% load i18n %}
 {% block column_contains %}
-    <h1 class="subtitle">Message to {{ user.username }}</h1>
+    <h1 class="subtitle">{% blocktrans with user.username as username %}Message to {{ username }} {% endblocktrans %}</h1>
     <form action="{% url 'send_message' user.pk %}" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         {% for field in form %}

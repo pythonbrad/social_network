@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.contrib import auth
+from django.utils.translation import gettext as _
 from messenger.forms import SigninForm
 from messenger.forms import LoginForm
 
@@ -15,7 +16,7 @@ def signin_view(request):
         else:
             form = SigninForm()
         return render(request, 'messenger/signin.html', {
-            'title': 'Signin',
+            'title': _('Signin'),
             'form': form,
         })
     else:
@@ -33,7 +34,7 @@ def login_view(request):
         else:
             form = LoginForm()
         return render(request, 'messenger/login.html', {
-            'title': 'Login',
+            'title': _('Login'),
             'form': form
         })
     else:

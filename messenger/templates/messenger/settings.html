@@ -1,4 +1,5 @@
 {% extends 'messenger/panel.html' %}
+{% load i18n %}
 {% block column_contains %}
     {% if form %}
         {% include "messenger/forms.html" %}
@@ -12,7 +13,7 @@
                     {{ data.body }}
                 </div>
                 <footer class="message-footer">
-                    <a href="{{ data.url }}" class="button is-small is-info">Open</a>
+                    <a href="{{ data.url }}" class="button is-small is-info">{% trans "Open" %}</a>
                 </footer>
             </div>
         {% endfor %}

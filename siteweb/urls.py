@@ -21,8 +21,8 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('messenger.urls')),
     path('maintenance-mode/', include('maintenance_mode.urls')),
+    path('', include('messenger.urls')),
 ]
 
 if settings.DEBUG:

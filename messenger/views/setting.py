@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 from django.shortcuts import reverse
 from django.utils import timezone
+from django.utils import translation
+from django.utils.translation import gettext as _
 from messenger.forms import ChangePhotoForm
 from messenger.forms import ChangePasswordForm
 from messenger.forms import ChangeDataUserForm
@@ -11,28 +13,48 @@ from .utils import get_days_to_wait
 
 def settings_view(request):
     if request.user.is_authenticated:
-        datas = [{
-            'title': 'My informations',
-            'body': 'Modify your informations',
-            'url': reverse('user_settings'),
-        }, {
-            'title': 'Photo of profil',
-            'body': 'Change your photo of profil',
-            'url': reverse('photo_settings'),
-        }, {
-            'title': 'Password',
-            'body': 'Change your password',
-            'url': reverse('password_settings'),
-        }, {
-            'title':
-            '%s Media' % ('Enable' if request.user.no_media else 'Disable'),
-            'body':
-            'Click on open to Enable or Disable media to control his datas',
-            'url':
-            reverse('no_media_settings'),
-        }]
+        datas = [
+            {
+                'title': _('My informations'),
+                'body': _('Modify your informations'),
+                'url': reverse('user_settings'),
+            },
+            {
+                'title': _('Photo of profil'),
+                'body': _('Change your photo of profil'),
+                'url': reverse('photo_settings'),
+            },
+            {
+                'title': _('Password'),
+                'body': _('Change your password'),
+                'url': reverse('password_settings'),
+            },
+            {
+                'title':
+                '%s Media' %
+                (_('Enable') if request.user.no_media else _('Disable')),
+                'body':
+                _('Click on open to Enable or Disable media to control his datas'
+                  ),
+                'url':
+                reverse('no_media_settings'),
+            },
+            {
+                'title': 'English Language',
+                'body': 'Click on %s to set English Language' % _('Open'),
+                'url': reverse('set_language', args=('en', )),
+            },
+            {
+                'title':
+                'Langue Francaise',
+                'body':
+                'Click sur %s pour passer a la language Francaise' % _('Open'),
+                'url':
+                reverse('set_language', args=('fr', )),
+            },
+        ]
         return render(request, 'messenger/settings.html', {
-            'title': 'Settings',
+            'title': _('Settings'),
             'datas': datas,
         })
     else:
@@ -45,7 +67,10 @@ def user_settings_view(request):
             form = ChangeDataUserForm(request.POST, request.FILES)
             password_entry = request.POST.get('password', None)
             if password_entry != request.user.password:
-                form.add_error('password', 'password verification error')
+                form.add_error(
+                    'password',
+                    # Translators: This message is a error text
+                    _('password verification error'))
             else:
                 date_last_update = request.user.date_updated
                 days_wait = get_days_to_wait(date_last_update)
@@ -53,9 +78,12 @@ def user_settings_view(request):
                 if days_wait < days_to_wait:
                     form.add_error(
                         'password',
-                        'You should wait %s days to change this information'
-                        ', last update: %s' %
-                        (days_to_wait - days_wait, date_last_update))
+                        # Translators: This message is a error text
+                        _('You should wait %(days_to_wait)d days to change'
+                          ' this information, last update: %(days_wait)s') % {
+                              'days_to_wait': (days_to_wait - days_wait),
+                              'date_last_update': date_last_update
+                          })
                 else:
                     pass
             if form.is_valid():
@@ -75,7 +103,7 @@ def user_settings_view(request):
             })
         return render(
             request, 'messenger/settings.html', {
-                'title': 'User Settings',
+                'title': _('User Settings'),
                 'form': form,
                 'settings_url': reverse('user_settings'),
             })
@@ -90,16 +118,16 @@ def photo_settings_view(request):
             if form.is_valid():
                 request.user.photo = form.cleaned_data['photo']
                 request.user.save()
-                Article.objects.create(
+                Article.make_notification(
                     author=request.user,
-                    contains='Has changed his photo of profil',
+                    contains=_('Has changed his photo of profil'),
                     photo=request.user.photo)
                 return redirect('settings')
         else:
             form = ChangePhotoForm(initial={'photo': request.user.photo})
         return render(
             request, 'messenger/settings.html', {
-                'title': 'Photo Settings',
+                'title': _('Photo Settings'),
                 'form': form,
                 'settings_url': reverse('photo_settings'),
             })
@@ -113,7 +141,10 @@ def password_settings_view(request):
             form = ChangePasswordForm(request.POST, request.FILES)
             old_password = request.POST.get('old_password', None)
             if old_password != request.user.password:
-                form.add_error('old_password', 'Old password error')
+                form.add_error(
+                    'old_password',
+                    # Translators: This message is a error text
+                    _('Old password error'))
             else:
                 pass
             if form.is_valid():
@@ -124,7 +155,7 @@ def password_settings_view(request):
             form = ChangePasswordForm()
         return render(
             request, 'messenger/settings.html', {
-                'title': 'Password Settings',
+                'title': _('Password Settings'),
                 'form': form,
                 'settings_url': reverse('password_settings'),
             })
@@ -139,3 +170,9 @@ def no_media_settings_view(request):
         return redirect('settings')
     else:
         return redirect('login')
+
+
+def set_language(request, lang):
+    translation.activate(lang)
+    request.session[translation.LANGUAGE_SESSION_KEY] = lang
+    return redirect('home')

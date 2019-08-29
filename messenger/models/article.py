@@ -1,22 +1,32 @@
 from django.db import models
 from django.utils import timezone
+from django.shortcuts import reverse
 from django.db.models.signals import post_save
+from django.utils.translation import gettext_lazy as _
 from messenger.signals import post_save_article
 from messenger.signals import post_save_comment
 from .user import User
+from .notification import Notification
 from .utils import user_directory_path
 
 
 class Article(models.Model):
     author = models.ForeignKey(User,
-                               related_name='article_author',
-                               on_delete=models.CASCADE)
-    contains = models.TextField(max_length=5000)
-    photo = models.ImageField(upload_to=user_directory_path, blank=True)
+                               related_name='article_authors',
+                               on_delete=models.CASCADE,
+                               verbose_name=_('authors'))
+    contains = models.TextField(max_length=5000, verbose_name=_('contains'))
+    photo = models.ImageField(upload_to=user_directory_path,
+                              blank=True,
+                              verbose_name='photo')
     comments = models.ManyToManyField('Comment',
-                                      related_name='article_comments')
-    likers = models.ManyToManyField(User, related_name='article_likers')
-    date_created = models.DateTimeField(default=timezone.now)
+                                      related_name='article_comments',
+                                      verbose_name=_('comments'))
+    likers = models.ManyToManyField(User,
+                                    related_name='article_likers',
+                                    verbose_name=_('likers'))
+    date_created = models.DateTimeField(default=timezone.now,
+                                        verbose_name=_('date of creation'))
 
     def __str__(self):
         return self.contains
@@ -27,18 +37,39 @@ class Article(models.Model):
     def get_user(self):
         return self.author
 
+    def share(self, user):
+        for friend in user.get_list_friends():
+            Notification.objects.create(
+                receiver=friend,
+                message="%s said: Can you see this article of %s?" %
+                (user.username, self.author.username),
+                url=reverse('get_comments', args=(self.pk, )),
+                obj_pk=self.pk)
+
+    def make_notification(author, contains, photo):
+        Article.objects.create(author=author,
+                               contains=contains,
+                               photo=photo)
+
 
 class Comment(models.Model):
     author = models.ForeignKey(User,
-                               related_name='comment_author',
-                               on_delete=models.CASCADE)
+                               related_name='comment_authors',
+                               on_delete=models.CASCADE,
+                               verbose_name=_('authors'))
     article = models.ForeignKey(Article,
-                                related_name='article_comment',
-                                on_delete=models.CASCADE)
-    contains = models.TextField(max_length=5000)
-    photo = models.ImageField(upload_to=user_directory_path, blank=True)
-    likers = models.ManyToManyField(User, related_name='comment_likers')
-    date_created = models.DateTimeField(default=timezone.now)
+                                related_name='commented_article',
+                                on_delete=models.CASCADE,
+                                verbose_name=_('article'))
+    contains = models.TextField(max_length=5000, verbose_name=_('contains'))
+    photo = models.ImageField(upload_to=user_directory_path,
+                              blank=True,
+                              verbose_name=_('photo'))
+    likers = models.ManyToManyField(User,
+                                    related_name='comment_likers',
+                                    verbose_name=_('likers'))
+    date_created = models.DateTimeField(default=timezone.now,
+                                        verbose_name=_('date of creation'))
 
     class Meta:
         ordering = ['date_created']

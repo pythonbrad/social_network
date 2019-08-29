@@ -1,6 +1,7 @@
 {% extends 'messenger/panel.html' %}
+{% load i18n %}
 {% block column_contains %}
-    <h1 class="subtitle">New Article</h1>
+    <h1 class="subtitle">{% trans "New Article" %}</h1>
     <form action="{% url 'create_article' %}" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         {% for field in form %}

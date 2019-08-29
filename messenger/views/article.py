@@ -2,10 +2,10 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 from django.shortcuts import reverse
 from django.utils import timezone
+from django.utils.translation import gettext as _
 from django.shortcuts import get_object_or_404
 from messenger.models import Article
 from messenger.models import Comment
-from messenger.models import Notification
 from messenger.forms import ArticleForm
 from messenger.forms import CommentForm
 from .utils import build_paginator
@@ -22,7 +22,7 @@ def create_article_view(request):
         else:
             form = ArticleForm()
         return render(request, 'messenger/create_article.html', {
-            'title': 'Create article',
+            'title': _('Create article'),
             'form': form,
         })
     else:
@@ -32,18 +32,18 @@ def create_article_view(request):
 def articles_view(request):
     if request.user.is_authenticated:
         articles = Article.objects.all()
-        _ = []
+        result = []
         friends = request.user.get_list_friends()
         for article in articles:
             if article.author in friends or article.author == request.user:
-                _.append(article)
+                result.append(article)
             else:
                 pass
-        articles = _
+        articles = result
         articles = build_paginator(request, articles)
         return render(
             request, 'messenger/articles.html', {
-                'title': 'Articles',
+                'title': _('Articles'),
                 'datetime': timezone.now(),
                 'articles': articles,
             })
@@ -90,7 +90,7 @@ def create_comment_view(request, pk):
             form = CommentForm()
         return render(
             request, 'messenger/create_comment.html', {
-                'title': 'Create comment',
+                'title': _('Create comment'),
                 'form': form,
                 'article': article,
                 'redirect_to': redirect_to,
@@ -106,7 +106,7 @@ def get_comments_view(request, pk):
         comments = build_paginator(request, comments)
         return render(
             request, 'messenger/get_comments.html', {
-                'title': 'Comments',
+                'title': _('Comments'),
                 'comments': comments,
                 'article': article,
                 'datetime': timezone.now(),
@@ -144,13 +144,7 @@ def share_article_view(request, pk):
     if request.user.is_authenticated:
         redirect_to = request.GET.get('next', 'home')
         article = get_object_or_404(Article, pk=pk)
-        for friend in request.user.get_list_friends():
-            Notification.objects.create(
-                receiver=friend,
-                message="%s said: Can you see this article of %s?" %
-                (request.user.username, article.author.username),
-                url=reverse('get_comments', args=(pk, )),
-                obj_pk=pk)
+        article.share(request.user)
         return redirect(redirect_to)
     else:
         return redirect('login')

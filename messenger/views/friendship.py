@@ -3,6 +3,7 @@ from django.shortcuts import redirect
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.db.models import Q
+from django.utils.translation import gettext as _
 from messenger.models import Friendship
 from .utils import build_paginator
 from messenger.models import User
@@ -15,7 +16,7 @@ def list_friendship_view(request):
         friendships = build_paginator(request, friendships)
         return render(
             request, 'messenger/list_friendships.html', {
-                'title': 'List friendship',
+                'title': _('List friendship'),
                 'friendships': friendships,
                 'datetime': timezone.now(),
             })
