@@ -175,4 +175,7 @@ def no_media_settings_view(request):
 def set_language(request, lang):
     translation.activate(lang)
     request.session[translation.LANGUAGE_SESSION_KEY] = lang
-    return redirect('home')
+    if request.user.is_authenticated:
+        return redirect('settings')
+    else:
+        return redirect('home')
