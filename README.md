@@ -1,5 +1,5 @@
 # social_network
-**How install?
+**How install?***
 ```
 pip install django==2.1
 pip install pillow
