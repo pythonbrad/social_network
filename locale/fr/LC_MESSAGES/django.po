@@ -26,7 +26,7 @@ msgstr ""
 #. Translators: This message is a help text
 #: .\messenger\forms\account.py:25
 msgid "Enter your email"
-msgstr "Entrer ton addresse email"
+msgstr "Entrer votre addresse email"
 
 #. Translators: This message is a help text
 #: .\messenger\forms\account.py:28
@@ -43,7 +43,7 @@ msgstr "*Optionnel"
 #. Translators: This message is a help text
 #: .\messenger\forms\account.py:57 .\messenger\forms\account.py:61
 msgid "Retype your password"
-msgstr "Retape ton mot de passe"
+msgstr "Retape votre mot de passe"
 
 #. Translators: This message is a error text
 #: .\messenger\forms\account.py:78 .\messenger\forms\account.py:87
@@ -61,6 +61,9 @@ msgstr "Ce nom d'utilisateur est deja utilisé"
 #, python-format
 msgid "username is too long, max %(max_length)d characters"
 msgstr "nom d'utilisateur est trop long, maximun %(max_length)d caracteres"
+
+msgid "%(user1)s said: Can you see this article of %(user2)s?"
+msgstr "%(user1)s affirmait: Pouvez-vous voir cette article de %(user2)s?"
 
 #. Translators: This message is a error text
 #: .\messenger\forms\account.py:99
@@ -109,7 +112,7 @@ msgstr "%(tag)s ne doit pas commencer avec un nombre"
 #. Translators: This message is a error text
 #: .\messenger\forms\account.py:180
 msgid "You are too young."
-msgstr "Tu es trop jeune."
+msgstr "Vous etes trop jeune."
 
 #. Translators: This message is a error text
 #: .\messenger\forms\account.py:195 .\messenger\forms\setting.py:121
@@ -119,12 +122,12 @@ msgstr "Mot de passe de vérification et mot de passe sont différent"
 #. Translators: This message is a help text
 #: .\messenger\forms\account.py:209
 msgid "Type your Username or Email"
-msgstr "Tape ton nom d'utilisateur or ton email"
+msgstr "Tapez votre nom d'utilisateur or votre email"
 
 #. Translators: This message is a help text
 #: .\messenger\forms\account.py:217
 msgid "Type your Password"
-msgstr "Tape ton mot de passe"
+msgstr "Tapez votre mot de passe"
 
 #. Translators: This message is a error text
 #: .\messenger\forms\account.py:241
@@ -140,7 +143,7 @@ msgstr "nom d'utilisateur ou email invalide"
 #: .\messenger\forms\article.py:18 .\messenger\forms\article.py:39
 #: .\messenger\forms\message.py:17
 msgid "Enter your message"
-msgstr "Entre ton message"
+msgstr "Entrer votre message"
 
 #. Translators: This message is a help text
 #: .\messenger\forms\setting.py:16
@@ -155,7 +158,7 @@ msgstr "Entre la nouvelle date de naissance"
 #. Translators: This message is a help text
 #: .\messenger\forms\setting.py:52
 msgid "Enter your password"
-msgstr "Entre ton mot de passe"
+msgstr "Entrer votre mot de passe"
 
 #. Translators: This message is a help text
 #: .\messenger\forms\setting.py:82
@@ -243,7 +246,7 @@ msgstr "date du dernier message"
 
 #: .\messenger\models\relationship.py:46
 msgid "Hello, I would be your friend"
-msgstr "Salut, Je voudrais être ton amis"
+msgstr "Salut, Je voudrais être votre amis"
 
 #: .\messenger\models\relationship.py:50
 msgid "is valided?"
@@ -289,7 +292,7 @@ msgstr "%(user)s a déclaré \"%(message)s\""
 #: .\messenger\signals.py:20
 #, python-format
 msgid "%(user)s has accepted your friendship"
-msgstr "%(user)s as accepté ton demande d'amitié"
+msgstr "%(user)s as accepté votre demande d'amitié"
 
 #: .\messenger\signals.py:28 .\messenger\signals.py:37
 #, python-format
@@ -299,7 +302,7 @@ msgstr "%(user1)s est maintenant en amitié avec %(user2)s"
 #: .\messenger\signals.py:56 .\messenger\signals.py:64
 #, python-format
 msgid "your friendship with %(user)s has been canceled"
-msgstr "ton amitié avec %(user)s a été annulé"
+msgstr "votre amitié avec %(user)s a été annulé"
 
 #: .\messenger\signals.py:89
 #, python-format
@@ -314,12 +317,15 @@ msgstr "%(user)s as publié un nouveau article"
 #: .\messenger\signals.py:122
 #, python-format
 msgid "%(user1)s has comments an article of %(user2)s that you has liked"
-msgstr "%(user1)s a commenté un article de %(user2)s que tu as aimé"
+msgstr "%(user1)s a commenté un article de %(user2)s que vous avez aimé"
 
 #: .\messenger\signals.py:134
 #, python-format
 msgid "%(user)s has comments your article"
-msgstr "%(user)s a commenté ton article"
+msgstr "%(user)s a commenté votre article"
+
+msgid "language"
+msgstr "langue"
 
 #: .\messenger\templates\messenger\article.html:8
 #: .\messenger\templates\messenger\article.html:45
@@ -374,7 +380,7 @@ msgstr "Créer un nouveau article"
 
 #: .\messenger\templates\messenger\articles.html:12
 msgid "Nothing for the moment, Make you many friends to see more articles."
-msgstr "Rien pour le moment, fais toi beaucoup d'amis pour voir plus d'articles."
+msgstr "Rien pour le moment, faites vous beaucoup d'amis pour voir plus d'articles."
 
 #: .\messenger\templates\messenger\base.html:18
 msgid "Logout"
@@ -427,7 +433,7 @@ msgstr "Non reçue"
 
 #: .\messenger\templates\messenger\home.html:5
 msgid "Already member, or not still member, done a choice"
-msgstr "Déja membre, ou pas encore membre; fait ton choix"
+msgstr "Déja membre, ou pas encore membre; faites votre choix"
 
 #: .\messenger\templates\messenger\home.html:8
 msgid "Already member"
@@ -699,7 +705,7 @@ msgstr "vérification de mot de passe a échoué"
 msgid ""
 "You should wait %(days_to_wait)d days to change this information, last "
 "update: %(days_wait)s"
-msgstr "Tu doit attendre %(days_to_wait)d jours pour changer cette information, dernière mise à jour: update: %(days_wait)s"
+msgstr "Vous devez attendre %(days_to_wait)d jours pour changer cette information, dernière mise à jour: update: %(days_wait)s"
 
 #: .\messenger\views\setting.py:86
 msgid "User Settings"

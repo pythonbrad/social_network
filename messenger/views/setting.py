@@ -176,6 +176,8 @@ def set_language(request, lang):
     translation.activate(lang)
     request.session[translation.LANGUAGE_SESSION_KEY] = lang
     if request.user.is_authenticated:
+        request.user.language = lang
+        request.user.save()
         return redirect('settings')
     else:
         return redirect('home')

@@ -6,7 +6,6 @@ from django.utils.translation import gettext_lazy as _
 from messenger.signals import post_save_article
 from messenger.signals import post_save_comment
 from .user import User
-from .notification import Notification
 from .utils import user_directory_path
 
 
@@ -39,17 +38,17 @@ class Article(models.Model):
 
     def share(self, user):
         for friend in user.get_list_friends():
-            Notification.objects.create(
-                receiver=friend,
-                message="%s said: Can you see this article of %s?" %
-                (user.username, self.author.username),
-                url=reverse('get_comments', args=(self.pk, )),
-                obj_pk=self.pk)
+            friend.create_notification(message=_(
+                "%(user1)s said: Can you see this article of %(user2)s?") % {
+                    'user1': user.username,
+                    'user2': self.author.username
+                },
+                                       url=reverse('get_comments',
+                                                   args=(self.pk, )),
+                                       obj_pk=self.pk)
 
     def make_notification(author, contains, photo):
-        Article.objects.create(author=author,
-                               contains=contains,
-                               photo=photo)
+        Article.objects.create(author=author, contains=contains, photo=photo)
 
 
 class Comment(models.Model):

@@ -7,6 +7,11 @@ from .notification import Notification
 from .relationship import Friendship
 from .message import Message
 
+LANGUAGE_CHOICES = [
+    ('en', 'English'),
+    ('fr', 'Francais'),
+]
+
 
 class User(AbstractUser):
     username = models.CharField(max_length=50,
@@ -24,6 +29,10 @@ class User(AbstractUser):
     last_name = models.CharField(max_length=50,
                                  blank=True,
                                  verbose_name=_('last name'))
+    language = models.CharField(max_length=2,
+                                choices=LANGUAGE_CHOICES,
+                                default=LANGUAGE_CHOICES[0][0],
+                                verbose_name=_('language'))
     """
     No replace friendship, the contact save all the users
      with who a user has communicated same if this user is not his friend

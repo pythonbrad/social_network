@@ -20,7 +20,7 @@
                         <span></span>
                     </span>
                 </div>
-                {% if request.user.is_authentificated %}
+                {% if request.user.is_authenticated %}
                     <div id="navMenu" class="navbar-menu">
                         <div class="navbar-end">
                             <a href="{% url 'settings' %}" class="navbar-item">

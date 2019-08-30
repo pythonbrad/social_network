@@ -65,7 +65,7 @@ class SigninForm(forms.ModelForm):
         model = User
         fields = [
             'username', 'email', 'date_of_birth', 'password', 'photo',
-            'first_name', 'last_name'
+            'first_name', 'last_name', 'language',
         ]
 
     def clean_username(self):
