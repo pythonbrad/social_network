@@ -20,13 +20,15 @@
                         <span></span>
                     </span>
                 </div>
-                <div id="navMenu" class="navbar-menu">
-                    <div class="navbar-end">
-                        <a href="{% url 'settings' %}" class="navbar-item">
-                            {% trans "Settings" %}</a>
-                        <a href="{% url 'logout' %}">{% trans "Logout" %}</a>
+                {% if request.user.is_authentificated %}
+                    <div id="navMenu" class="navbar-menu">
+                        <div class="navbar-end">
+                            <a href="{% url 'settings' %}" class="navbar-item">
+                                {% trans "Settings" %}</a>
+                            <a href="{% url 'logout' %}">{% trans "Logout" %}</a>
+                        </div>
                     </div>
-                </div>
+                {% endif %}
             </div>
         </nav>
         <br/>
