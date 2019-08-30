@@ -374,7 +374,7 @@ msgstr "Créer un nouveau article"
 
 #: .\messenger\templates\messenger\articles.html:12
 msgid "Nothing for the moment, Make you many friends to see more articles."
-msgstr ""
+msgstr "Rien pour le moment, fais toi beaucoup d'amis pour voir plus d'articles."
 
 #: .\messenger\templates\messenger\base.html:18
 msgid "Logout"

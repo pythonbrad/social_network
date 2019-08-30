@@ -1,4 +1,5 @@
 {% extends 'messenger/panel.html' %}
+{% load static %}
 {% load i18n %}
 {% block column_contains %}
     <h1 class="subtitle">
@@ -15,8 +16,15 @@
             </figure>
         {% endif %}
     </p>
-    <a href="{% url 'user_details' user.pk %}" class="button is-link is-small">{%trans "See his details" %}</a>
-    <a href="{% url 'send_message' user.pk %}" class="button is-primary is-small">{% trans "Send message" %}</a>
+    <br/>
+    <a href="{% url 'user_details' user.pk %}" class="button is-link is-small">
+        <figure class="image is-16x16"><img src="{% static 'img/eye.svg' %}"></figure>
+        &nbsp;{%trans "See his details" %}
+    </a>
+    <a href="{% url 'send_message' user.pk %}" class="button is-primary is-small">
+        <figure class="image is-16x16"><img src="{% static 'img/paper-plane.svg' %}"></figure>
+        &nbsp;{% trans "Send message" %}
+    </a>
     <br/><br/>
     {% include 'messenger/pagin_up.html' with data_to_pagin=messages %}
     <br/>
@@ -32,7 +40,8 @@
                                         {{ message.sender.first_name }} {{ message.sender.last_name }}
                                     {% endif %}
                                 </strong>
-                                <small>&nbsp;@{{ message.sender }}</small></a> <small style="float:right;">{{ message.date_created|timesince:datetime }}</small>
+                                <small>&nbsp;@{{ message.sender }}</small>
+                            </a><small style="float:right;">{{ message.date_created|timesince:datetime }}</small>
                             <br>
                             {{ message.contains|truncatechars:255 }}
                         </p>
@@ -52,13 +61,18 @@
                         <div class="level-left">
                             <i class="level-item">
                                 {% if message.received %}
-                                    <font color='green'>{% trans "Received" %}: {{ message.date_received|timesince:datetime }}</font>
+                                    <figure class="image is-16x16"><img src="{% static 'img/envelope-open.svg' %}"></figure>
+                                    &nbsp;{% trans "Received" %}: {{ message.date_received|timesince:datetime }}
                                 {% else %}
-                                    <font color='red'>{% trans "Not received" %}</font>
+                                    <figure class="image is-16x16"><img src="{% static 'img/envelope.svg' %}"></figure>
+                                    &nbsp;{% trans "Not received" %}
                                 {% endif %}
                             </i>
                             {% if message.sender == request.user %}
-                                <a class="level-item button is-small is-danger" href="{% url 'delete_message' message.pk %}?next={{ request.path }}?page={{ messages.number }}">{% trans "Delete" %}</a>
+                                <a class="level-item button is-small is-danger" href="{% url 'delete_message' message.pk %}?next={{ request.path }}?page={{ messages.number }}">
+                                    <figure class="image is-16x16"><img src="{% static 'img/delete.svg' %}"></figure>
+                                    &nbsp;{% trans "Delete" %}
+                                </a>
                             {% endif %}
                         </div>
                     </nav>

@@ -1,0 +1,23 @@
+{% load static %}
+{% load i18n %}
+    <a class="level-item button is-small is-primary" href="{% url liked_namespace article.pk %}?next={{ request.path }}?page={{ articles.number }}">
+        {% if request.user in article.likers.all %}
+            <figure class="image is-16x16"><img src="{% static 'img/heart-broken.svg' %}"></figure>
+            &nbsp;{% trans "Unliked" %}
+        {% else %}
+            <figure class="image is-16x16"><img src="{% static 'img/heart.svg' %}"></figure>
+            &nbsp;{% trans "Liked" %}
+        {% endif %}
+        ({{ article.likers.count }})
+    </a>
+    {% if can_share %}
+        <a class="level-item button is-small is-warning" href="{% url 'share_article' article.pk %}?next={{ request.path }}?page={{ articles.number }}">
+            <figure class="image is-16x16"><img src="{% static 'img/share.svg' %}"></figure>
+            &nbsp;{% trans "Share" %}
+        </a>
+    {% endif %}
+    {% if article.author == request.user %}
+        <a class="level-item button is-small is-danger" href="{% url delete_namespace article.pk %}?next={{ request.path }}?page={{ articles.number }}">
+            <figure class="image is-16x16"><img src="{% static 'img/delete.svg' %}"></figure>
+            &nbsp;{% trans "Delete" %}</a>
+    {% endif %}

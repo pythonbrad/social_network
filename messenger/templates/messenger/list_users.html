@@ -1,4 +1,5 @@
 {% extends 'messenger/panel.html' %}
+{% load static %}
 {% load i18n %}
 {% block column_contains %}
     <h1 class="subtitle">{% trans "List users" %} ({{ users.paginator.count }})</h1>
@@ -40,7 +41,8 @@
                                 <a class="level-item button is-danger is-small card-footer-item" disabled>{% trans "Friendship in waiting" %}</a>
                             {% else %}
                                 <a class="level-item button is-success is-small card-footer-item" href="{% url 'create_friendship' user.pk %}">
-                                    {% trans "Send friendship" %}
+                                    <figure class="image is-16x16"><img src="{% static 'img/paper-plane.svg' %}"></figure>
+                                    &nbsp;{% trans "Send friendship" %}
                                 </a>
                             {% endif %}
                         </div>

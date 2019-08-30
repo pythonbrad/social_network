@@ -1,3 +1,4 @@
+{% load static %}
 {% load i18n %}
         <div class="box">
             <article class="media">
@@ -25,11 +26,11 @@
                             </a> <small style="float:right;">{{ article.date_created|timesince:datetime }}</small>
                             <br>
                             {% if zone_comment is False %}
-                                {% with article.contains.splitlines as acs %}
-                                    {% if acs|length > 1 %}
-                                        {{ acs.0|truncatechars:255 }}...
+                                {% with article.contains.splitlines as lines %}
+                                    {% if lines|length > 1 %}
+                                        {{ lines.0|truncatechars:255 }}...
                                     {% else %}
-                                        {{ acs.0|truncatechars:255 }}
+                                        {{ lines.0|truncatechars:255 }}
                                     {% endif %}
                                 {% endwith %}
                             {% else %}
@@ -53,38 +54,20 @@
                     <nav class="level">
                         <div class="level-left">
                             {% if zone_comment is not None %}
-                                <a class="level-item button is-small is-primary" href="{% url 'liked_article' article.pk %}?next={{ request.path }}?page={{ articles.number }}">
-                                    {% if request.user in article.likers.all %}
-                                        {% trans "Unliked" %}
-                                    {% else %}
-                                        {% trans "Liked" %}
-                                    {% endif %}
-                                    ({{ article.likers.count }})
-                                </a>
-                                <a class="level-item button is-small is-warning" href="{% url 'share_article' article.pk %}?next={{ request.path }}?page={{ articles.number }}">{% trans "Share" %}</a>
-                                {% if article.author == request.user %}
-                                    <a class="level-item button is-small is-danger" href="{% url 'delete_article' article.pk %}?next={{ request.path }}?page={{ articles.number }}">{% trans "Delete" %}</a>
+                                {% include 'messenger/article_tools.html' with liked_namespace='liked_article' can_share=True delete_namespace='delete_article' %}
+                                {% if zone_comment is True %}
+                                    <a href="{% url 'create_comment' article.pk %}?next={{ request.path }}" class="level-item button is-small is-link">
+                                        <figure class="image is-16x16"><img src="{% static 'img/comment.svg' %}"></figure>
+                                        &nbsp;{% trans "Comment" %} ({{ article.comments.count }})
+                                    </a>
+                                {% elif zone_comment is False %}
+                                    <a class="level-item button is-small is-link" href="{% url 'get_comments' article.pk %}">
+                                        <figure class="image is-16x16"><img src="{% static 'img/more.svg' %}"></figure>
+                                        &nbsp;{% trans "More" %}
+                                    </a>
                                 {% endif %}
-                            {% endif %}
-                            {% if zone_comment is True %}
-                                <a href="{% url 'create_comment' article.pk %}?next={{ request.path }}" class="level-item button is-small is-link">{% trans "Comment" %} ({{ article.comments.count }})</a>
-                                {% if article.author == request.user %}
-                                    <a class="level-item button is-small is-danger" href="{% url 'delete_article' article.pk %}?next={% url 'articles' %}">{% trans "Delete" %}</a>
-                                {% endif %}
-                            {% elif zone_comment is False %}
-                                <a class="level-item button is-small is-link" href="{% url 'get_comments' article.pk %}">{% trans "More" %}</a>
                             {% else %}
-                                <a class="level-item button is-small is-primary" href="{% url 'liked_comment' article.pk %}?next={{ request.path }}?page={{ articles.number }}">
-                                    {% if request.user in article.likers.all %}
-                                        {% trans "Unliked" %}
-                                    {% else %}
-                                        {% trans "Liked" %}
-                                    {% endif %}
-                                    ({{ article.likers.count }})
-                                </a>
-                                {% if article.author == request.user %}
-                                    <a class="level-item button is-small is-danger" href="{% url 'delete_comment' article.pk %}?next={{ request.path }}?page={{ articles.number }}">{% trans "Delete" %}</a>
-                                {% endif %}
+                                {% include 'messenger/article_tools.html' with liked_namespace='liked_comment' can_share=False delete_namespace='delete_comment' %}
                             {% endif %}
                         </div>
                     </nav>
