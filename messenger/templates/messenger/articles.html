@@ -6,7 +6,7 @@
         {% trans "Articles" %}: {{ articles.paginator.count }}
     </h1>
     {% include 'messenger/pagin_up.html' with data_to_pagin=articles %}
-    {% for article in articles %}
+    {% for article in articles reversed %}
         {% include "messenger/article.html" with zone_comment=False %}
     {% empty %}
         <h1>{% trans "Nothing for the moment, Make you many friends to see more articles." %}</h1>

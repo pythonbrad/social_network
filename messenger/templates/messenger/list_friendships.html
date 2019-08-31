@@ -4,7 +4,7 @@
     <a class="button is-primary is-small" href="{% url 'list_users' %}">{% trans "Find friends" %}</a>
     <h1 class="subtitle">{% trans "Frienship en attente" %} ({{ friendships.paginator.count }})</h1>
     {% include 'messenger/pagin_up.html' with data_to_pagin=friendships %}
-    {% for friendship in friendships %}
+    {% for friendship in friendships reversed %}
         <div class="box">
             <article class="media">
                 {% if friendship.sender != request.user and friendship.sender.photo %}

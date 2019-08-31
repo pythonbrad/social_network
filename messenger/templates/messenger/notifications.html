@@ -6,7 +6,7 @@
             <span>{% trans "Notification" %} ({{ notifications.paginator.count }})</span>
         </div>
         {% include 'messenger/pagin_up.html' with data_to_pagin=notifications %}
-        {% for notification in notifications %}
+        {% for notification in notifications reversed %}
             <div class="message-body">
                 <a href="{{ notification.url }}">
                     {{ notification }}

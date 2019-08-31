@@ -4,7 +4,7 @@
 {% block column_contains %}
     <h1 class="subtitle">{% trans "List users" %} ({{ users.paginator.count }})</h1>
     {% include 'messenger/pagin_up.html' with data_to_pagin=users %}
-    {% for user in users %}
+    {% for user in users reversed %}
         <div class="box">
             <article class="media">
                 {% if user.photo %}
