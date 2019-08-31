@@ -2,45 +2,14 @@
 {% load i18n %}
 {% block contains %}
     <br/><br/>
-    <h1 class="label" align="center">{% trans "Already member, or not still member, done a choice" %}</h1>
-    <div class="columns" align="center">
-        <div class="column">
-            <a class="button is-link" href="{% url 'login' %}">{% trans "Already member" %}</a>
-        </div>
-        <div class="column">
-            <a class="button is-link" href="{% url 'signin' %}">{% trans "Not still member" %}</a>
-        </div>
-    </div>
+    <h1 class="label" align="center">{% trans "Already member, or not still member, done a choice" %}</h1><br>
     <div align="center">
-        <h1 class="label">You speak what language?<br>Tu parle quel langue?</h1>
+        <a class="button is-link" href="{% url 'login' %}">{% trans "Already member" %}</a>
+        <a class="button is-link" href="{% url 'signin' %}">{% trans "Not still member" %}</a>
+    </div><br><br>
+    <div align="center">
+        <h1 class="label">You speak what language?<br>Tu parle quel langue?</h1><br>
         <a class="button is-primary" href="{% url 'set_language' lang='en' %}">English</a>
         <a class="button is-primary" href="{% url 'set_language' lang='fr' %}">Francais</a>
-    </div>
-    <h1 class="label" align="center">Nous repondons a quelque de vos questions</h1>
-    <div class="card">
-        <div class="card-content">
-            <header class="card-header">
-                <p class="title">What is it ?</p>
-            </header>
-            <div class="card-content">
-                {% lorem %}
-            </div>
-        </div>
-        <div class="card-content">
-            <header class="card-header">
-                <p class="title">Why it ?</p>
-            </header>
-            <div class="card-content">
-                {% lorem %}
-            </div>
-        </div>
-        <div class="card-content">
-            <header class="card-header">
-                <p class="title">About us ?</p>
-            </header>
-            <div class="card-content">
-                {% lorem %}
-            </div>
-        </div>
     </div>
 {% endblock %}

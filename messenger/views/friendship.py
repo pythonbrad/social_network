@@ -13,7 +13,7 @@ def list_friendship_view(request):
     if request.user.is_authenticated:
         # Pour data frienship, use it
         friendships = Friendship.get_not_valid(user=request.user)
-        friendships = build_paginator(request, friendships)
+        friendships = build_paginator(request, friendships)[::-1]
         return render(
             request, 'messenger/list_friendships.html', {
                 'title': _('List friendship'),
