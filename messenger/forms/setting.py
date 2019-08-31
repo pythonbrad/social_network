@@ -54,7 +54,8 @@ class ChangeDataUserForm(forms.Form):
                 # Translators: This message is a help text
                 _('Enter your password')
             }),
-        help_text='Enter your password to valid the modifications',
+        # Translators: This message is a help text
+        help_text=_('Enter your password to valid the modifications'),
         label=_('password').capitalize())
 
     def clean_date_of_birth(self):
@@ -125,5 +126,4 @@ class ChangePasswordForm(forms.Form):
                 self.add_error(
                     'password_verification',
                     # Translators: This message is a error text
-                    _('Password verification and'
-                      ' password are different'))
+                    _('Password verification and password are different'))

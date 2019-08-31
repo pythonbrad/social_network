@@ -34,7 +34,7 @@ def settings_view(request):
                 '%s Media' %
                 (_('Enable') if request.user.no_media else _('Disable')),
                 'body':
-                _('Click on open to Enable or Disable media to control his datas'
+                _('Click on open to Enable or Disable media to control your datas'
                   ),
                 'url':
                 reverse('no_media_settings'),
@@ -80,7 +80,7 @@ def user_settings_view(request):
                         'password',
                         # Translators: This message is a error text
                         _('You should wait %(days_to_wait)d days to change'
-                          ' this information, last update: %(days_wait)s') % {
+                          ' this information, last update: %(date_last_update)s') % {
                               'days_to_wait': (days_to_wait - days_wait),
                               'date_last_update': date_last_update
                           })
@@ -120,7 +120,7 @@ def photo_settings_view(request):
                 request.user.save()
                 Article.make_notification(
                     author=request.user,
-                    contains=_('Has changed his photo of profil'),
+                    contains='---',
                     photo=request.user.photo)
                 return redirect('settings')
         else:

@@ -193,8 +193,7 @@ class SigninForm(forms.ModelForm):
                 self.add_error(
                     'password_verification',
                     # Translators: This message is a error text
-                    _('Password verification and'
-                      ' password are different'))
+                    _('Password verification and password are different'))
             else:
                 pass
 

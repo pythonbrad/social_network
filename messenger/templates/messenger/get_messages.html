@@ -3,7 +3,7 @@
 {% load i18n %}
 {% block column_contains %}
     <h1 class="subtitle">
-        {% blocktrans with user.username as username %} Discussion with {{ username }} {% endblocktrans %} ({{ messages.paginator.count }})
+        {% blocktrans with user.username as username %}Discussion with {{ username }}{% endblocktrans %} ({{ messages.paginator.count }})
     </h1>
     <p>
         {% if user.photo %}

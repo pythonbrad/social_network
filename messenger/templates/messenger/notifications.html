@@ -12,7 +12,7 @@
                     {{ notification }}
                 </a>&nbsp;
                 <a class="delete is-small" title="delete" href="{% url 'delete_notification' notification.pk %}?next={{ request.path }}?page={{ notifications.number }}"></a>
-                <p>{% blocktrans with notification.date_created|timesince:datetime as date_created %}Ago {{ date_created }} {% endblocktrans %}</p>
+                <p>{% blocktrans with notification.date_created|timesince:datetime as date_created %}Ago {{ date_created }}{% endblocktrans %}</p>
             </div>
         {% empty %}
             <div class="message-body">

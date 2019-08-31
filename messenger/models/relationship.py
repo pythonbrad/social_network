@@ -41,10 +41,6 @@ class Friendship(models.Model):
         on_delete=models.CASCADE,
         related_name='friendship_receivers',
         verbose_name=_('receivers'))
-    message = models.CharField(
-        max_length=100,
-        default=_("Hello, I would be your friend"),
-        verbose_name=_('message'))
     is_valided = models.BooleanField(
         default=False,
         verbose_name=_('is valided?'))

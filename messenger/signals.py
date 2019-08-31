@@ -1,14 +1,19 @@
 from django.shortcuts import reverse
 from django.utils import timezone
 from django.utils.translation import gettext as _
+from django.utils import translation
 
 
 def post_save_friendship(sender, instance, created, **kwargs):
+    # Backup of user actual language
+    backup_language = translation.get_language()
+
     if created:
+        # Translate in notification receiver language
+        translation.activate(instance.receiver.language)
         instance.receiver.create_notification(
-            message=_('%(user)s said "%(message)s"') % {
+            message=_('%(user)s said "Hello, I would be your friend"') % {
                 'user': instance.sender,
-                'message': instance.message
             },
             obj_pk=instance.pk,
             url=reverse('list_friendships'),
@@ -16,6 +21,8 @@ def post_save_friendship(sender, instance, created, **kwargs):
 
     else:
         if instance.is_valided:
+            # Translate in notification receiver language
+            translation.activate(instance.sender.language)
             instance.sender.create_notification(
                 message=_('%(user)s has accepted your friendship') %
                 {'user': instance.receiver},
@@ -24,6 +31,8 @@ def post_save_friendship(sender, instance, created, **kwargs):
             )
 
             for friend in instance.sender.get_list_friends():
+                # Translate in notification receiver language
+                translation.activate(friend.language)
                 friend.create_notification(
                     message=_("%(user1)s is now in friendship with %(user2)s")
                     % {
@@ -33,6 +42,8 @@ def post_save_friendship(sender, instance, created, **kwargs):
                     obj_pk=instance.pk,
                     url=reverse('user_details', args=(instance.receiver, )))
             for friend in instance.receiver.get_list_friends():
+                # Translate in notification receiver language
+                translation.activate(friend.language)
                 friend.create_notification(
                     message=_("%(user1)s is now in friendship with %(user2)s")
                     % {
@@ -44,6 +55,8 @@ def post_save_friendship(sender, instance, created, **kwargs):
 
         else:
             pass
+    # Restore the language backup
+    translation.activate(backup_language)
 
 
 def pre_delete_friendship(sender, instance, **kwargs):
@@ -51,7 +64,12 @@ def pre_delete_friendship(sender, instance, **kwargs):
     for notification in notifications:
         notification.delete()
 
+    # Backup of user actual language
+    backup_language = translation.get_language()
+
     if instance.is_valided:
+        # Translate in notification receiver language
+        translation.activate(instance.receiver.language)
         instance.receiver.create_notification(
             message=_('your friendship with %(user)s has been canceled') %
             {'user': instance.sender},
@@ -60,6 +78,8 @@ def pre_delete_friendship(sender, instance, **kwargs):
         )
     else:
         pass
+    # Translate in notification receiver language
+    translation.activate(instance.sender.language)
     instance.sender.create_notification(
         message=_('your friendship with %(user)s has been canceled') %
         {'user': instance.receiver},
@@ -67,8 +87,14 @@ def pre_delete_friendship(sender, instance, **kwargs):
         obj_pk=instance.pk,
     )
 
+    # Restore the language backup
+    translation.activate(backup_language)
+
 
 def post_save_message(sender, instance, created, **kwargs):
+    # Backup of user actual language
+    backup_language = translation.get_language()
+
     if created:
 
         if not instance.sender.contacts.filter(
@@ -85,6 +111,8 @@ def post_save_message(sender, instance, created, **kwargs):
                                                        user=instance.sender)
             result.date_last_message = timezone.now()
 
+        # Translate in notification receiver language
+        translation.activate(instance.receiver.language)
         instance.receiver.create_notification(
             message=_('New message from %(user)s') % {'user': instance.sender},
             obj_pk=instance.pk,
@@ -92,6 +120,9 @@ def post_save_message(sender, instance, created, **kwargs):
         )
     else:
         pass
+
+    # Restore the language backup
+    translation.activate(backup_language)
 
 
 def pre_delete_message(sender, instance, **kwargs):
@@ -101,10 +132,15 @@ def pre_delete_message(sender, instance, **kwargs):
 
 
 def post_save_article(sender, instance, created, **kwargs):
+    # Backup of user actual language
+    backup_language = translation.get_language()
+
     if created:
         for friend in instance.author.get_list_friends():
+            # Translate in notification receiver language
+            translation.activate(friend.language)
             friend.create_notification(
-                message=_('%(user)s has publish a new article') %
+                message=_('%(user)s has published a new article') %
                 {'user': instance.author},
                 obj_pk=instance.pk,
                 url=reverse('articles'),
@@ -112,12 +148,20 @@ def post_save_article(sender, instance, created, **kwargs):
     else:
         pass
 
+    # Restore the language backup
+    translation.activate(backup_language)
+
 
 def post_save_comment(sender, instance, created, **kwargs):
+    # Backup of user actual language
+    backup_language = translation.get_language()
+
     if created:
         instance.article.comments.add(instance)
         for liker in instance.article.likers.all():
             if instance.author != liker != instance.article.author:
+                # Translate in notification receiver language
+                translation.activate(liker.language)
                 liker.create_notification(
                     message=_('%(user1)s has comments an article of '
                               '%(user2)s that you has liked') % {
@@ -130,6 +174,8 @@ def post_save_comment(sender, instance, created, **kwargs):
             else:
                 pass
         if instance.author != instance.article.author:
+            # Translate in notification receiver language
+            translation.activate(instance.author.language)
             instance.article.author.create_notification(
                 message=_('%(user)s has comments your article') %
                 {'user': instance.author},
@@ -140,3 +186,6 @@ def post_save_comment(sender, instance, created, **kwargs):
             pass
     else:
         pass
+
+    # Restore the language backup
+    translation.activate(backup_language)
