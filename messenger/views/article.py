@@ -40,7 +40,7 @@ def articles_view(request):
             else:
                 pass
         articles = result
-        articles = build_paginator(request, articles)[::-1]
+        articles = build_paginator(request, articles)
         return render(
             request, 'messenger/articles.html', {
                 'title': _('Articles'),
@@ -103,7 +103,7 @@ def get_comments_view(request, pk):
     if request.user.is_authenticated:
         article = get_object_or_404(Article, pk=pk)
         comments = article.comments.all()
-        comments = build_paginator(request, comments)[::-1]
+        comments = build_paginator(request, comments)
         return render(
             request, 'messenger/get_comments.html', {
                 'title': _('Comments'),

@@ -23,7 +23,7 @@ def delete_notification_view(request, pk):
 def list_notifications_view(request):
     if request.user.is_authenticated:
         notifications = Notification.get(user=request.user)
-        notifications = build_paginator(request, notifications)[::-1]
+        notifications = build_paginator(request, notifications)
         for notification in notifications:
             if not notification.received:
                 notification.received = True

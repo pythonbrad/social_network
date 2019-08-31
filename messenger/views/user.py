@@ -12,7 +12,7 @@ from .utils import build_paginator
 def list_users_view(request):
     if request.user.is_authenticated:
         users = User.objects.all().exclude(pk=request.user.pk)
-        users = build_paginator(request, users)[::-1]
+        users = build_paginator(request, users)
         friends = request.user.get_list_friends(in_waiting=False)
         waiting_friends = request.user.get_list_friends(in_waiting=True)
         return render(
@@ -29,7 +29,7 @@ def list_users_view(request):
 def list_friends_view(request):
     if request.user.is_authenticated:
         friends = request.user.get_list_friends()
-        friends = build_paginator(request, friends)[::-1]
+        friends = build_paginator(request, friends)
         return render(request, 'messenger/list_friends.html', {
             'title': _('List friends'),
             'friends': friends,
