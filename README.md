@@ -25,7 +25,6 @@ You need to have installed on your computer
 ### installation process
 
 ```bash
-https://github.com/pythonbrad/social_network.git
 cd social_network
 virtualenv -p python3 venv
 source venv/bin/activate
