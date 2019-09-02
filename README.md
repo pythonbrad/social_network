@@ -1,5 +1,12 @@
 # social_network
+
+![Image](https://github.com/pythonbrad/social_network/blob/master/a.png)
+![Image](https://github.com/pythonbrad/social_network/blob/master/b.png)
+![Image](https://github.com/pythonbrad/social_network/blob/master/c.png)
+
 **How install?***
+
+
 ```
 pip install django==2.1
 pip install pillow
