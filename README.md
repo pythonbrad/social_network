@@ -7,7 +7,7 @@ You can create your account here and see what it looks like.
 
 http://tutorbrad.pythonanywhere.com
 
-##Ssome screenshoot
+## Ssome screenshoot
 
 ![Image](https://github.com/pythonbrad/social_network/blob/master/a.png)
 ![Image](https://github.com/pythonbrad/social_network/blob/master/b.png)
