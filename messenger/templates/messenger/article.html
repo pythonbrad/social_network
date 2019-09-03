@@ -49,13 +49,13 @@
                                 {% include 'messenger/article_tools.html' with liked_namespace='liked_article' can_share=True delete_namespace='delete_article' %}
                                 {% if zone_comment is True %}
                                     <a href="{% url 'create_comment' article.pk %}?next={{ request.path }}" class="level-item button is-small is-link">
-                                        <figure class="image is-16x16"><img src="{% static 'img/comment.svg' %}"></figure>
-                                        &nbsp;{% trans "Comment" %} ({{ article.comments.count }})
+                                        <span class="icon is-small"><img src="{% static 'img/comment.svg' %}"></span>
+                                        <p>{% trans "Comment" %} ({{ article.comments.count }})</p>
                                     </a>
                                 {% elif zone_comment is False %}
                                     <a class="level-item button is-small is-link" href="{% url 'get_comments' article.pk %}">
-                                        <figure class="image is-16x16"><img src="{% static 'img/more.svg' %}"></figure>
-                                        &nbsp;{% trans "More" %}
+                                        <span class="icon is-small"><img src="{% static 'img/more.svg' %}"></span>
+                                        <p>{% trans "More" %}</p>
                                     </a>
                                 {% endif %}
                             {% else %}

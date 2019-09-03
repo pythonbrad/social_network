@@ -2,52 +2,47 @@
 {% load static %}
 {% load i18n %}
 {% block contains %}
-    <div class="tabs is-centered is-fullwidth is-small">
-        <ul>
-            {% with request.user.get_state as user_state %}
+    <div ng-app ="myApp">
+        <div class="tabs is-centered is-fullwidth is-small" ng-controller='panelController'>
+            <ul>
                 <li>
-                    <a href="{% url 'articles' %}"><figure class="image is-16x16"><img src="{% static 'img/news.svg' %}"></figure>
-                    &nbsp;{% trans 'News' %}
+                    <a href="{% url 'articles' %}"><span class="icon is-small"><img src="{% static 'img/news.svg' %}"></span>
+                    <p>{% trans 'News' %}</p>
                     </a>
                 </li>
-                <li>
+                <li class="{% verbatim %}{{ messages_count ? 'is-active' : '' }}{% endverbatim %}">
                     <a href="{% url 'messages' %}">
-                    <figure class="image is-16x16"><img src="{% static 'img/message.svg' %}"></figure>
-                    &nbsp;{% trans 'Messages' %}
-                    {% with user_state.new_messages.count as number %}
-                        {% if number %}
-                            ({{ number }})
-                        {% endif %}
-                    {% endwith %}
+                    <span class="icon is-small"><img src="{% static 'img/message.svg' %}"></span>
+                    <p>{% trans 'Messages' %}</p>
+                    {% verbatim %}
+                        {{ messages_count ? "("+messages_count+")" : "" }}
+                    {% endverbatim %}
                     </a>
                 </li>
                 <li>
                     <a href="{% url 'list_friends' %}">
-                    <figure class="image is-16x16"><img src="{% static 'img/friend.svg' %}"></figure>
-                    &nbsp;{% trans "Friends" %}</a>
+                    <span class="icon is-small"><img src="{% static 'img/friend.svg' %}"></span>
+                    <p>{% trans "Friends" %}</p></a>
                 </li>
-                <li>
+                <li class="{% verbatim %}{{ friendships_count ? 'is-active' : '' }}{% endverbatim %}">
                     <a href="{% url 'list_friendships' %}">
-                    <figure class="image is-16x16"><img src="{% static 'img/add_friend.svg' %}"></figure>
-                    &nbsp;{%trans "Friendships" %}
-                    {% with user_state.waiting_friends.count as number %}
-                        {% if number %}
-                            ({{ number }})
-                        {% endif %}
-                    {% endwith %}
-                    </a>
+                    <span class="icon is-small"><img src="{% static 'img/add_friend.svg' %}"></span>
+                    <p>{%trans "Friendships" %}
+                    {% verbatim %}
+                        {{ friendships_count ? "("+friendships_count+")" : "" }}
+                    {% endverbatim %}
+                    </p></a>
                 </li>
-                <li><a href="{% url 'list_notifications' %}">
-                    <figure class="image is-16x16"><img src="{% static 'img/bell.svg' %}"></figure>
-                    &nbsp;{% trans "Notifications" %}
-                    {% with user_state.new_notifications.count as number %}
-                        {% if number %}
-                            ({{ number }})
-                        {% endif %}
-                    {% endwith %}
+                <li class="{% verbatim %}{{ notifications_count ? 'is-active' : '' }}{% endverbatim %}"><a href="{% url 'list_notifications' %}">
+                    <span class="icon is-small"><img src="{% static 'img/bell.svg' %}"></span>
+                    <p>{% trans "Notifications" %}
+                    {% verbatim %}
+                        {{ notifications_count ? "("+notifications_count+")" : "" }}
+                    {% endverbatim %}
+                    </p>
                 </a></li>
-            {% endwith %}
-        </ul>
+            </ul>
+        </div>
     </div>
     <div class='columns'>
         <div class="column is-one-fifth"></div>
@@ -59,4 +54,23 @@
         <div class="column is-one-fifth">
         </div>
     </div>
+    <script>
+        var myApp = angular.module('myApp', []);
+        myApp.controller("panelController", function ($scope, $http, $interval) {
+            var url = "{% url 'get_state' %}";
+            function panel_refresh () {
+                $http.get(url).success(function(response) {
+                    $scope.notifications_count = response.new_notifications;
+                    $scope.messages_count = response.new_messages;
+                    $scope.friendships_count = response.waiting_friends;
+                });
+            }
+            //First execution
+            panel_refresh();
+            //Execution by interval
+            $interval(
+                panel_refresh
+                , 5000);
+        });
+    </script>
 {% endblock %}

@@ -41,8 +41,8 @@
                                 <a class="level-item button is-danger is-small card-footer-item" disabled>{% trans "Friendship in waiting" %}</a>
                             {% else %}
                                 <a class="level-item button is-success is-small card-footer-item" href="{% url 'create_friendship' user.pk %}">
-                                    <figure class="image is-16x16"><img src="{% static 'img/paper-plane.svg' %}"></figure>
-                                    &nbsp;{% trans "Send friendship" %}
+                                    <span class="icon is-small"><img src="{% static 'img/paper-plane.svg' %}"></span>
+                                    <p>{% trans "Send friendship" %}</p>
                                 </a>
                             {% endif %}
                         </div>

@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.shortcuts import get_object_or_404
+from django.http import JsonResponse
 from django.db.models import Q
 from django.utils import timezone
 from django.utils.translation import gettext as _
@@ -66,3 +67,7 @@ def user_details_view(request, pk):
             })
     else:
         return redirect('login')
+
+
+def get_state_view(request):
+    return JsonResponse(request.user.get_state())

@@ -18,12 +18,12 @@
     </p>
     <br/>
     <a href="{% url 'user_details' user.pk %}" class="button is-link is-small">
-        <figure class="image is-16x16"><img src="{% static 'img/eye.svg' %}"></figure>
-        &nbsp;{%trans "See his details" %}
+        <span class="icon is-small"><img src="{% static 'img/eye.svg' %}"></span>
+        <p>{%trans "See his details" %}</p>
     </a>
     <a href="{% url 'send_message' user.pk %}" class="button is-primary is-small">
-        <figure class="image is-16x16"><img src="{% static 'img/paper-plane.svg' %}"></figure>
-        &nbsp;{% trans "Send message" %}
+        <span class="icon is-small"><img src="{% static 'img/paper-plane.svg' %}"></span>
+        <p>{% trans "Send message" %}</p>
     </a>
     <br/><br/>
     {% include 'messenger/pagin_up.html' with data_to_pagin=messages %}
@@ -61,17 +61,17 @@
                         <div class="level-left">
                             <i class="level-item">
                                 {% if message.received %}
-                                    <figure class="image is-16x16"><img src="{% static 'img/envelope-open.svg' %}"></figure>
-                                    &nbsp;{% trans "Received" %}: {{ message.date_received|timesince:datetime }}
+                                    <span class="icon is-small"><img src="{% static 'img/envelope-open.svg' %}"></span>
+                                    <p>{% trans "Received" %}: {{ message.date_received|timesince:datetime }}</p>
                                 {% else %}
-                                    <figure class="image is-16x16"><img src="{% static 'img/envelope.svg' %}"></figure>
-                                    &nbsp;{% trans "Not received" %}
+                                    <span class="icon is-small"><img src="{% static 'img/envelope.svg' %}"></span>
+                                    <p>{% trans "Not received" %}</p>
                                 {% endif %}
                             </i>
                             {% if message.sender == request.user %}
                                 <a class="level-item button is-small is-danger" href="{% url 'delete_message' message.pk %}?next={{ request.path }}?page={{ messages.number }}">
-                                    <figure class="image is-16x16"><img src="{% static 'img/delete.svg' %}"></figure>
-                                    &nbsp;{% trans "Delete" %}
+                                    <span class="icon is-small"><img src="{% static 'img/delete.svg' %}"></span>
+                                    <p>{% trans "Delete" %}</p>
                                 </a>
                             {% endif %}
                         </div>

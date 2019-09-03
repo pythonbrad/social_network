@@ -30,8 +30,8 @@
                         </a>
                     </p>
                     <a href="{% url 'send_message' friend.pk %}" class="button is-link is-small">
-                        <figure class="image is-16x16"><img src="{% static 'img/paper-plane.svg' %}"></figure>
-                        &nbsp;{% trans "Send message" %}
+                        <span class="icon is-small"><img src="{% static 'img/paper-plane.svg' %}"></span>
+                        <p>{% trans "Send message" %}</p>
                     </a>
                 </div>
             </div>

@@ -72,4 +72,7 @@ urlpatterns = [
     path('settings/language/<lang>',
          views.set_language,
          name='set_language'),
+    path('user/api/get_state',
+         views.get_state_view,
+         name='get_state'),
 ]

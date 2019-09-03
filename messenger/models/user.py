@@ -55,10 +55,11 @@ class User(AbstractUser):
         return self
 
     def get_state(self):
-        new_notifications = Notification.get_new(user=self)
-        waiting_friends = Friendship.get_new(user=self)
-        new_messages = Message.get_new(user=self)
-        return locals()
+        return {
+            'new_notifications': Notification.get_new(user=self).count(),
+            'waiting_friends': Friendship.get_new(user=self).count(),
+            'new_messages': Message.get_new(user=self).count(),
+        }
 
     def get_list_friends(self, in_waiting=False):
         if in_waiting is not None:

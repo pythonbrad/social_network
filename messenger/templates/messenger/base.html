@@ -6,6 +6,7 @@
         <title>{{ title }}</title>
         <meta charset="utf-8" lang='en'>
         <link rel="stylesheet" type="text/css" href="{% static 'css/bulma.min.css' %}">
+        <script src="{% static 'js/angular1.3.16.min.js' %}"></script>
     </head>
     <body>
         <nav class="navbar is-link">
@@ -36,13 +37,13 @@
         {% endblock %}
         <script type="text/javascript">
         (function() {
-  var burger = document.querySelector('.burger');
-  var nav = document.querySelector('#'+burger.dataset.target);
-  burger.addEventListener('click', function(){
-    burger.classList.toggle('is-active');
-    nav.classList.toggle('is-active');
-  });
-})();
+          var burger = document.querySelector('.burger');
+          var nav = document.querySelector('#'+burger.dataset.target);
+          burger.addEventListener('click', function(){
+            burger.classList.toggle('is-active');
+            nav.classList.toggle('is-active');
+          });
+        })();
         </script>
     </body>
 </html>
