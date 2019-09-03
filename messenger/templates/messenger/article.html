@@ -28,7 +28,7 @@
                             {% if zone_comment is False %}
                                 {{ article.contains|truncatechars:255|linebreaks }}
                             {% else %}
-                                {{ article.contains }}
+                                {{ article.contains|linebreaks }}
                             {% endif %}
                         </p>
                         {% if article.photo %}
