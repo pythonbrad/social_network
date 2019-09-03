@@ -43,7 +43,7 @@
                                 <small>&nbsp;@{{ message.sender }}</small>
                             </a><small style="float:right;">{{ message.date_created|timesince:datetime }}</small>
                             <br>
-                            {{ message.contains|truncatechars:255 }}
+                            {{ message.contains|linebreaks }}
                         </p>
                         {% if message.photo %}
                             <p>

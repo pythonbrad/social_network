@@ -29,7 +29,7 @@
                                 <small>&nbsp;@{{ last_message.user }}</small>
                             </a> <small style="float:right;">{{ last_message.message.date_created|timesince:datetime }}</small>
                             <br>
-                            <b>{% trans "Last Message" %}:</b> {{ last_message.message.contains|truncatechars:255 }}
+                            <b>{% trans "Last Message" %}:</b> {{ last_message.message.contains|truncatechars:100|linebreaks }}
                             {% if not last_message.message.received and last_message.message.receiver == request.user %}
                                 <p><span class="button is-primary is-small">Has New</span></p>
                             {% endif %}

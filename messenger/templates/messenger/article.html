@@ -26,17 +26,9 @@
                             </a> <small style="float:right;">{{ article.date_created|timesince:datetime }}</small>
                             <br>
                             {% if zone_comment is False %}
-                                {% with article.contains.splitlines as lines %}
-                                    {% if lines|length > 1 %}
-                                        {{ lines.0|truncatechars:255 }}...
-                                    {% else %}
-                                        {{ lines.0|truncatechars:255 }}
-                                    {% endif %}
-                                {% endwith %}
+                                {{ article.contains|truncatechars:255|linebreaks }}
                             {% else %}
-                                {% for line in article.contains.splitlines %}
-                                    {{ line }}<br/>
-                                {% endfor %}
+                                {{ article.contains }}
                             {% endif %}
                         </p>
                         {% if article.photo %}
