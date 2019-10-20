@@ -9,7 +9,7 @@
         <div class="card-content">
             <div class="card-image" align="center">
                 {% if user.photo %}
-                    <figure class="image is-128x128">
+                    <figure class="image is-fullwidth">
                         {% if request.user.no_media %}
                             <a href="{{ user.photo.url }}">{% trans "See Media" %}</a>
                         {% else %}
@@ -18,6 +18,7 @@
                     </figure>
                 {% endif %}
             </div>
+            <span class='subtitle'>{% trans "Details" %}:</span>
             <p><b>{% trans "Adhesion" %}:</b> {{ user.date_joined }}</p>
             <p><b>{% trans "Date of birth" %}:</b> {{ user.date_of_birth }}</p>
             {% if user in friends or user == request.user %}
@@ -53,5 +54,6 @@
                 {% endif %}
             </footer>
         {% endif %}
+        {% include 'messenger/articles.html' with articles=articles %}
     </div>
 {% endblock %}

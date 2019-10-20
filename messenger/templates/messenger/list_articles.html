@@ -1,0 +1,4 @@
+{% extends 'messenger/panel.html' %}
+{% block column_contains %}
+    {% include 'messenger/articles.html' with articles=articles %}
+{% endblock %}

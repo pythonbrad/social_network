@@ -6,6 +6,7 @@ from django.db.models import Q
 from django.utils import timezone
 from django.utils.translation import gettext as _
 from messenger.models import Friendship
+from messenger.models import Article
 from messenger.models import User
 from .utils import build_paginator
 
@@ -57,11 +58,14 @@ def user_details_view(request, pk):
         user = get_object_or_404(User, pk=pk)
         friends = request.user.get_list_friends()
         waiting_friends = request.user.get_list_friends(in_waiting=True)
+        articles = Article.objects.filter(author=user) if request.user in friends or request.user == user else None
+        articles = build_paginator(request, articles)
         return render(
             request, 'messenger/user_details.html', {
                 'title': _('User details'),
                 'user': user,
                 'friends': friends,
+                'articles': articles,
                 'waiting_friends': waiting_friends,
                 'datetime': timezone.now(),
             })

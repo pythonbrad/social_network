@@ -42,7 +42,7 @@ def articles_view(request):
         articles = result
         articles = build_paginator(request, articles)
         return render(
-            request, 'messenger/articles.html', {
+            request, 'messenger/list_articles.html', {
                 'title': _('Articles'),
                 'datetime': timezone.now(),
                 'articles': articles,

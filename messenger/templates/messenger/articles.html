@@ -1,15 +1,14 @@
-{% extends 'messenger/panel.html' %}
 {% load i18n %}
 {% block column_contains %}
     <p><a href="{% url 'create_article' %}" class="button is-link">{% trans "Create a new article" %}</a></p>
     <h1 class="subtitle">
         {% trans "Articles" %}: {{ articles.paginator.count }}
     </h1>
-    {% include 'messenger/pagin_up.html' with data_to_pagin=articles %}
+    {% include 'messenger/pagin_down.html' with data_to_pagin=articles %}
     {% for article in articles reversed %}
         {% include "messenger/article.html" with zone_comment=False %}
     {% empty %}
-        <h1>{% trans "Nothing for the moment, Make you many friends to see more articles." %}</h1>
+        <h1>{% trans "Nothing for the moment." %}</h1>
     {% endfor %}
-    {% include 'messenger/pagin_down.html' with data_to_pagin=articles %}
+    {% include 'messenger/pagin_up.html' with data_to_pagin=articles %}
 {% endblock %}

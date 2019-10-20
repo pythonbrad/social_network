@@ -4,6 +4,7 @@ from django.shortcuts import reverse
 from django.db.models.signals import post_save
 from django.utils.translation import gettext_lazy as _
 from django.utils import translation
+from django.utils import timezone
 from messenger.signals import post_save_article
 from messenger.signals import post_save_comment
 from .user import User
@@ -39,20 +40,10 @@ class Article(models.Model):
 
     def share(self, user):
         backup_language = translation.get_language()
-        for friend in user.get_list_friends():
-            # set language of receiver of notification
-            translation.activate(friend.language)
-            friend.create_notification(message=_(
-                "%(user1)s said: Can you see this article of %(user2)s?") % {
-                    'user1': user.username,
-                    'user2': self.author.username
-                },
-                                       url=reverse('get_comments',
-                                                   args=(self.pk, )),
-                                       obj_pk=self.pk)
-        # Restore the language
-        translation.activate(backup_language)
-
+        article_shared = Article(author=user)
+        article_shared.contains = _('This is an article published by %(owner)s (%(date)s)') % {'owner': self.author, 'date': timezone.now()} + '.\n' + self.contains
+        article_shared.photo = self.photo
+        article_shared.save()
     def make_notification(author, contains, photo):
         Article.objects.create(author=author, contains=contains, photo=photo)
 
