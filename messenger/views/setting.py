@@ -120,7 +120,7 @@ def photo_settings_view(request):
                 request.user.save()
                 Article.make_notification(
                     author=request.user,
-                    contains='---',
+                    contains=_('%(user)s has changed his photo of profil') % {'user': request.user},
                     photo=request.user.photo)
                 return redirect('settings')
         else:
