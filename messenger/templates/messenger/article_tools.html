@@ -1,14 +1,12 @@
 {% load static %}
 {% load i18n %}
-    <a class="level-item button is-small is-primary" href="{% url liked_namespace article.pk %}?next={{ request.path }}?page={{ articles.number }}">
-        {% if request.user in article.likers.all %}
-            <span class="icon is-small"><img src="{% static 'img/heart-broken.svg' %}"></span>
-            <p>{% trans "Unliked" %}</p>
-        {% else %}
-            <span class="icon is-small"><img src="{% static 'img/heart.svg' %}"></span>
-            <p>{% trans "Liked" %}</p>
-        {% endif %}
-        ({{ article.likers.count }})
+    <a class="level-item button is-small is-primary" ng-click="liked_article('{{ article.pk }}', '{% url liked_namespace article.pk %}')">
+            <span ng-show="article_is_liked('{{ article.pk }}')" class="icon is-small"><img src="{% static 'img/heart-broken.svg' %}"></span>
+            <p ng-show="article_is_liked('{{ article.pk }}')">{% trans "Unliked" %}</p>
+
+            <span ng-hide="article_is_liked('{{ article.pk }}')" class="icon is-small"><img src="{% static 'img/heart.svg' %}"></span>
+            <p ng-hide="article_is_liked('{{ article.pk }}')">{% trans "Liked" %}</p>
+            (<span ng-bind="count_liked_article('{{ article.pk }}')"></span>)
     </a>
     {% if can_share %}
         <a class="level-item button is-small is-warning" href="{% url 'share_article' article.pk %}?next={{ request.path }}?page={{ articles.number }}">
@@ -17,7 +15,7 @@
         </a>
     {% endif %}
     {% if article.author == request.user %}
-        <a class="level-item button is-small is-danger" href="{% url delete_namespace article.pk %}?next={{ request.path }}?page={{ articles.number }}">
+        <a class="level-item button is-small is-danger" ng-click="hide_article('{{ article.pk }}', '{% url delete_namespace article.pk %}')">
             <span class="icon is-small"><img src="{% static 'img/delete.svg' %}"></span>
             <p>{% trans "Delete" %}</p></a>
     {% endif %}

@@ -1,12 +1,15 @@
 {% load static %}
 {% load i18n %}
 <!DOCTYPE html>
-<html>
+<html ng-app ="myApp">
     <head>
         <title>{{ title }}</title>
         <meta charset="utf-8" lang='en'>
         <link rel="stylesheet" type="text/css" href="{% static 'css/bulma.min.css' %}">
         <script src="{% static 'js/angular1.3.16.min.js' %}"></script>
+        <script type="text/javascript">
+            var myApp = angular.module('myApp', []);
+        </script>
     </head>
     <body>
         <nav class="navbar is-link">

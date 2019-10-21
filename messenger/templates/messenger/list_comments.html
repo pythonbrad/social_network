@@ -1,0 +1,5 @@
+{% extends 'messenger/panel.html' %}
+{% block column_contains %}
+	{% include "messenger/article.html" with zone_comment=True %}
+    {% include 'messenger/articles.html' with article=comment zone_comment=None articles=comments is_article=0 %}
+{% endblock %}
