@@ -1,4 +1,4 @@
 {% extends 'messenger/panel.html' %}
 {% block column_contains %}
-    {% include 'messenger/articles.html' with articles=articles %}
+    {% include 'messenger/articles.html' with articles=articles is_article=1 zone_comment=False %}
 {% endblock %}

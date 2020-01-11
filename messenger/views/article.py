@@ -105,7 +105,7 @@ def get_comments_view(request, pk):
         comments = article.comments.all()
         comments = build_paginator(request, comments)
         return render(
-            request, 'messenger/get_comments.html', {
+            request, 'messenger/list_comments.html', {
                 'title': _('Comments'),
                 'comments': comments,
                 'article': article,

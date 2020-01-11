@@ -2,7 +2,7 @@
 {% load static %}
 {% load i18n %}
 {% block contains %}
-    <div ng-app ="myApp">
+    <div>
         <div class="tabs is-centered is-fullwidth is-small" ng-controller='panelController'>
             <ul>
                 <li>
@@ -55,7 +55,6 @@
         </div>
     </div>
     <script>
-        var myApp = angular.module('myApp', []);
         myApp.controller("panelController", function ($scope, $http, $interval) {
             var url = "{% url 'get_state' %}";
             function panel_refresh () {

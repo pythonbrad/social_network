@@ -1,14 +1,62 @@
 {% load i18n %}
 {% block column_contains %}
-    <p><a href="{% url 'create_article' %}" class="button is-link">{% trans "Create a new article" %}</a></p>
+    {% if zone_comment == False %}
+        <p><a href="{% url 'create_article' %}" class="button is-link">{% trans "Create a new article" %}</a></p>
+    {% endif %}
     <h1 class="subtitle">
-        {% trans "Articles" %}: {{ articles.paginator.count }}
+        {% if is_article %}
+            {% trans 'Articles' %}:
+        {% else %}
+            {% trans 'Comments' %}:
+        {% endif %}
     </h1>
     {% include 'messenger/pagin_down.html' with data_to_pagin=articles %}
-    {% for article in articles reversed %}
-        {% include "messenger/article.html" with zone_comment=False %}
-    {% empty %}
-        <h1>{% trans "Nothing for the moment." %}</h1>
-    {% endfor %}
+    <div ng-controller="articleController">
+        <script>
+            var data_article = {};
+        </script>
+        {% for article in articles reversed %}
+            <script>
+                data_article['{{ article.pk }}'] = {showed: true};
+                {% if request.user in article.likers.all %}
+                    data_article['{{ article.pk }}'].liked = true;
+                {% else %}
+                    data_article['{{ article.pk }}'].liked = false;
+                {% endif %}
+                data_article['{{ article.pk }}'].liked_count = '{{ article.likers.count }}';
+            </script>
+            <div ng-show="show_article('{{ article.pk }}')">
+                {% include "messenger/article.html" with zone_comment=zone_comment article=article articles=articles %}
+            </div>
+        {% empty %}
+            <h1>{% trans "Nothing for the moment." %}</h1>
+        {% endfor %}
+        <script type="text/javascript">
+            myApp.controller("articleController", function ($scope, $http) {
+                $scope.show_article = function (pk) {
+                    return data_article[pk].showed;
+                };
+                $scope.hide_article = function (pk, url) {
+                    data_article[pk].showed = false;
+                    $http.get(url).success(function(response) {console.log('article deleted')});
+                };
+                $scope.article_is_liked = function (pk) {
+                    return data_article[pk].liked;
+                };
+                $scope.liked_article = function (pk, url) {
+                    data_article[pk].liked = !data_article[pk].liked;
+                    if (data_article[pk].liked) {
+                        data_article[pk].liked_count++
+                    } else {
+                        data_article[pk].liked_count--
+                    }
+                    $http.get(url).success(function(response) {});
+                };
+                $scope.count_liked_article = function (pk) {
+                    return data_article[pk].liked_count;
+                };;
+            });
+        </script>
+    </div>
     {% include 'messenger/pagin_up.html' with data_to_pagin=articles %}
 {% endblock %}
