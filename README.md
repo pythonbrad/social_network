@@ -3,9 +3,7 @@
 A social network build with Django framework, to learn and understant more some concepts related to web development with a live project.
 
 ## online version
-You can create your account here and see what it looks like.
-
-http://tutorbrad.pythonanywhere.com
+Actually offline
 
 ## Ssome screenshoot
 
